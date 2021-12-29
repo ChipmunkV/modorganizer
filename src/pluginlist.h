@@ -78,6 +78,43 @@ private:
 };
 
 
+struct ESPInfo
+{
+  ESPInfo(
+    const QString &name, bool enabled, const QString &originName,
+    const QString &fullPath, bool hasIni, std::set<QString> archives,
+    bool lightSupported);
+
+  QString name;
+  QString fullPath;
+  bool enabled;
+  bool forceEnabled;
+  int priority;
+  QString index;
+  int loadOrder;
+//    FILETIME time;
+  QString originName;
+  bool isMaster;
+  bool isLight;
+  bool isLightFlagged;
+  bool modSelected;
+  QString author;
+  QString description;
+  bool hasIni;
+  std::set<QString, MOBase::FileNameComparator> archives;
+  std::set<QString, MOBase::FileNameComparator> masters;
+  mutable std::set<QString, MOBase::FileNameComparator> masterUnset;
+
+  bool operator < (const ESPInfo& str) const
+  {
+    return (loadOrder < str.loadOrder);
+  }
+};
+
+static bool ByName(const ESPInfo& LHS, const ESPInfo& RHS);
+static bool ByPriority(const ESPInfo& LHS, const ESPInfo& RHS);
+static bool ByDate(const ESPInfo& LHS, const ESPInfo& RHS);
+
 
 /**
  * @brief model representing the plugins (.esp/.esm) in the current virtual data folder
@@ -302,39 +339,6 @@ signals:
 
 
 private:
-
-  struct ESPInfo
-  {
-    ESPInfo(
-      const QString &name, bool enabled, const QString &originName,
-      const QString &fullPath, bool hasIni, std::set<QString> archives,
-      bool lightSupported);
-
-    QString name;
-    QString fullPath;
-    bool enabled;
-    bool forceEnabled;
-    int priority;
-    QString index;
-    int loadOrder;
-    FILETIME time;
-    QString originName;
-    bool isMaster;
-    bool isLight;
-    bool isLightFlagged;
-    bool modSelected;
-    QString author;
-    QString description;
-    bool hasIni;
-    std::set<QString, MOBase::FileNameComparator> archives;
-    std::set<QString, MOBase::FileNameComparator> masters;
-    mutable std::set<QString, MOBase::FileNameComparator> masterUnset;
-
-    bool operator < (const ESPInfo& str) const
-    {
-      return (loadOrder < str.loadOrder);
-    }
-  };
 
   struct AdditionalInfo {
     QStringList messages;

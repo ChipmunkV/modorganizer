@@ -1,7 +1,15 @@
 #ifndef SETTINGSUTILITIES_H
 #define SETTINGSUTILITIES_H
 
+#include <optional>
+#include <QSettings>
+#include <QVariantList>
 #include <log.h>
+
+QT_FORWARD_DECLARE_CLASS(QAbstractButton)
+QT_FORWARD_DECLARE_CLASS(QDockWidget)
+QT_FORWARD_DECLARE_CLASS(QHeaderView)
+QT_FORWARD_DECLARE_CLASS(QMainWindow)
 
 namespace MOBase {
   class ExpanderWidget;
@@ -82,7 +90,7 @@ void setImpl(
     settings.setValue(
       name, static_cast<std::underlying_type_t<T>>(value));
   } else {
-    settings.setValue(name, value);
+    settings.setValue(name, QVariant::fromValue(value));
   }
 }
 

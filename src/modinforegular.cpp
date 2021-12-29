@@ -458,7 +458,8 @@ bool ModInfoRegular::setName(const QString &name)
     }
   } else {
     if (!shellRename(modDir.absoluteFilePath(m_Name), modDir.absoluteFilePath(name))) {
-      log::error("failed to rename mod {} (errorcode {})", name, ::GetLastError());
+//      log::error("failed to rename mod {} (errorcode {})", name, ::GetLastError());
+      assert(false && "Not implemented");
       return false;
     }
   }

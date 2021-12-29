@@ -1,10 +1,14 @@
 #include "envmetrics.h"
 #include "env.h"
-#include <Windows.h>
-#include <shellscalingapi.h>
+//#include <Windows.h>
+//#include <shellscalingapi.h>
 #include <log.h>
 #include <utility.h>
+#include <QGuiApplication>
 #include <QDesktopWidget>
+#include <QScreen>
+
+using HMONITOR = void*;
 
 namespace env
 {
@@ -15,16 +19,18 @@ using namespace MOBase;
 //
 int getDesktopDpi()
 {
-  // desktop DC
-  DesktopDCPtr dc(GetDC(0));
-
-  if (!dc) {
-    const auto e = GetLastError();
-    log::error("can't get desktop DC, {}", formatSystemMessage(e));
-    return 0;
-  }
-
-  return GetDeviceCaps(dc.get(), LOGPIXELSX);
+//  // desktop DC
+//  DesktopDCPtr dc(GetDC(0));
+//
+//  if (!dc) {
+//    const auto e = GetLastError();
+//    log::error("can't get desktop DC, {}", formatSystemMessage(e));
+//    return 0;
+//  }
+//
+//  return GetDeviceCaps(dc.get(), LOGPIXELSX);
+  assert(false && "Not implemented");
+  return 0;
 }
 
 // finds a monitor by device name; there's no real good way to do that except
@@ -32,48 +38,50 @@ int getDesktopDpi()
 //
 HMONITOR findMonitor(const QString& name)
 {
-  // passed to the enumeration callback
-  struct Data
-  {
-    QString name;
-    HMONITOR hm;
-  };
-
-  Data data = {name, 0};
-
-  // callback
-  auto callback = [](HMONITOR hm, HDC, RECT*, LPARAM lp) {
-    auto& data = *reinterpret_cast<Data*>(lp);
-
-    MONITORINFOEX mi = {};
-    mi.cbSize = sizeof(mi);
-
-    // monitor info will include the name
-    if (!GetMonitorInfoW(hm, &mi)) {
-      const auto e = GetLastError();
-      log::error(
-        "GetMonitorInfo() failed for '{}', {}",
-        data.name, formatSystemMessage(e));
-
-      // error for this monitor, but continue
-      return TRUE;
-    }
-
-    if (QString::fromWCharArray(mi.szDevice) == data.name) {
-      // found, stop
-      data.hm = hm;
-      return FALSE;
-    }
-
-    // not found, continue to the next monitor
-    return TRUE;
-  };
-
-
-  // for each monitor
-  EnumDisplayMonitors(0, nullptr, callback, reinterpret_cast<LPARAM>(&data));
-
-  return data.hm;
+//  // passed to the enumeration callback
+//  struct Data
+//  {
+//    QString name;
+//    HMONITOR hm;
+//  };
+//
+//  Data data = {name, 0};
+//
+//  // callback
+//  auto callback = [](HMONITOR hm, HDC, RECT*, LPARAM lp) {
+//    auto& data = *reinterpret_cast<Data*>(lp);
+//
+//    MONITORINFOEX mi = {};
+//    mi.cbSize = sizeof(mi);
+//
+//    // monitor info will include the name
+//    if (!GetMonitorInfoW(hm, &mi)) {
+//      const auto e = GetLastError();
+//      log::error(
+//        "GetMonitorInfo() failed for '{}', {}",
+//        data.name, formatSystemMessage(e));
+//
+//      // error for this monitor, but continue
+//      return TRUE;
+//    }
+//
+//    if (QString::fromWCharArray(mi.szDevice) == data.name) {
+//      // found, stop
+//      data.hm = hm;
+//      return FALSE;
+//    }
+//
+//    // not found, continue to the next monitor
+//    return TRUE;
+//  };
+//
+//
+//  // for each monitor
+//  EnumDisplayMonitors(0, nullptr, callback, reinterpret_cast<LPARAM>(&data));
+//
+//  return data.hm;
+    assert(false && "Not implemented");
+    return nullptr;
 }
 
 // returns the dpi for the given monitor; for systems that do not support
@@ -81,54 +89,56 @@ HMONITOR findMonitor(const QString& name)
 //
 int getDpi(const QString& monitorDevice)
 {
-  using GetDpiForMonitorFunction =
-    HRESULT WINAPI (HMONITOR, MONITOR_DPI_TYPE, UINT*, UINT*);
-
-  static LibraryPtr shcore;
-  static GetDpiForMonitorFunction* GetDpiForMonitor = nullptr;
-  static bool checked = false;
-
-  if (!checked) {
-    // try to find GetDpiForMonitor() from shcored.dll
-
-    shcore.reset(LoadLibraryW(L"Shcore.dll"));
-
-    if (shcore) {
-      // windows 8.1+ only
-      GetDpiForMonitor = reinterpret_cast<GetDpiForMonitorFunction*>(
-        GetProcAddress(shcore.get(), "GetDpiForMonitor"));
-    }
-
-    checked = true;
-  }
-
-  if (!GetDpiForMonitor) {
-    // get the desktop dpi instead
-    return getDesktopDpi();
-  }
-
-
-  // there's no way to get an HMONITOR from a device name, so all monitors
-  // will have to be enumerated and their name checked
-  HMONITOR hm = findMonitor(monitorDevice);
-  if (!hm) {
-    log::error("can't get dpi for monitor '{}', not found", monitorDevice);
+//  using GetDpiForMonitorFunction =
+//    HRESULT WINAPI (HMONITOR, MONITOR_DPI_TYPE, UINT*, UINT*);
+//
+//  static LibraryPtr shcore;
+//  static GetDpiForMonitorFunction* GetDpiForMonitor = nullptr;
+//  static bool checked = false;
+//
+//  if (!checked) {
+//    // try to find GetDpiForMonitor() from shcored.dll
+//
+//    shcore.reset(LoadLibraryW(L"Shcore.dll"));
+//
+//    if (shcore) {
+//      // windows 8.1+ only
+//      GetDpiForMonitor = reinterpret_cast<GetDpiForMonitorFunction*>(
+//        GetProcAddress(shcore.get(), "GetDpiForMonitor"));
+//    }
+//
+//    checked = true;
+//  }
+//
+//  if (!GetDpiForMonitor) {
+//    // get the desktop dpi instead
+//    return getDesktopDpi();
+//  }
+//
+//
+//  // there's no way to get an HMONITOR from a device name, so all monitors
+//  // will have to be enumerated and their name checked
+//  HMONITOR hm = findMonitor(monitorDevice);
+//  if (!hm) {
+//    log::error("can't get dpi for monitor '{}', not found", monitorDevice);
+//    return 0;
+//  }
+//
+//  UINT dpiX=0, dpiY=0;
+//  const auto r = GetDpiForMonitor(hm, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+//
+//  if (FAILED(r)) {
+//    log::error(
+//      "GetDpiForMonitor() failed for '{}', {}",
+//      monitorDevice, formatSystemMessage(r));
+//
+//    return 0;
+//  }
+//
+//  // dpiX and dpiY are always identical, as per the documentation
+//  return dpiX;
+    assert(false && "Not implemented");
     return 0;
-  }
-
-  UINT dpiX=0, dpiY=0;
-  const auto r = GetDpiForMonitor(hm, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
-
-  if (FAILED(r)) {
-    log::error(
-      "GetDpiForMonitor() failed for '{}', {}",
-      monitorDevice, formatSystemMessage(r));
-
-    return 0;
-  }
-
-  // dpiX and dpiY are always identical, as per the documentation
-  return dpiX;
 }
 
 
@@ -190,29 +200,30 @@ QString Display::toString() const
 
 void Display::getSettings()
 {
-  DEVMODEW dm = {};
-  dm.dmSize = sizeof(dm);
-
-  const auto wsDevice = m_monitorDevice.toStdWString();
-
-  if (!EnumDisplaySettingsW(wsDevice.c_str(), ENUM_CURRENT_SETTINGS, &dm)) {
-    log::error("EnumDisplaySettings() failed for '{}'", m_monitorDevice);
-    return;
-  }
-
-  // all these fields should be available
-
-  if (dm.dmFields & DM_DISPLAYFREQUENCY) {
-    m_refreshRate = dm.dmDisplayFrequency;
-  }
-
-  if (dm.dmFields & DM_PELSWIDTH) {
-    m_resX = dm.dmPelsWidth;
-  }
-
-  if (dm.dmFields & DM_PELSHEIGHT) {
-    m_resY = dm.dmPelsHeight;
-  }
+//  DEVMODEW dm = {};
+//  dm.dmSize = sizeof(dm);
+//
+//  const auto wsDevice = m_monitorDevice.toStdWString();
+//
+//  if (!EnumDisplaySettingsW(wsDevice.c_str(), ENUM_CURRENT_SETTINGS, &dm)) {
+//    log::error("EnumDisplaySettings() failed for '{}'", m_monitorDevice);
+//    return;
+//  }
+//
+//  // all these fields should be available
+//
+//  if (dm.dmFields & DM_DISPLAYFREQUENCY) {
+//    m_refreshRate = dm.dmDisplayFrequency;
+//  }
+//
+//  if (dm.dmFields & DM_PELSWIDTH) {
+//    m_resX = dm.dmPelsWidth;
+//  }
+//
+//  if (dm.dmFields & DM_PELSHEIGHT) {
+//    m_resY = dm.dmPelsHeight;
+//  }
+  assert(false && "Not implemented");
 }
 
 
@@ -239,28 +250,29 @@ QRect Metrics::desktopGeometry() const
 
 void Metrics::getDisplays()
 {
-  // don't bother if it goes over 100
-  for (int i=0; i<100; ++i) {
-    DISPLAY_DEVICEW device = {};
-    device.cb = sizeof(device);
-
-    if (!EnumDisplayDevicesW(nullptr, i, &device, 0)) {
-      // no more
-      break;
-    }
-
-    // EnumDisplayDevices() seems to be returning a lot of devices that are
-    // not actually monitors, but those don't have the
-    // DISPLAY_DEVICE_ATTACHED_TO_DESKTOP bit set
-    if ((device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) == 0) {
-      continue;
-    }
-
-    m_displays.emplace_back(
-      QString::fromWCharArray(device.DeviceString),
-      QString::fromWCharArray(device.DeviceName),
-      (device.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE));
-  }
+//  // don't bother if it goes over 100
+//  for (int i=0; i<100; ++i) {
+//    DISPLAY_DEVICEW device = {};
+//    device.cb = sizeof(device);
+//
+//    if (!EnumDisplayDevicesW(nullptr, i, &device, 0)) {
+//      // no more
+//      break;
+//    }
+//
+//    // EnumDisplayDevices() seems to be returning a lot of devices that are
+//    // not actually monitors, but those don't have the
+//    // DISPLAY_DEVICE_ATTACHED_TO_DESKTOP bit set
+//    if ((device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) == 0) {
+//      continue;
+//    }
+//
+//    m_displays.emplace_back(
+//      QString::fromWCharArray(device.DeviceString),
+//      QString::fromWCharArray(device.DeviceName),
+//      (device.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE));
+//  }
+  assert(false && "Not implemented");
 }
 
 } // namespace

@@ -1,6 +1,7 @@
 #ifndef ENV_METRICS_H
 #define ENV_METRICS_H
 
+#include <QRect>
 #include <QString>
 #include <vector>
 

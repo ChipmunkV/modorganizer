@@ -1,4 +1,6 @@
 #include "settingsdialognexus.h"
+#include <QClipboard>
+#include <QFileDialog>
 #include "ui_settingsdialog.h"
 #include "ui_nexusmanualkey.h"
 #include "nexusinterface.h"

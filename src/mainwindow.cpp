@@ -72,7 +72,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <bsainvalidation.h>
 #include <taskprogressmanager.h>
 #include <scopeguard.h>
-#include <usvfs.h>
+//#include <usvfs.h>
 #include "localsavegames.h"
 #include "listdialog.h"
 #include "envshortcut.h"
@@ -103,7 +103,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDropEvent>
 #include <QEvent>
 #include <QFileDialog>
-#include <QFIleIconProvider>
+#include <QFileIconProvider>
 #include <QFont>
 #include <QFuture>
 #include <QHash>
@@ -165,7 +165,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/range/adaptor/reversed.hpp>
 #endif
 
-#include <shlobj.h>
+//#include <shlobj.h>
 
 #include <limits.h>
 #include <exception>
@@ -183,6 +183,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #endif // TEST_MODELS
 
 #pragma warning( disable : 4428 )
+
+using UINT32 = uint32_t;
 
 using namespace MOBase;
 using namespace MOShared;
@@ -2317,12 +2319,13 @@ void MainWindow::fileMoved(const QString &filePath, const QString &oldOriginName
       if (m_OrganizerCore.directoryStructure()->originExists(ToWString(newOriginName))) {
         FilesOrigin &newOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(newOriginName));
 
-        QString fullNewPath = ToQString(newOrigin.getPath()) + "\\" + filePath;
-        WIN32_FIND_DATAW findData;
-        HANDLE hFind;
-        hFind = ::FindFirstFileW(ToWString(fullNewPath).c_str(), &findData);
-        filePtr->addOrigin(newOrigin.getID(), findData.ftCreationTime, L"", -1);
-        FindClose(hFind);
+//        QString fullNewPath = ToQString(newOrigin.getPath()) + "\\" + filePath;
+//        WIN32_FIND_DATAW findData;
+//        HANDLE hFind;
+//        hFind = ::FindFirstFileW(ToWString(fullNewPath).c_str(), &findData);
+//        filePtr->addOrigin(newOrigin.getID(), findData.ftCreationTime, L"", -1);
+//        FindClose(hFind);
+        assert(false && "Not implemented");
       }
       if (m_OrganizerCore.directoryStructure()->originExists(ToWString(oldOriginName))) {
         FilesOrigin &oldOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(oldOriginName));
@@ -3506,12 +3509,13 @@ void MainWindow::on_restoreButton_clicked()
         !shellCopy(loadOrderName + "." + choice, loadOrderName, true, this) ||
         !shellCopy(lockedName    + "." + choice, lockedName, true, this)) {
 
-      const auto e = GetLastError();
-
-      QMessageBox::critical(
-        this, tr("Restore failed"),
-        tr("Failed to restore the backup. Errorcode: %1")
-          .arg(QString::fromStdWString(formatSystemMessage(e))));
+//      const auto e = GetLastError();
+//
+//      QMessageBox::critical(
+//        this, tr("Restore failed"),
+//        tr("Failed to restore the backup. Errorcode: %1")
+//          .arg(QString::fromStdWString(formatSystemMessage(e))));
+      assert(false && "Not implemented");
     }
     m_OrganizerCore.refreshESPList(true);
   }
@@ -3532,11 +3536,12 @@ void MainWindow::on_restoreModsButton_clicked()
   QString choice = queryRestore(modlistName);
   if (!choice.isEmpty()) {
     if (!shellCopy(modlistName + "." + choice, modlistName, true, this)) {
-      const auto e = GetLastError();
-      QMessageBox::critical(
-        this, tr("Restore failed"),
-        tr("Failed to restore the backup. Errorcode: %1")
-          .arg(formatSystemMessage(e)));
+//      const auto e = GetLastError();
+//      QMessageBox::critical(
+//        this, tr("Restore failed"),
+//        tr("Failed to restore the backup. Errorcode: %1")
+//          .arg(formatSystemMessage(e)));
+      assert(false && "Not implemented");
     }
     m_OrganizerCore.refresh(false);
   }
@@ -3630,10 +3635,11 @@ void MainWindow::dropLocalFile(const QUrl &url, const QString &outputDir, bool m
   } else {
     success = shellCopy(file.absoluteFilePath(), target, true, this);
   }
-  if (!success) {
-    const auto e = GetLastError();
-    log::error("file operation failed: {}", formatSystemMessage(e));
-  }
+//  if (!success) {
+//    const auto e = GetLastError();
+//    log::error("file operation failed: {}", formatSystemMessage(e));
+//  }
+  assert(false && "Not implemented");
 }
 
 void MainWindow::dropEvent(QDropEvent *event)

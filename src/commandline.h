@@ -3,10 +3,15 @@
 #include "moshortcut.h"
 #include <vector>
 #include <memory>
+#include <optional>
+#include <boost/program_options.hpp>
+#include <QStringList>
 
 class OrganizerCore;
 class MOApplication;
 class MOMultiProcess;
+
+using LPCWSTR = wchar_t const *;
 
 namespace cl
 {

@@ -60,7 +60,7 @@ ModListDropInfo::ModListDropInfo(const QMimeData* mimeData, OrganizerCore& core)
     m_rows = {};
     m_download = -1;
     m_localUrls.clear();
-    m_url = {};
+    m_url = QUrl();
   }
 }
 

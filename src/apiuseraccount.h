@@ -58,7 +58,7 @@ class APIUserAccount
 public:
   // when the number of remaining requests is under this number, further
   // requests will be throttled by avoiding non-critical ones
-  static const int ThrottleThreshold = 200;
+  static const int ThrottleThreshold;
 
   APIUserAccount();
 

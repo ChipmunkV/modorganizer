@@ -4,6 +4,9 @@
 #include "modinfo.h"
 #include "modinfodialogfwd.h"
 
+QT_FORWARD_DECLARE_CLASS(QMenu)
+QT_FORWARD_DECLARE_CLASS(QTreeView)
+
 namespace MOShared { class FileEntry; }
 
 class OrganizerCore;

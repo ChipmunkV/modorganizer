@@ -20,8 +20,10 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "previewgenerator.h"
 
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QLabel>
 #include <QImageReader>
+#include <QScreen>
 #include <QTextEdit>
 #include <utility.h>
 

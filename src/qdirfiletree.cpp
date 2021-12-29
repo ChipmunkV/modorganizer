@@ -37,7 +37,7 @@ protected:
     return true;
   }
 
-  std::shared_ptr<IFileTree> QDirFileTree::doClone() const
+  std::shared_ptr<IFileTree> doClone() const
   {
     return std::make_shared<QDirFileTreeImpl>(nullptr, qDir);
   }
@@ -74,7 +74,7 @@ protected:
     return true;
   }
 
-  std::shared_ptr<IFileTree> QDirFileTree::doClone() const
+  std::shared_ptr<IFileTree> doClone() const
   {
     return std::make_shared<QDirRootFileTreeImpl>(qDir);
   }

@@ -59,7 +59,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <boost/bind/bind.hpp>
 
-#include <Windows.h> //for VS_FIXEDFILEINFO, GetLastError
+//#include <Windows.h> //for VS_FIXEDFILEINFO, GetLastError
 
 #include <exception>
 #include <map>

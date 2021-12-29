@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.16)
 if(DEFINED DEPENDENCIES_DIR)
 	include(${DEPENDENCIES_DIR}/modorganizer_super/cmake_common/src.cmake)
 else()
-	include(../cmake_common/src.cmake)
+	include(${CMAKE_SOURCE_DIR}/../cmake_common/src.cmake)
 endif()
 
 
@@ -241,11 +241,21 @@ add_filter(NAME src/widgets GROUPS
 )
 
 
-requires_project(game_features githubpp bsatk esptk archive usvfs)
+if(WIN32)
+	requires_project(game_features githubpp bsatk esptk archive uibase usvfs)
+else()
+	requires_project(game_features githubpp bsatk esptk archive uibase)
+endif()
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 	${modorganizer_super_path}/lootcli/include
 )
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+	${CMAKE_CURRENT_LIST_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME} lz4 z /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0)
 
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/dlls.manifest.qt5"

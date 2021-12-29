@@ -4,6 +4,9 @@
 #include <QString>
 #include <optional>
 
+using DWORD = uint32_t;
+using HINSTANCE = void*;
+
 namespace env
 {
 

@@ -261,7 +261,7 @@ void DownloadManager::pauseAll()
     }
   }
 
-  ::Sleep(100);
+//  ::Sleep(100);
 
   bool done = false;
   QTime startTime = QTime::currentTime();
@@ -279,7 +279,7 @@ void DownloadManager::pauseAll()
       }
     }
     if (!done) {
-      ::Sleep(100);
+//      ::Sleep(100);
     }
   }
 
@@ -373,44 +373,45 @@ void DownloadManager::refreshList()
     }
 
 
-    env::forEachEntry(
-      QDir::toNativeSeparators(m_OutputDirectory).toStdWString(), &cx, nullptr, nullptr,
-      [](void* data, std::wstring_view f, FILETIME, uint64_t size) {
-        auto& cx = *static_cast<Context*>(data);
-
-        std::wstring lc = MOShared::ToLowerCopy(f);
-
-        bool interestingExt = false;
-        for (auto&& ext : cx.extensions) {
-          if (lc.ends_with(ext)) {
-            interestingExt = true;
-            break;
-          }
-        }
-
-        if (!interestingExt) {
-          return;
-        }
-
-        if (cx.seen.contains(lc)) {
-          return;
-        }
-
-        QString fileName =
-          QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" +
-          QString::fromWCharArray(f.data(), f.size());
-
-        DownloadInfo *info = DownloadInfo::createFromMeta(
-          fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);
-
-        if (info == nullptr) {
-          return;
-        }
-
-        cx.self.m_ActiveDownloads.push_front(info);
-        cx.seen.insert(std::move(lc));
-        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdWString());
-    });
+//    env::forEachEntry(
+//      QDir::toNativeSeparators(m_OutputDirectory).toStdWString(), &cx, nullptr, nullptr,
+//      [](void* data, std::wstring_view f, FILETIME, uint64_t size) {
+//        auto& cx = *static_cast<Context*>(data);
+//
+//        std::wstring lc = MOShared::ToLowerCopy(f);
+//
+//        bool interestingExt = false;
+//        for (auto&& ext : cx.extensions) {
+//          if (lc.ends_with(ext)) {
+//            interestingExt = true;
+//            break;
+//          }
+//        }
+//
+//        if (!interestingExt) {
+//          return;
+//        }
+//
+//        if (cx.seen.contains(lc)) {
+//          return;
+//        }
+//
+//        QString fileName =
+//          QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" +
+//          QString::fromWCharArray(f.data(), f.size());
+//
+//        DownloadInfo *info = DownloadInfo::createFromMeta(
+//          fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);
+//
+//        if (info == nullptr) {
+//          return;
+//        }
+//
+//        cx.self.m_ActiveDownloads.push_front(info);
+//        cx.seen.insert(std::move(lc));
+//        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdWString());
+//    });
+    assert(false && "Not implemented");
 
     log::debug("saw {} downloads", m_ActiveDownloads.size());
 

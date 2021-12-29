@@ -1,7 +1,16 @@
 #ifndef ENV_ENV_H
 #define ENV_ENV_H
 
+#include <filesystem>
+#include <set>
+#include <QFileInfo>
+
 class Settings;
+
+using HDC = void*;
+using HMENU = void*;
+using HINSTANCE = void*;
+using IUnknown = void;
 
 namespace env
 {
@@ -21,9 +30,10 @@ struct DesktopDCReleaser
 
   void operator()(HDC dc)
   {
-    if (dc != 0) {
-      ::ReleaseDC(0, dc);
-    }
+//    if (dc != 0) {
+//      ::ReleaseDC(0, dc);
+//    }
+    assert(false && "Not implemented");
   }
 };
 
@@ -38,9 +48,10 @@ struct HMenuFreer
 
   void operator()(HMENU h)
   {
-    if (h != 0) {
-      ::DestroyMenu(h);
-    }
+//    if (h != 0) {
+//      ::DestroyMenu(h);
+//    }
+    assert(false && "Not implemented");
   }
 };
 
@@ -55,9 +66,10 @@ struct LibraryFreer
 
   void operator()(HINSTANCE h)
   {
-    if (h != 0) {
-      ::FreeLibrary(h);
-    }
+//    if (h != 0) {
+//      ::FreeLibrary(h);
+//    }
+    assert(false && "Not implemented");
   }
 };
 
@@ -70,9 +82,10 @@ struct COMReleaser
 {
   void operator()(IUnknown* p)
   {
-    if (p) {
-      p->Release();
-    }
+//    if (p) {
+//      p->Release();
+//    }
+    assert(false && "Not implemented");
   }
 };
 
@@ -103,7 +116,8 @@ struct LocalFreer
 
   void operator()(T p)
   {
-    ::LocalFree(p);
+//    ::LocalFree(p);
+    assert(false && "Not implemented");
   }
 };
 
@@ -120,7 +134,8 @@ struct CoTaskMemFreer
 
   void operator()(T p)
   {
-    ::CoTaskMemFree(p);
+//    ::CoTaskMemFree(p);
+    assert(false && "Not implemented");
   }
 };
 

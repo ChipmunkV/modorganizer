@@ -4,6 +4,8 @@
 #include <QStatusBar>
 #include <QProgressBar>
 
+QT_FORWARD_DECLARE_CLASS(QLabel)
+
 struct APIStats;
 class APIUserAccount;
 class Settings;

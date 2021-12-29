@@ -1,5 +1,9 @@
 #include "modlistcontextmenu.h"
 
+#include <QPushButton>
+#include <QRadioButton>
+#include <QWidgetAction>
+
 #include <report.h>
 
 #include "modlist.h"

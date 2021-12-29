@@ -1,4 +1,5 @@
 #include "modinfodialognexus.h"
+#include <QScopedValueRollback>
 #include "ui_modinfodialog.h"
 #include "settings.h"
 #include "organizercore.h"

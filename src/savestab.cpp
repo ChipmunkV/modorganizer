@@ -1,4 +1,6 @@
 #include "savestab.h"
+#include <QMessageBox>
+#include <QScreen>
 #include "ui_mainwindow.h"
 #include "organizercore.h"
 #include "activatemodsdialog.h"
@@ -130,29 +132,30 @@ void SavesTab::refreshSavesIfOpen()
 QDir SavesTab::currentSavesDir() const
 {
   QDir savesDir;
-  if (m_core.currentProfile()->localSavesEnabled()) {
-    savesDir.setPath(m_core.currentProfile()->savePath());
-  } else {
-    auto iniFiles = m_core.managedGame()->iniFiles();
-
-    if (iniFiles.isEmpty()) {
-      return m_core.managedGame()->savesDirectory();
-    }
-
-    QString iniPath = m_core.currentProfile()->absoluteIniFilePath(iniFiles[0]);
-
-    wchar_t path[MAX_PATH];
-    if (::GetPrivateProfileStringW(
-      L"General", L"SLocalSavePath", L"",
-      path, MAX_PATH,
-      iniPath.toStdWString().c_str()
-    )) {
-      savesDir.setPath(m_core.managedGame()->documentsDirectory().absoluteFilePath(QString::fromWCharArray(path)));
-    }
-    else {
-      savesDir = m_core.managedGame()->savesDirectory();
-    }
-  }
+//  if (m_core.currentProfile()->localSavesEnabled()) {
+//    savesDir.setPath(m_core.currentProfile()->savePath());
+//  } else {
+//    auto iniFiles = m_core.managedGame()->iniFiles();
+//
+//    if (iniFiles.isEmpty()) {
+//      return m_core.managedGame()->savesDirectory();
+//    }
+//
+//    QString iniPath = m_core.currentProfile()->absoluteIniFilePath(iniFiles[0]);
+//
+//    wchar_t path[MAX_PATH];
+//    if (::GetPrivateProfileStringW(
+//      L"General", L"SLocalSavePath", L"",
+//      path, MAX_PATH,
+//      iniPath.toStdWString().c_str()
+//    )) {
+//      savesDir.setPath(m_core.managedGame()->documentsDirectory().absoluteFilePath(QString::fromWCharArray(path)));
+//    }
+//    else {
+//      savesDir = m_core.managedGame()->savesDirectory();
+//    }
+//  }
+  assert(false && "Not implemented");
 
   return savesDir;
 }

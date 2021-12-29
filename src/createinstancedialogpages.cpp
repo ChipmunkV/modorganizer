@@ -1,4 +1,5 @@
 #include "createinstancedialogpages.h"
+#include <QFileDialog>
 #include "ui_createinstancedialog.h"
 #include "instancemanager.h"
 #include "settings.h"

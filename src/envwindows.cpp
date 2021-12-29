@@ -1,4 +1,5 @@
 #include "envwindows.h"
+#include <QSettings>
 #include "env.h"
 #include "envmodule.h"
 #include <utility.h>
@@ -11,19 +12,20 @@ using namespace MOBase;
 
 WindowsInfo::WindowsInfo()
 {
-  // loading ntdll.dll, the functions will be found with GetProcAddress()
-  LibraryPtr ntdll(LoadLibraryW(L"ntdll.dll"));
-
-  if (!ntdll) {
-    log::error("failed to load ntdll.dll while getting version");
-    return;
-  } else {
-    m_reported = getReportedVersion(ntdll.get());
-    m_real = getRealVersion(ntdll.get());
-  }
-
-  m_release = getRelease();
-  m_elevated = getElevated();
+//  // loading ntdll.dll, the functions will be found with GetProcAddress()
+//  LibraryPtr ntdll(LoadLibraryW(L"ntdll.dll"));
+//
+//  if (!ntdll) {
+//    log::error("failed to load ntdll.dll while getting version");
+//    return;
+//  } else {
+//    m_reported = getReportedVersion(ntdll.get());
+//    m_real = getRealVersion(ntdll.get());
+//  }
+//
+//  m_release = getRelease();
+//  m_elevated = getElevated();
+  assert(false && "Not implemented");
 }
 
 bool WindowsInfo::compatibilityMode() const
@@ -107,56 +109,60 @@ QString WindowsInfo::toString() const
 
 WindowsInfo::Version WindowsInfo::getReportedVersion(HINSTANCE ntdll) const
 {
-  // windows has been deprecating pretty much all the functions having to do
-  // with getting version information because apparently, people keep misusing
-  // them for feature detection
-  //
-  // there's still RtlGetVersion() though
-
-  using RtlGetVersionType = NTSTATUS (NTAPI)(PRTL_OSVERSIONINFOW);
-
-  auto* RtlGetVersion = reinterpret_cast<RtlGetVersionType*>(
-    GetProcAddress(ntdll, "RtlGetVersion"));
-
-  if (!RtlGetVersion) {
-    log::error("RtlGetVersion() not found in ntdll.dll");
-    return {};
-  }
-
-  OSVERSIONINFOEX vi = {};
-  vi.dwOSVersionInfoSize = sizeof(vi);
-
-  // this apparently never fails
-  RtlGetVersion((RTL_OSVERSIONINFOW*)&vi);
-
-  return {vi.dwMajorVersion, vi.dwMinorVersion, vi.dwBuildNumber};
+//  // windows has been deprecating pretty much all the functions having to do
+//  // with getting version information because apparently, people keep misusing
+//  // them for feature detection
+//  //
+//  // there's still RtlGetVersion() though
+//
+//  using RtlGetVersionType = NTSTATUS (NTAPI)(PRTL_OSVERSIONINFOW);
+//
+//  auto* RtlGetVersion = reinterpret_cast<RtlGetVersionType*>(
+//    GetProcAddress(ntdll, "RtlGetVersion"));
+//
+//  if (!RtlGetVersion) {
+//    log::error("RtlGetVersion() not found in ntdll.dll");
+//    return {};
+//  }
+//
+//  OSVERSIONINFOEX vi = {};
+//  vi.dwOSVersionInfoSize = sizeof(vi);
+//
+//  // this apparently never fails
+//  RtlGetVersion((RTL_OSVERSIONINFOW*)&vi);
+//
+//  return {vi.dwMajorVersion, vi.dwMinorVersion, vi.dwBuildNumber};
+  assert(false && "Not implemented");
+  return WindowsInfo::Version();
 }
 
 WindowsInfo::Version WindowsInfo::getRealVersion(HINSTANCE ntdll) const
 {
-  // getting the actual windows version is more difficult because all the
-  // functions are lying when running in compatibility mode
-  //
-  // RtlGetNtVersionNumbers() is an undocumented function that seems to work
-  // fine, but it might not in the future
-
-  using RtlGetNtVersionNumbersType = void (NTAPI)(DWORD*, DWORD*, DWORD*);
-
-  auto* RtlGetNtVersionNumbers = reinterpret_cast<RtlGetNtVersionNumbersType*>(
-    GetProcAddress(ntdll, "RtlGetNtVersionNumbers"));
-
-  if (!RtlGetNtVersionNumbers) {
-    log::error("RtlGetNtVersionNumbers not found in ntdll.dll");
-    return {};
-  }
-
-  DWORD major=0, minor=0, build=0;
-  RtlGetNtVersionNumbers(&major, &minor, &build);
-
-  // for whatever reason, the build number has 0xf0000000 set
-  build = 0x0fffffff & build;
-
-  return {major, minor, build};
+//  // getting the actual windows version is more difficult because all the
+//  // functions are lying when running in compatibility mode
+//  //
+//  // RtlGetNtVersionNumbers() is an undocumented function that seems to work
+//  // fine, but it might not in the future
+//
+//  using RtlGetNtVersionNumbersType = void (NTAPI)(DWORD*, DWORD*, DWORD*);
+//
+//  auto* RtlGetNtVersionNumbers = reinterpret_cast<RtlGetNtVersionNumbersType*>(
+//    GetProcAddress(ntdll, "RtlGetNtVersionNumbers"));
+//
+//  if (!RtlGetNtVersionNumbers) {
+//    log::error("RtlGetNtVersionNumbers not found in ntdll.dll");
+//    return {};
+//  }
+//
+//  DWORD major=0, minor=0, build=0;
+//  RtlGetNtVersionNumbers(&major, &minor, &build);
+//
+//  // for whatever reason, the build number has 0xf0000000 set
+//  build = 0x0fffffff & build;
+//
+//  return {major, minor, build};
+  assert(false && "Not implemented");
+  return WindowsInfo::Version();
 }
 
 WindowsInfo::Release WindowsInfo::getRelease() const
@@ -196,38 +202,40 @@ WindowsInfo::Release WindowsInfo::getRelease() const
 
 std::optional<bool> WindowsInfo::getElevated() const
 {
-  HandlePtr token;
-
-  {
-    HANDLE rawToken = 0;
-
-    if (!OpenProcessToken(GetCurrentProcess( ), TOKEN_QUERY, &rawToken)) {
-      const auto e = GetLastError();
-
-      log::error(
-        "while trying to check if process is elevated, "
-        "OpenProcessToken() failed: {}", formatSystemMessage(e));
-
-      return {};
-    }
-
-    token.reset(rawToken);
-  }
-
-  TOKEN_ELEVATION e = {};
-  DWORD size = sizeof(TOKEN_ELEVATION);
-
-  if (!GetTokenInformation(token.get(), TokenElevation, &e, sizeof(e), &size)) {
-    const auto e = GetLastError();
-
-    log::error(
-      "while trying to check if process is elevated, "
-      "GetTokenInformation() failed: {}", formatSystemMessage(e));
-
-    return {};
-  }
-
-  return (e.TokenIsElevated != 0);
+//  HandlePtr token;
+//
+//  {
+//    HANDLE rawToken = 0;
+//
+//    if (!OpenProcessToken(GetCurrentProcess( ), TOKEN_QUERY, &rawToken)) {
+//      const auto e = GetLastError();
+//
+//      log::error(
+//        "while trying to check if process is elevated, "
+//        "OpenProcessToken() failed: {}", formatSystemMessage(e));
+//
+//      return {};
+//    }
+//
+//    token.reset(rawToken);
+//  }
+//
+//  TOKEN_ELEVATION e = {};
+//  DWORD size = sizeof(TOKEN_ELEVATION);
+//
+//  if (!GetTokenInformation(token.get(), TokenElevation, &e, sizeof(e), &size)) {
+//    const auto e = GetLastError();
+//
+//    log::error(
+//      "while trying to check if process is elevated, "
+//      "GetTokenInformation() failed: {}", formatSystemMessage(e));
+//
+//    return {};
+//  }
+//
+//  return (e.TokenIsElevated != 0);
+  assert(false && "Not implemented");
+  return std::optional<bool>();
 }
 
 } // namespace

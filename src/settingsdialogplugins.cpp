@@ -1,4 +1,5 @@
 #include "settingsdialogplugins.h"
+#include <QMessageBox>
 #include "ui_settingsdialog.h"
 #include "noeditdelegate.h"
 #include <iplugin.h>

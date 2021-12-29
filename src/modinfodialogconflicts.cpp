@@ -1,4 +1,6 @@
 #include "modinfodialogconflicts.h"
+#include <QAction>
+#include <QMenu>
 #include "ui_modinfodialog.h"
 #include "modinfodialogconflictsmodels.h"
 #include "modinfodialog.h"

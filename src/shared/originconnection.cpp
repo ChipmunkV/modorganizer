@@ -1,4 +1,5 @@
 #include "originconnection.h"
+#include <QObject>
 #include "filesorigin.h"
 #include "util.h"
 #include <log.h>

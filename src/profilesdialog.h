@@ -20,6 +20,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PROFILESDIALOG_H
 #define PROFILESDIALOG_H
 
+#include <optional>
+
 #include "tutorabledialog.h"
 class Profile;
 class OrganizerCore;

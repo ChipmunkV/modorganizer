@@ -1,5 +1,7 @@
 #include "apiuseraccount.h"
 
+#include <QObject>
+
 QString localizedUserAccountType(APIUserAccountTypes t)
 {
   switch (t)
@@ -16,6 +18,8 @@ QString localizedUserAccountType(APIUserAccountTypes t)
   }
 }
 
+
+const int APIUserAccount::ThrottleThreshold = 200;
 
 APIUserAccount::APIUserAccount()
   : m_type(APIUserAccountTypes::None)

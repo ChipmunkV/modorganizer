@@ -20,9 +20,10 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "messagedialog.h"
 #include "ui_messagedialog.h"
 #include <log.h>
+#include <QMainWindow>
 #include <QTimer>
 #include <QResizeEvent>
-#include <Windows.h>
+//#include <Windows.h>
 
 using namespace MOBase;
 

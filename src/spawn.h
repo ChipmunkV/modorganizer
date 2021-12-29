@@ -21,10 +21,12 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #define SPAWN_H
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <tchar.h>
+//#include <windows.h>
+//#include <tchar.h>
 #include <QFileInfo>
 #include <QDir>
+
+using HANDLE = void*;
 
 class Settings;
 
@@ -48,8 +50,10 @@ struct SpawnParameters
   QDir currentDirectory;
   QString steamAppID;
   bool hooked = false;
-  HANDLE stdOut = INVALID_HANDLE_VALUE;
-  HANDLE stdErr = INVALID_HANDLE_VALUE;
+//  HANDLE stdOut = INVALID_HANDLE_VALUE;
+//  HANDLE stdErr = INVALID_HANDLE_VALUE;
+  HANDLE stdOut = nullptr;
+  HANDLE stdErr = nullptr;
 };
 
 

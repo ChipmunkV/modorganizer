@@ -120,7 +120,7 @@ T convert(const QJsonValue& value, const char* what)
   {
     MOBase::log::error(
       "'{}' is a {}, not a {}",
-      what, details::typeName(value), typeid(T).name);
+      what, details::typeName(value), typeid(T).name());
 
     throw;
   }

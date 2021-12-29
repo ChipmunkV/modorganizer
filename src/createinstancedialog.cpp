@@ -370,7 +370,8 @@ void CreateInstanceDialog::finish()
       switch (r)
       {
         case QSettings::AccessError:
-          logCreation(formatSystemMessage(ERROR_ACCESS_DENIED));
+//          logCreation(formatSystemMessage(ERROR_ACCESS_DENIED));
+          assert(false && "Not implemented");
           break;
 
         case QSettings::FormatError:

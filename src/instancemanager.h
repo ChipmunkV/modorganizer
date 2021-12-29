@@ -1,6 +1,8 @@
 #ifndef MODORGANIZER_INSTANCEMANAGER_INCLUDED
 #define MODORGANIZER_INSTANCEMANAGER_INCLUDED
 
+#include <memory>
+#include <optional>
 #include <QString>
 #include <QSettings>
 

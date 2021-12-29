@@ -22,6 +22,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QFileSystemWatcher>
+#include <QSplashScreen>
+#include <optional>
 
 class Settings;
 class MOMultiProcess;
@@ -39,6 +41,7 @@ class MOApplication : public QApplication
 
 public:
   MOApplication(int& argc, char** argv);
+  virtual ~MOApplication();
 
   // called from main() only once for stuff that persists across "restarts"
   //

@@ -1,8 +1,14 @@
 #include "uilocker.h"
 #include "mainwindow.h"
+#include <QApplication>
+#include <QDockWidget>
 #include <QGraphicsDropShadowEffect>
 #include <QMenuBar>
+#include <QLayout>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QStatusBar>
+#include <QToolBar>
 
 class UILockerInterface
 {

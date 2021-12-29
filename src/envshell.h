@@ -5,6 +5,15 @@
 #include <QFileInfo>
 #include <QPoint>
 
+QT_FORWARD_DECLARE_CLASS(QMainWindow)
+
+using WPARAM = uint64_t;
+using LPARAM = uint64_t;
+using LRESULT = uint64_t;
+using UINT = uint32_t;
+using HMENU = void*;
+using HWND = void*;
+
 namespace env
 {
 
@@ -30,22 +39,22 @@ public:
 private:
   QMainWindow* m_mw;
   std::vector<QFileInfo> m_files;
-  COMPtr<IContextMenu> m_cm;
-  COMPtr<IContextMenu2> m_cm2;
-  COMPtr<IContextMenu3> m_cm3;
+//  COMPtr<IContextMenu> m_cm;
+//  COMPtr<IContextMenu2> m_cm2;
+//  COMPtr<IContextMenu3> m_cm3;
   HMenuPtr m_menu;
 
   void create();
 
-  std::vector<LPCITEMIDLIST> createIdls(const std::vector<QFileInfo>& files);
-  COMPtr<IShellItemArray> createItemArray(std::vector<LPCITEMIDLIST>& idls);
+//  std::vector<LPCITEMIDLIST> createIdls(const std::vector<QFileInfo>& files);
+//  COMPtr<IShellItemArray> createItemArray(std::vector<LPCITEMIDLIST>& idls);
 
-  void createContextMenu(IShellItemArray* array);
-  void createPopupMenu(IContextMenu* cm);
+//  void createContextMenu(IShellItemArray* array);
+//  void createPopupMenu(IContextMenu* cm);
 
-  COMPtr<IShellItem> createShellItem(const std::wstring& path);
-  COMPtr<IPersistIDList> getPersistIDList(IShellItem* item);
-  CoTaskMemPtr<LPITEMIDLIST> getIDList(IPersistIDList* pidlist);
+//  COMPtr<IShellItem> createShellItem(const std::wstring& path);
+//  COMPtr<IPersistIDList> getPersistIDList(IShellItem* item);
+//  CoTaskMemPtr<LPITEMIDLIST> getIDList(IPersistIDList* pidlist);
   HMenuPtr createDummyMenu(const QString& what);
 
   void onMenuSelect(

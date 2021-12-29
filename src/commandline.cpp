@@ -1,4 +1,6 @@
 #include "commandline.h"
+#include <iostream>
+#include <QApplication>
 #include "env.h"
 #include "organizercore.h"
 #include "instancemanager.h"
@@ -69,7 +71,11 @@ std::optional<int> CommandLine::process(const std::wstring& line)
 {
   try
   {
+#ifdef _WIN32
     auto args = po::split_winmain(line);
+#else
+    auto args = po::split_unix(line);
+#endif
     if (!args.empty()) {
       // remove program name
       args.erase(args.begin());
@@ -217,16 +223,18 @@ std::optional<int> CommandLine::process(const std::wstring& line)
 
 bool CommandLine::forwardToPrimary(MOMultiProcess& multiProcess)
 {
-  if (m_shortcut.isValid()) {
-    multiProcess.sendMessage(m_shortcut.toString());
-  } else if (m_nxmLink) {
-    multiProcess.sendMessage(*m_nxmLink);
-  } else if (m_command && m_command->canForwardToPrimary()) {
-    multiProcess.sendMessage(QString::fromWCharArray(GetCommandLineW()));
-  } else {
-    return false;
-  }
-
+//  if (m_shortcut.isValid()) {
+//    multiProcess.sendMessage(m_shortcut.toString());
+//  } else if (m_nxmLink) {
+//    multiProcess.sendMessage(*m_nxmLink);
+//  } else if (m_command && m_command->canForwardToPrimary()) {
+//    multiProcess.sendMessage(QString::fromWCharArray(GetCommandLineW()));
+//  } else {
+//    return false;
+//  }
+//
+//  return true;
+  assert(false && "Not implemented");
   return true;
 }
 
@@ -691,27 +699,29 @@ std::optional<int> LaunchCommand::runEarly()
 
 int LaunchCommand::SpawnWaitProcess(LPCWSTR workingDirectory, LPCWSTR commandLine)
 {
-  PROCESS_INFORMATION pi{ 0 };
-  STARTUPINFO si{ 0 };
-  si.cb = sizeof(si);
-  std::wstring commandLineCopy = commandLine;
-
-  if (!CreateProcessW(NULL, &commandLineCopy[0], NULL, NULL, FALSE, 0, NULL, workingDirectory, &si, &pi)) {
-    // A bit of a problem where to log the error message here, at least this way you can get the message
-    // using a either DebugView or a live debugger:
-    std::wostringstream ost;
-    ost << L"CreateProcess failed: " << commandLine << ", " << GetLastError();
-    OutputDebugStringW(ost.str().c_str());
-    return -1;
-  }
-
-  WaitForSingleObject(pi.hProcess, INFINITE);
-
-  DWORD exitCode = (DWORD)-1;
-  ::GetExitCodeProcess(pi.hProcess, &exitCode);
-  CloseHandle(pi.hThread);
-  CloseHandle(pi.hProcess);
-  return static_cast<int>(exitCode);
+//  PROCESS_INFORMATION pi{ 0 };
+//  STARTUPINFO si{ 0 };
+//  si.cb = sizeof(si);
+//  std::wstring commandLineCopy = commandLine;
+//
+//  if (!CreateProcessW(NULL, &commandLineCopy[0], NULL, NULL, FALSE, 0, NULL, workingDirectory, &si, &pi)) {
+//    // A bit of a problem where to log the error message here, at least this way you can get the message
+//    // using a either DebugView or a live debugger:
+//    std::wostringstream ost;
+//    ost << L"CreateProcess failed: " << commandLine << ", " << GetLastError();
+//    OutputDebugStringW(ost.str().c_str());
+//    return -1;
+//  }
+//
+//  WaitForSingleObject(pi.hProcess, INFINITE);
+//
+//  DWORD exitCode = (DWORD)-1;
+//  ::GetExitCodeProcess(pi.hProcess, &exitCode);
+//  CloseHandle(pi.hThread);
+//  CloseHandle(pi.hProcess);
+//  return static_cast<int>(exitCode);
+  assert(false && "Not implemented");
+  return 0;
 }
 
 // Parses the first parseArgCount arguments of the current process command line and returns
@@ -719,26 +729,28 @@ int LaunchCommand::SpawnWaitProcess(LPCWSTR workingDirectory, LPCWSTR commandLin
 LPCWSTR LaunchCommand::UntouchedCommandLineArguments(
   int parseArgCount, std::vector<std::wstring>& parsedArgs)
 {
-  LPCWSTR cmd = GetCommandLineW();
-  LPCWSTR arg = nullptr; // to skip executable name
-  for (; parseArgCount >= 0 && *cmd; ++cmd)
-  {
-    if (*cmd == '"') {
-      int escaped = 0;
-      for (++cmd; *cmd && (*cmd != '"' || escaped % 2 != 0); ++cmd)
-        escaped = *cmd == '\\' ? escaped + 1 : 0;
-    }
-    if (*cmd == ' ') {
-      if (arg)
-        if (cmd-1 > arg && *arg == '"' && *(cmd-1) == '"')
-          parsedArgs.push_back(std::wstring(arg+1, cmd-1));
-        else
-          parsedArgs.push_back(std::wstring(arg, cmd));
-      arg = cmd + 1;
-      --parseArgCount;
-    }
-  }
-  return cmd;
+//  LPCWSTR cmd = GetCommandLineW();
+//  LPCWSTR arg = nullptr; // to skip executable name
+//  for (; parseArgCount >= 0 && *cmd; ++cmd)
+//  {
+//    if (*cmd == '"') {
+//      int escaped = 0;
+//      for (++cmd; *cmd && (*cmd != '"' || escaped % 2 != 0); ++cmd)
+//        escaped = *cmd == '\\' ? escaped + 1 : 0;
+//    }
+//    if (*cmd == ' ') {
+//      if (arg)
+//        if (cmd-1 > arg && *arg == '"' && *(cmd-1) == '"')
+//          parsedArgs.push_back(std::wstring(arg+1, cmd-1));
+//        else
+//          parsedArgs.push_back(std::wstring(arg, cmd));
+//      arg = cmd + 1;
+//      --parseArgCount;
+//    }
+//  }
+//  return cmd;
+  assert(false && "Not implemented");
+  return L"";
 }
 
 

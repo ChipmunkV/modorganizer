@@ -6,6 +6,8 @@
 #include "settings.h"
 #include "settingsdialog.h"
 
+QT_FORWARD_DECLARE_CLASS(QTreeWidgetItem)
+
 class PluginsSettingsTab : public SettingsTab
 {
 public:

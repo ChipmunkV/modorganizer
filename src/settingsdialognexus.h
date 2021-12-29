@@ -5,6 +5,8 @@
 #include "settingsdialog.h"
 #include "nxmaccessmanager.h"
 
+QT_FORWARD_DECLARE_CLASS(QListWidget)
+
 // used by the settings dialog and the create instance dialog
 //
 class NexusConnectionUI : public QObject

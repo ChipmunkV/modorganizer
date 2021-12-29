@@ -1,9 +1,14 @@
 #include "modlistviewactions.h"
 
+#include <QBuffer>
+#include <QButtonGroup>
+#include <QColorDialog>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QInputDialog>
 #include <QLabel>
+#include <QPushButton>
+#include <QRadioButton>
 #include <QRegExp>
 
 #include <log.h>
@@ -1181,8 +1186,9 @@ void ModListViewActions::moveOverwriteContentsTo(const QString& absolutePath) co
     MessageDialog::showMessage(tr("Move successful."), m_parent);
   }
   else {
-    const auto e = GetLastError();
-    log::error("Move operation failed: {}", formatSystemMessage(e));
+//    const auto e = GetLastError();
+//    log::error("Move operation failed: {}", formatSystemMessage(e));
+    assert(false && "Not implemented");
   }
 
   m_core.refresh();
@@ -1276,8 +1282,9 @@ void ModListViewActions::clearOverwrite() const
         m_core.refresh();
       }
       else {
-        const auto e = GetLastError();
-        log::error("Delete operation failed: {}", formatSystemMessage(e));
+//        const auto e = GetLastError();
+//        log::error("Delete operation failed: {}", formatSystemMessage(e));
+        assert(false && "Not implemented");
       }
     }
   }

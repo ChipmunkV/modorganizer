@@ -14,99 +14,108 @@ constexpr bool AlwaysSortDirectoriesFirst = true;
 
 const QString& directoryFileType()
 {
-  static const QString name = [] {
-    const DWORD flags = SHGFI_TYPENAME;
-    SHFILEINFOW sfi = {};
-
-    // "." for the current directory, which should always exist
-    const auto r = SHGetFileInfoW(L".", 0, &sfi, sizeof(sfi), flags);
-
-    if (!r) {
-      const auto e = GetLastError();
-
-      log::error(
-        "SHGetFileInfoW failed for folder file type, {}",
-        formatSystemMessage(e));
-
-      return QString("File folder");
-    } else {
-      return QString::fromWCharArray(sfi.szTypeName);
-    }
-  }();
-
+//  static const QString name = [] {
+//    const DWORD flags = SHGFI_TYPENAME;
+//    SHFILEINFOW sfi = {};
+//
+//    // "." for the current directory, which should always exist
+//    const auto r = SHGetFileInfoW(L".", 0, &sfi, sizeof(sfi), flags);
+//
+//    if (!r) {
+//      const auto e = GetLastError();
+//
+//      log::error(
+//        "SHGetFileInfoW failed for folder file type, {}",
+//        formatSystemMessage(e));
+//
+//      return QString("File folder");
+//    } else {
+//      return QString::fromWCharArray(sfi.szTypeName);
+//    }
+//  }();
+//
+//  return name;
+  assert(false && "Not implemented");
+  static const QString name;
   return name;
 }
 
 const QString& cachedFileTypeNoExtension()
 {
-  static const QString name = [] {
-    const DWORD flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
-    SHFILEINFOW sfi = {};
-
-    // dummy filename with no extension
-    const auto r = SHGetFileInfoW(L"file", 0, &sfi, sizeof(sfi), flags);
-
-    if (!r) {
-      const auto e = GetLastError();
-
-      log::error(
-        "SHGetFileInfoW failed for file without extension, {}",
-        formatSystemMessage(e));
-
-      return QString("File");
-    } else {
-      return QString::fromWCharArray(sfi.szTypeName);
-    }
-  }();
-
+//  static const QString name = [] {
+//    const DWORD flags = SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES;
+//    SHFILEINFOW sfi = {};
+//
+//    // dummy filename with no extension
+//    const auto r = SHGetFileInfoW(L"file", 0, &sfi, sizeof(sfi), flags);
+//
+//    if (!r) {
+//      const auto e = GetLastError();
+//
+//      log::error(
+//        "SHGetFileInfoW failed for file without extension, {}",
+//        formatSystemMessage(e));
+//
+//      return QString("File");
+//    } else {
+//      return QString::fromWCharArray(sfi.szTypeName);
+//    }
+//  }();
+//
+//  return name;
+  assert(false && "Not implemented");
+  static const QString name;
   return name;
 }
 
 const QString& cachedFileType(const std::wstring& file, bool isOnFilesystem)
 {
-  static std::map<std::wstring, QString, std::less<>> map;
-  static std::mutex mutex;
-
-  const auto dot = file.find_last_of(L'.');
-  if (dot == std::wstring::npos) {
-    return cachedFileTypeNoExtension();
-  }
-
-  std::scoped_lock lock(mutex);
-  const auto sv = std::wstring_view(file.c_str() + dot, file.size() - dot);
-
-  auto itor = map.find(sv);
-  if (itor != map.end()) {
-    return itor->second;
-  }
-
-
-  DWORD flags = SHGFI_TYPENAME;
-
-  if (!isOnFilesystem) {
-    // files from archives are not on the filesystem; this flag forces
-    // SHGetFileInfoW() to only work with the filename
-    flags |= SHGFI_USEFILEATTRIBUTES;
-  }
-
-  SHFILEINFOW sfi = {};
-  const auto r = SHGetFileInfoW(file.c_str(), 0, &sfi, sizeof(sfi), flags);
-
-  QString s;
-
-  if (!r) {
-    const auto e = GetLastError();
-
-    log::error(
-      "SHGetFileInfoW failed for '{}', {}",
-      file, formatSystemMessage(e));
-
-    s = cachedFileTypeNoExtension();
-  } else {
-    s = QString::fromWCharArray(sfi.szTypeName);
-  }
-
-  return map.emplace(sv, s).first->second;
+//  static std::map<std::wstring, QString, std::less<>> map;
+//  static std::mutex mutex;
+//
+//  const auto dot = file.find_last_of(L'.');
+//  if (dot == std::wstring::npos) {
+//    return cachedFileTypeNoExtension();
+//  }
+//
+//  std::scoped_lock lock(mutex);
+//  const auto sv = std::wstring_view(file.c_str() + dot, file.size() - dot);
+//
+//  auto itor = map.find(sv);
+//  if (itor != map.end()) {
+//    return itor->second;
+//  }
+//
+//
+//  DWORD flags = SHGFI_TYPENAME;
+//
+//  if (!isOnFilesystem) {
+//    // files from archives are not on the filesystem; this flag forces
+//    // SHGetFileInfoW() to only work with the filename
+//    flags |= SHGFI_USEFILEATTRIBUTES;
+//  }
+//
+//  SHFILEINFOW sfi = {};
+//  const auto r = SHGetFileInfoW(file.c_str(), 0, &sfi, sizeof(sfi), flags);
+//
+//  QString s;
+//
+//  if (!r) {
+//    const auto e = GetLastError();
+//
+//    log::error(
+//      "SHGetFileInfoW failed for '{}', {}",
+//      file, formatSystemMessage(e));
+//
+//    s = cachedFileTypeNoExtension();
+//  } else {
+//    s = QString::fromWCharArray(sfi.szTypeName);
+//  }
+//
+//  return map.emplace(sv, s).first->second;
+  assert(false && "Not implemented");
+  static const QString type;
+  return type;
 }
 
 

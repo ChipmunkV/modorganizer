@@ -18,6 +18,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "settingsdialog.h"
+#include <QDir>
+#include <QMessageBox>
 #include "ui_settingsdialog.h"
 #include "settingsdialogdiagnostics.h"
 #include "settingsdialoggeneral.h"

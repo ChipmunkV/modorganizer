@@ -39,6 +39,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QThread>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 using namespace MOBase;
 using namespace std::chrono_literals;
@@ -56,6 +58,10 @@ ValidationProgressDialog::ValidationProgressDialog(Settings* s, NexusKeyValidato
 
   connect(ui->hide, &QPushButton::clicked, [&]{ onHide(); });
   connect(ui->cancel, &QPushButton::clicked, [&]{ onCancel(); });
+}
+
+ValidationProgressDialog::~ValidationProgressDialog()
+{
 }
 
 void ValidationProgressDialog::setParentWidget(QWidget* w)

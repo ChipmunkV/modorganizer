@@ -1,4 +1,6 @@
 #include "modinfodialogimages.h"
+#include <QImageReader>
+#include <QToolTip>
 #include "ui_modinfodialog.h"
 #include "settings.h"
 #include "utility.h"

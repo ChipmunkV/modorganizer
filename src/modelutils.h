@@ -5,6 +5,8 @@
 #include <QAbstractItemModel>
 #include <QColor>
 
+QT_FORWARD_DECLARE_CLASS(QTreeView)
+
 namespace MOShared {
 
 // retrieve all the row index under the given parent

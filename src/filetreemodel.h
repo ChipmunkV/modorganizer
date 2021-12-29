@@ -1,6 +1,8 @@
 #ifndef MODORGANIZER_FILETREEMODEL_INCLUDED
 #define MODORGANIZER_FILETREEMODEL_INCLUDED
 
+#include <QModelIndex>
+#include <QTimer>
 #include "filetreeitem.h"
 #include "iconfetcher.h"
 #include "shared/fileregisterfwd.h"

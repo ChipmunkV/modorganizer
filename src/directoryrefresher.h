@@ -55,6 +55,7 @@ public:
   };
 
   DirectoryRefresher(std::size_t threadCount);
+  virtual ~DirectoryRefresher();
 
   // noncopyable
   DirectoryRefresher(const DirectoryRefresher&) = delete;

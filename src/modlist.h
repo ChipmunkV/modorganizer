@@ -28,6 +28,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <imodlist.h>
 
+#include <QElapsedTimer>
 #include <QFile>
 #include <QListWidget>
 #include <QNetworkReply>

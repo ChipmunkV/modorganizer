@@ -18,6 +18,11 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "loglist.h"
+#include <QApplication>
+#include <QClipboard>
+#include <QHeaderView>
+#include <QMenu>
+#include <QMessageBox>
 #include "organizercore.h"
 #include "copyeventfilter.h"
 #include "env.h"
@@ -359,7 +364,8 @@ void initLogging()
   log::getDefault().setCallback(
     [](log::Entry e){ LogModel::instance().add(e); });
 
-  log::getDefault().addToBlacklist(getenv("USERNAME"), "USERNAME");
+  char *username = getenv("USERNAME");
+  log::getDefault().addToBlacklist(username ? username : "", "USERNAME");
 
   qInstallMessageHandler(qtLogCallback);
 }

@@ -1,8 +1,13 @@
 #ifndef ENV_MODULE_H
 #define ENV_MODULE_H
 
+#include <memory>
+#include <optional>
 #include <QString>
 #include <QDateTime>
+
+using HANDLE = void*;
+using DWORD = uint32_t;
 
 namespace env
 {
@@ -15,9 +20,10 @@ struct HandleCloser
 
   void operator()(HANDLE h)
   {
-    if (h != INVALID_HANDLE_VALUE) {
-      ::CloseHandle(h);
-    }
+//    if (h != INVALID_HANDLE_VALUE) {
+//      ::CloseHandle(h);
+//    }
+    assert(false && "Not implemented");
   }
 };
 
@@ -79,7 +85,7 @@ private:
   //
   struct FileInfo
   {
-    VS_FIXEDFILEINFO ffi;
+//    VS_FIXEDFILEINFO ffi;
     QString fileDescription;
   };
 
@@ -96,12 +102,12 @@ private:
 
   // uses VS_FIXEDFILEINFO to build the version string
   //
-  QString getVersion(const VS_FIXEDFILEINFO& fi) const;
+//  QString getVersion(const VS_FIXEDFILEINFO& fi) const;
 
   // uses the file date from VS_FIXEDFILEINFO if available, or gets the
   // creation date on the file
   //
-  QDateTime getTimestamp(const VS_FIXEDFILEINFO& fi) const;
+//  QDateTime getTimestamp(const VS_FIXEDFILEINFO& fi) const;
 
   // returns the md5 hash unless the path contains "\windows\"
   //
@@ -109,7 +115,7 @@ private:
 
   // gets VS_FIXEDFILEINFO from the file version info buffer
   //
-  VS_FIXEDFILEINFO getFixedFileInfo(std::byte* buffer) const;
+//  VS_FIXEDFILEINFO getFixedFileInfo(std::byte* buffer) const;
 
   // gets FileVersion from the file version info buffer
   //

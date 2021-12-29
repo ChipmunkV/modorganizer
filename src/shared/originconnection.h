@@ -1,6 +1,9 @@
 #ifndef MO_REGISTER_ORIGINCONNECTION_INCLUDED
 #define MO_REGISTER_ORIGINCONNECTION_INCLUDED
 
+#include <atomic>
+#include <map>
+
 #include "fileregisterfwd.h"
 
 namespace MOShared

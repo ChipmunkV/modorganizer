@@ -2,7 +2,10 @@
 #define MO_REGISTER_FILESREGISTER_INCLUDED
 
 #include "fileregisterfwd.h"
+#include <atomic>
+#include <deque>
 #include <mutex>
+#include <set>
 #include <boost/shared_ptr.hpp>
 
 namespace MOShared

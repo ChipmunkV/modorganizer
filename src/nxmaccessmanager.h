@@ -28,6 +28,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <QDialogButtonBox>
 #include <QWebSocket>
+#include <optional>
 #include <set>
 
 namespace MOBase { class IPluginGame; }
@@ -182,6 +183,7 @@ class ValidationProgressDialog : public QDialog
 
 public:
   ValidationProgressDialog(Settings* s, NexusKeyValidator& v);
+  virtual ~ValidationProgressDialog();
 
   void setParentWidget(QWidget* w);
 

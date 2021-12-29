@@ -1,4 +1,6 @@
 #include "settingsdialogpaths.h"
+#include <QFileDialog>
+#include <QMessageBox>
 #include "ui_settingsdialog.h"
 #include "shared/appconfig.h"
 #include <iplugingame.h>

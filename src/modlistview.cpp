@@ -1,4 +1,5 @@
 #include "modlistview.h"
+#include <QInputDialog>
 #include <QUrl>
 #include <QMimeData>
 #include <QProxyStyle>

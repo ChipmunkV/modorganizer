@@ -5,6 +5,8 @@
 #include <QDragEnterEvent>
 #include "viewmarkingscrollbar.h"
 
+QT_FORWARD_DECLARE_CLASS(QLCDNumber)
+
 namespace Ui {
   class MainWindow;
 }

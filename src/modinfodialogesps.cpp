@@ -1,4 +1,5 @@
 #include "modinfodialogesps.h"
+#include <QInputDialog>
 #include "ui_modinfodialog.h"
 #include "modinfodialog.h"
 #include "settings.h"

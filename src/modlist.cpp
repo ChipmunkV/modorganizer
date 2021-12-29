@@ -1063,7 +1063,8 @@ bool ModList::dropLocalFiles(const ModListDropInfo& dropInfo, int row, const QMo
 
   if (sourceList.count()) {
     if (!shellMove(sourceList, targetList)) {
-      log::debug("Failed to move file (error {})", ::GetLastError());
+//      log::debug("Failed to move file (error {})", ::GetLastError());
+      assert(false && "Not implemented");
       return false;
     }
   }

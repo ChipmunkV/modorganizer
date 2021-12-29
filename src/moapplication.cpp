@@ -172,6 +172,10 @@ MOApplication::MOApplication(int& argc, char** argv)
   addDllsToPath();
 }
 
+MOApplication::~MOApplication()
+{
+}
+
 OrganizerCore& MOApplication::core()
 {
   return *m_core;
@@ -210,7 +214,8 @@ int MOApplication::setup(MOMultiProcess& multiProcess, bool forceSelect)
     return 1;
   }
 
-  log::debug("command line: '{}'", QString::fromWCharArray(GetCommandLineW()));
+//  log::debug("command line: '{}'", QString::fromWCharArray(GetCommandLineW()));
+  assert(false && "Not implemented");
 
   log::info(
     "starting Mod Organizer version {} revision {} in {}, usvfs: {}",
@@ -232,8 +237,9 @@ int MOApplication::setup(MOMultiProcess& multiProcess, bool forceSelect)
     purgeOldFiles();
   }
 
-  QWindowsWindowFunctions::setWindowActivationBehavior(
-    QWindowsWindowFunctions::AlwaysActivateWindow);
+//  QWindowsWindowFunctions::setWindowActivationBehavior(
+//    QWindowsWindowFunctions::AlwaysActivateWindow);
+    assert(false && "Not implemented");
 
 
   // loading settings

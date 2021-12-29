@@ -1,4 +1,6 @@
 #include "settingsdialogtheme.h"
+#include <QDirIterator>
+#include <QStyleFactory>
 #include "ui_settingsdialog.h"
 #include "shared/appconfig.h"
 #include "categoriesdialog.h"

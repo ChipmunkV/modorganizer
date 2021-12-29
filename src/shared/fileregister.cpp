@@ -1,4 +1,5 @@
 #include "fileregister.h"
+#include <QObject>
 #include "fileentry.h"
 #include "directoryentry.h"
 #include "originconnection.h"

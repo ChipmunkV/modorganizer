@@ -1,6 +1,7 @@
 #include "modelutils.h"
 
 #include <QAbstractProxyModel>
+#include <QTreeView>
 
 namespace MOShared {
 

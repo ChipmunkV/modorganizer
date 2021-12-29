@@ -1,4 +1,5 @@
 #include "multiprocess.h"
+#include <iostream>
 #include "loglist.h"
 #include "moapplication.h"
 #include "organizercore.h"
@@ -12,7 +13,7 @@
 
 using namespace MOBase;
 
-thread_local LPTOP_LEVEL_EXCEPTION_FILTER g_prevExceptionFilter = nullptr;
+//thread_local LPTOP_LEVEL_EXCEPTION_FILTER g_prevExceptionFilter = nullptr;
 thread_local std::terminate_handler g_prevTerminateHandler = nullptr;
 
 int run(int argc, char *argv[]);
@@ -30,9 +31,10 @@ int run(int argc, char *argv[])
   setExceptionHandlers();
 
   cl::CommandLine cl;
-  if (auto r=cl.process(GetCommandLineW())) {
-    return *r;
-  }
+//  if (auto r=cl.process(GetCommandLineW())) {
+//    return *r;
+//  }
+  assert(false && "Not implemented");
 
   initLogging();
 
@@ -155,55 +157,57 @@ int run(int argc, char *argv[])
   }
 }
 
-LONG WINAPI onUnhandledException(_EXCEPTION_POINTERS* ptrs)
-{
-  const auto path = OrganizerCore::getGlobalCoreDumpPath();
-  const auto type = OrganizerCore::getGlobalCoreDumpType();
-
-  const auto r = env::coredump(path.empty() ? nullptr : path.c_str(), type);
-
-  if (r) {
-    log::error("ModOrganizer has crashed, core dump created.");
-  } else {
-    log::error("ModOrganizer has crashed, core dump failed");
-  }
-
-  // g_prevExceptionFilter somehow sometimes point to this function, making this
-  // recurse and create hundreds of core dump, not sure why
-  if (g_prevExceptionFilter && ptrs && g_prevExceptionFilter != onUnhandledException)
-    return g_prevExceptionFilter(ptrs);
-  else
-    return EXCEPTION_CONTINUE_SEARCH;
-}
+//LONG WINAPI onUnhandledException(_EXCEPTION_POINTERS* ptrs)
+//{
+//  const auto path = OrganizerCore::getGlobalCoreDumpPath();
+//  const auto type = OrganizerCore::getGlobalCoreDumpType();
+//
+//  const auto r = env::coredump(path.empty() ? nullptr : path.c_str(), type);
+//
+//  if (r) {
+//    log::error("ModOrganizer has crashed, core dump created.");
+//  } else {
+//    log::error("ModOrganizer has crashed, core dump failed");
+//  }
+//
+//  // g_prevExceptionFilter somehow sometimes point to this function, making this
+//  // recurse and create hundreds of core dump, not sure why
+//  if (g_prevExceptionFilter && ptrs && g_prevExceptionFilter != onUnhandledException)
+//    return g_prevExceptionFilter(ptrs);
+//  else
+//    return EXCEPTION_CONTINUE_SEARCH;
+//}
 
 void onTerminate() noexcept
 {
-  __try
-  {
-    // force an exception to get a valid stack trace for this thread
-    *(int*)0 = 42;
-  }
-  __except
-    (
-      onUnhandledException(GetExceptionInformation()), EXCEPTION_EXECUTE_HANDLER
-      )
-  {
-  }
-
-  if (g_prevTerminateHandler) {
-    g_prevTerminateHandler();
-  } else {
-    std::abort();
-  }
+//  __try
+//  {
+//    // force an exception to get a valid stack trace for this thread
+//    *(int*)0 = 42;
+//  }
+//  __except
+//    (
+//      onUnhandledException(GetExceptionInformation()), EXCEPTION_EXECUTE_HANDLER
+//      )
+//  {
+//  }
+//
+//  if (g_prevTerminateHandler) {
+//    g_prevTerminateHandler();
+//  } else {
+//    std::abort();
+//  }
+  assert(false && "Not implemented");
 }
 
 void setExceptionHandlers()
 {
-  if (g_prevExceptionFilter) {
-    // already called
-    return;
-  }
-
-  g_prevExceptionFilter = SetUnhandledExceptionFilter(onUnhandledException);
-  g_prevTerminateHandler = std::set_terminate(onTerminate);
+//  if (g_prevExceptionFilter) {
+//    // already called
+//    return;
+//  }
+//
+//  g_prevExceptionFilter = SetUnhandledExceptionFilter(onUnhandledException);
+//  g_prevTerminateHandler = std::set_terminate(onTerminate);
+  assert(false && "Not implemented");
 }

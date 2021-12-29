@@ -18,6 +18,17 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "settings.h"
+#include <QComboBox>
+#include <QDockWidget>
+#include <QApplication>
+#include <QHeaderView>
+#include <QMessageBox>
+#include <QScreen>
+#include <QSplitter>
+#include <QTimer>
+#include <QToolBar>
+#include <QTreeView>
+#include <QWindow>
 #include "settingsutilities.h"
 #include "serverinfo.h"
 #include "executableslist.h"
@@ -2095,8 +2106,9 @@ void SteamSettings::setLogin(QString username, QString password)
   }
 
   if (!setWindowsCredential("steam_password", password)) {
-    const auto e = GetLastError();
-    log::error("Storing or deleting password failed: {}", formatSystemMessage(e));
+//    const auto e = GetLastError();
+//    log::error("Storing or deleting password failed: {}", formatSystemMessage(e));
+    assert(false && "Not implemented");
   }
 }
 
@@ -2470,8 +2482,9 @@ bool GlobalSettings::nexusApiKey(QString& apiKey)
 bool GlobalSettings::setNexusApiKey(const QString& apiKey)
 {
   if (!setWindowsCredential("APIKEY", apiKey)) {
-    const auto e = GetLastError();
-    log::error("Storing API key failed: {}", formatSystemMessage(e));
+//    const auto e = GetLastError();
+//    log::error("Storing API key failed: {}", formatSystemMessage(e));
+    assert(false && "Not implemented");
     return false;
   }
 

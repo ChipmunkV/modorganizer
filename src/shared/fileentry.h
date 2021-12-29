@@ -24,8 +24,8 @@ public:
     return m_Index;
   }
 
-  void addOrigin(
-    OriginID origin, FILETIME fileTime, std::wstring_view archive, int order);
+//  void addOrigin(
+//    OriginID origin, FILETIME fileTime, std::wstring_view archive, int order);
 
   // remove the specified origin from the list of origins that contain this
   // file. if no origin is left, the file is effectively deleted and true is
@@ -77,15 +77,15 @@ public:
     return m_Parent;
   }
 
-  void setFileTime(FILETIME fileTime) const
-  {
-    m_FileTime = fileTime;
-  }
-
-  FILETIME getFileTime() const
-  {
-    return m_FileTime;
-  }
+//  void setFileTime(FILETIME fileTime) const
+//  {
+//    m_FileTime = fileTime;
+//  }
+//
+//  FILETIME getFileTime() const
+//  {
+//    return m_FileTime;
+//  }
 
   void setFileSize(uint64_t size, uint64_t compressedSize)
   {
@@ -110,7 +110,7 @@ private:
   DataArchiveOrigin m_Archive;
   AlternativesVector m_Alternatives;
   DirectoryEntry *m_Parent;
-  mutable FILETIME m_FileTime;
+//  mutable FILETIME m_FileTime;
   uint64_t m_FileSize, m_CompressedFileSize;
   mutable std::mutex m_OriginsMutex;
 

@@ -1,6 +1,7 @@
 #ifndef MODLISTVERSIONDELEGATE_H
 #define MODLISTVERSIONDELEGATE_H
 
+#include <QItemDelegate>
 #include <QStyledItemDelegate>
 
 class ModListView;

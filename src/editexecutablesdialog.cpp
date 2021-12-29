@@ -25,8 +25,10 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "organizercore.h"
 #include "spawn.h"
 
+#include <QCompleter>
+#include <QMenu>
 #include <QMessageBox>
-#include <Shellapi.h>
+//#include <Shellapi.h>
 #include <utility.h>
 #include <algorithm>
 

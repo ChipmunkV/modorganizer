@@ -20,12 +20,20 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <optional>
+#include <QSettings>
+#include <QVersionNumber>
 #include "envdump.h"
 #include <filterwidget.h>
 #include <lootcli/lootcli.h>
 #include <questionboxmemory.h>
 #include <log.h>
-#include <usvfsparameters.h>
+//#include <usvfsparameters.h>
+
+QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QHeaderView)
+QT_FORWARD_DECLARE_CLASS(QMainWindow)
+QT_FORWARD_DECLARE_CLASS(QTreeView)
 
 #ifdef interface
   #undef interface

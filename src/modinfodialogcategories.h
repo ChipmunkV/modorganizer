@@ -1,4 +1,7 @@
+#include <set>
 #include "modinfodialogtab.h"
+
+QT_FORWARD_DECLARE_CLASS(QTreeWidgetItem)
 
 class CategoryFactory;
 

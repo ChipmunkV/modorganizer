@@ -20,10 +20,12 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "icondelegate.h"
 #include <log.h>
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QPainter>
 #include <QDebug>
 #include <QPixmapCache>
+#include <QTreeView>
 
 using namespace MOBase;
 

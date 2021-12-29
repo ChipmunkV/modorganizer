@@ -1,4 +1,5 @@
 #include "settingsdialogworkarounds.h"
+#include <QInputDialog>
 #include "ui_settingsdialog.h"
 #include "spawn.h"
 #include "settings.h"

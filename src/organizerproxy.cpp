@@ -182,43 +182,45 @@ HANDLE OrganizerProxy::startApplication(
 
 bool OrganizerProxy::waitForApplication(HANDLE handle, bool refresh, LPDWORD exitCode) const
 {
-  const auto pid = ::GetProcessId(handle);
-
-  log::debug(
-    "a plugin wants to wait for an application to complete, pid {}{}",
-    pid, (pid == 0 ? "unknown (probably already completed)" : ""));
-
-  auto runner = m_Proxied->processRunner();
-
-  ProcessRunner::WaitFlags waitFlags = ProcessRunner::ForceWait;
-
-  if (refresh) {
-    waitFlags |= ProcessRunner::TriggerRefresh | ProcessRunner::WaitForRefresh;
-  }
-
-  const auto r = runner
-    .setWaitForCompletion(waitFlags, UILocker::OutputRequired)
-    .attachToProcess(handle);
-
-  if (exitCode) {
-    *exitCode = runner.exitCode();
-  }
-
-  switch (r)
-  {
-    case ProcessRunner::Completed:
-      return true;
-
-    case ProcessRunner::Cancelled:     // fall-through
-    case ProcessRunner::ForceUnlocked:
-      // this is always an error because the application should have run to
-      // completion
-      return false;
-
-    case ProcessRunner::Error: // fall-through
-    default:
-      return false;
-  }
+//  const auto pid = ::GetProcessId(handle);
+//
+//  log::debug(
+//    "a plugin wants to wait for an application to complete, pid {}{}",
+//    pid, (pid == 0 ? "unknown (probably already completed)" : ""));
+//
+//  auto runner = m_Proxied->processRunner();
+//
+//  ProcessRunner::WaitFlags waitFlags = ProcessRunner::ForceWait;
+//
+//  if (refresh) {
+//    waitFlags |= ProcessRunner::TriggerRefresh | ProcessRunner::WaitForRefresh;
+//  }
+//
+//  const auto r = runner
+//    .setWaitForCompletion(waitFlags, UILocker::OutputRequired)
+//    .attachToProcess(handle);
+//
+//  if (exitCode) {
+//    *exitCode = runner.exitCode();
+//  }
+//
+//  switch (r)
+//  {
+//    case ProcessRunner::Completed:
+//      return true;
+//
+//    case ProcessRunner::Cancelled:     // fall-through
+//    case ProcessRunner::ForceUnlocked:
+//      // this is always an error because the application should have run to
+//      // completion
+//      return false;
+//
+//    case ProcessRunner::Error: // fall-through
+//    default:
+//      return false;
+//  }
+  assert(false && "Not implemented");
+  return false;
 }
 
 void OrganizerProxy::refresh(bool saveChanges)

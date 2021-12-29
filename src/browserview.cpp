@@ -25,7 +25,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWebEngineContextMenuData>
 #include <QWebEngineSettings>
 #include <QMenu>
-#include <Shlwapi.h>
+//#include <Shlwapi.h>
 #include "utility.h"
 
 

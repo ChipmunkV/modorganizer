@@ -3,6 +3,9 @@
 
 #include <filterwidget.h>
 
+QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
+
 namespace Ui { class MainWindow; }
 class OrganizerCore;
 class DownloadListView;

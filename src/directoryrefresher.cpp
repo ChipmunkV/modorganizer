@@ -38,6 +38,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QTextCodec>
 
+#include <condition_variable>
 #include <fstream>
 
 
@@ -176,6 +177,10 @@ DirectoryRefresher::DirectoryRefresher(std::size_t threadCount)
 {
 }
 
+DirectoryRefresher::~DirectoryRefresher()
+{
+}
+
 DirectoryEntry *DirectoryRefresher::stealDirectoryStructure()
 {
   QMutexLocker locker(&m_RefreshLock);
@@ -254,40 +259,41 @@ void DirectoryRefresher::stealModFilesIntoStructure(
   DirectoryEntry *directoryStructure, const QString &modName,
   int priority, const QString &directory, const QStringList &stealFiles)
 {
-  std::wstring directoryW = ToWString(QDir::toNativeSeparators(directory));
-
-  // instead of adding all the files of the target directory, we just change the root of the specified
-  // files to this mod
-  DirectoryStats dummy;
-  FilesOrigin &origin = directoryStructure->createOrigin(
-    ToWString(modName), directoryW, priority, dummy);
-
-  for (const QString &filename : stealFiles) {
-    if (filename.isEmpty()) {
-      log::warn("Trying to find file with no name");
-      log::warn(" . modName: {}", modName);
-      log::warn(" . directory: {}", directory);
-      log::warn(" . priority: {}", priority);
-      for (int i = 0; i < stealFiles.length(); ++i)
-        log::warn(" . stealFiles[{}]: {}", i, stealFiles[i]);
-      continue;
-    }
-    QFileInfo fileInfo(filename);
-    FileEntryPtr file = directoryStructure->findFile(ToWString(fileInfo.fileName()));
-    if (file.get() != nullptr) {
-      if (file->getOrigin() == 0) {
-        // replace data as the origin on this bsa
-        file->removeOrigin(0);
-      }
-      origin.addFile(file->getIndex());
-      file->addOrigin(origin.getID(), file->getFileTime(), L"", -1);
-    } else {
-      QString warnStr = fileInfo.absolutePath();
-      if (warnStr.isEmpty())
-        warnStr = filename;
-      log::warn("file not found: {}", warnStr);
-    }
-  }
+//  std::wstring directoryW = ToWString(QDir::toNativeSeparators(directory));
+//
+//  // instead of adding all the files of the target directory, we just change the root of the specified
+//  // files to this mod
+//  DirectoryStats dummy;
+//  FilesOrigin &origin = directoryStructure->createOrigin(
+//    ToWString(modName), directoryW, priority, dummy);
+//
+//  for (const QString &filename : stealFiles) {
+//    if (filename.isEmpty()) {
+//      log::warn("Trying to find file with no name");
+//      log::warn(" . modName: {}", modName);
+//      log::warn(" . directory: {}", directory);
+//      log::warn(" . priority: {}", priority);
+//      for (int i = 0; i < stealFiles.length(); ++i)
+//        log::warn(" . stealFiles[{}]: {}", i, stealFiles[i]);
+//      continue;
+//    }
+//    QFileInfo fileInfo(filename);
+//    FileEntryPtr file = directoryStructure->findFile(ToWString(fileInfo.fileName()));
+//    if (file.get() != nullptr) {
+//      if (file->getOrigin() == 0) {
+//        // replace data as the origin on this bsa
+//        file->removeOrigin(0);
+//      }
+//      origin.addFile(file->getIndex());
+//      file->addOrigin(origin.getID(), file->getFileTime(), L"", -1);
+//    } else {
+//      QString warnStr = fileInfo.absolutePath();
+//      if (warnStr.isEmpty())
+//        warnStr = filename;
+//      log::warn("file not found: {}", warnStr);
+//    }
+//  }
+  assert(false && "Not implemented");
 }
 
 void DirectoryRefresher::addModFilesToStructure(

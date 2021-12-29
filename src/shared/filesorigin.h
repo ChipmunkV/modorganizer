@@ -1,7 +1,12 @@
 #ifndef MO_REGISTER_FILESORIGIN_INCLUDED
 #define MO_REGISTER_FILESORIGIN_INCLUDED
 
+#include <mutex>
+#include <set>
+
 #include "fileregisterfwd.h"
+
+#include <boost/weak_ptr.hpp>
 
 namespace MOShared
 {

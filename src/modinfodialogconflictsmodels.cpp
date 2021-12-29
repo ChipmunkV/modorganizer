@@ -1,4 +1,5 @@
 #include "modinfodialogconflictsmodels.h"
+#include <QTreeView>
 #include "modinfodialog.h"
 #include <utility.h>
 

@@ -1,8 +1,14 @@
 #ifndef MODORGANIZER_SAVESTAB_INCLUDED
 #define MODORGANIZER_SAVESTAB_INCLUDED
 
+#include <QDir>
+#include <QFileSystemWatcher>
+#include <QTimer>
 #include "savegameinfo.h"
 #include <filterwidget.h>
+
+QT_FORWARD_DECLARE_CLASS(QTreeWidget)
+QT_FORWARD_DECLARE_CLASS(QTreeWidgetItem)
 
 namespace Ui { class MainWindow; }
 

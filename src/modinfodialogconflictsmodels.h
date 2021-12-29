@@ -1,4 +1,7 @@
+#include <QAbstractItemModel>
 #include "shared/fileentry.h"
+
+QT_FORWARD_DECLARE_CLASS(QTreeView)
 
 class PluginContainer;
 

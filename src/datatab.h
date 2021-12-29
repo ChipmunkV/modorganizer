@@ -24,6 +24,7 @@ public:
   DataTab(
     OrganizerCore& core, PluginContainer& pc,
     QWidget* parent, Ui::MainWindow* ui);
+  virtual ~DataTab();
 
   void saveState(Settings& s) const;
   void restoreState(const Settings& s);

@@ -21,7 +21,7 @@
 #include <localsavegames.h>
 #include <scopeguard.h>
 #include <utility.h>
-#include <usvfs.h>
+//#include <usvfs.h>
 #include "shared/appconfig.h"
 #include <report.h>
 #include <questionboxmemory.h>
@@ -52,10 +52,10 @@
 #include <QtDebug>
 #include <QtGlobal> // for qUtf8Printable, etc
 
-#include <Psapi.h>
-#include <Shlobj.h>
-#include <tlhelp32.h>
-#include <tchar.h> // for _tcsicmp
+//#include <Psapi.h>
+//#include <Shlobj.h>
+//#include <tlhelp32.h>
+//#include <tchar.h> // for _tcsicmp
 
 #include <limits.h>
 #include <stddef.h>
@@ -87,6 +87,8 @@ QStringList toStringList(InputIterator current, InputIterator end)
   return result;
 }
 
+
+const unsigned int OrganizerCore::PROBLEM_MO1SCRIPTEXTENDERWORKAROUND = 1;
 
 OrganizerCore::OrganizerCore(Settings &settings)
   : m_UserInterface(nullptr)

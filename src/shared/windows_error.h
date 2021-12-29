@@ -22,8 +22,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <stdexcept>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+//#define WIN32_LEAN_AND_MEAN
+//#include <windows.h>
 
 namespace MOShared {
 

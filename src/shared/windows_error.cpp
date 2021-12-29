@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef __WIN32
 #include "windows_error.h"
 #include <sstream>
 
@@ -47,3 +48,4 @@ std::string windows_error::constructMessage(const std::string& input, int inErro
 }
 
 } // namespace MOShared
+#endif

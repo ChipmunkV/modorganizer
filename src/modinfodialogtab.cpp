@@ -1,4 +1,5 @@
 #include "modinfodialogtab.h"
+#include <QColorDialog>
 #include "ui_modinfodialog.h"
 #include "texteditor.h"
 #include "modinfo.h"

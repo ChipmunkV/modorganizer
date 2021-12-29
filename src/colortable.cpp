@@ -1,4 +1,6 @@
 #include "colortable.h"
+#include <QColorDialog>
+#include <QPainter>
 #include "modflagicondelegate.h"
 #include "modconflicticondelegate.h"
 #include "settings.h"

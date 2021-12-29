@@ -32,6 +32,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWebEngineSettings>
 #include <QNetworkCookieJar>
 #include <QNetworkCookie>
+#include <QWindow>
+#include <QScreen>
 #include <QMenu>
 #include <QInputDialog>
 #include <QWebEngineHistory>

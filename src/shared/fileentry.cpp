@@ -17,71 +17,71 @@ FileEntry::FileEntry(FileIndex index, std::wstring name, DirectoryEntry *parent)
 {
 }
 
-void FileEntry::addOrigin(
-  OriginID origin, FILETIME fileTime, std::wstring_view archive, int order)
-{
-  std::scoped_lock lock(m_OriginsMutex);
-
-  if (m_Parent != nullptr) {
-    m_Parent->propagateOrigin(origin);
-  }
-
-  if (m_Origin == -1) {
-    // If this file has no previous origin, this mod is now the origin with no
-    // alternatives
-    m_Origin = origin;
-    m_FileTime = fileTime;
-    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
-  }
-  else if (
-    (m_Parent != nullptr) && (
-    (m_Parent->getOriginByID(origin).getPriority() > m_Parent->getOriginByID(m_Origin).getPriority()) ||
-      (archive.size() == 0 && m_Archive.isValid()))
-    ) {
-    // If this mod has a higher priority than the origin mod OR
-    // this mod has a loose file and the origin mod has an archived file,
-    // this mod is now the origin and the previous origin is the first alternative
-
-    auto itor = std::find_if(
-      m_Alternatives.begin(), m_Alternatives.end(),
-      [&](auto&& i) { return i.originID() == m_Origin; });
-
-    if (itor == m_Alternatives.end()) {
-      m_Alternatives.push_back({m_Origin, m_Archive});
-    }
-
-    m_Origin = origin;
-    m_FileTime = fileTime;
-    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
-  }
-  else {
-    // This mod is just an alternative
-    bool found = false;
-
-    if (m_Origin == origin) {
-      // already an origin
-      return;
-    }
-
-    for (auto iter = m_Alternatives.begin(); iter != m_Alternatives.end(); ++iter) {
-      if (iter->originID() == origin) {
-        // already an origin
-        return;
-      }
-
-      if ((m_Parent != nullptr) &&
-        (m_Parent->getOriginByID(iter->originID()).getPriority() < m_Parent->getOriginByID(origin).getPriority())) {
-        m_Alternatives.insert(iter, {origin, {std::wstring(archive.begin(), archive.end()), order}});
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
-      m_Alternatives.push_back({origin, {std::wstring(archive.begin(), archive.end()), order}});
-    }
-  }
-}
+//void FileEntry::addOrigin(
+//  OriginID origin, FILETIME fileTime, std::wstring_view archive, int order)
+//{
+//  std::scoped_lock lock(m_OriginsMutex);
+//
+//  if (m_Parent != nullptr) {
+//    m_Parent->propagateOrigin(origin);
+//  }
+//
+//  if (m_Origin == -1) {
+//    // If this file has no previous origin, this mod is now the origin with no
+//    // alternatives
+//    m_Origin = origin;
+//    m_FileTime = fileTime;
+//    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
+//  }
+//  else if (
+//    (m_Parent != nullptr) && (
+//    (m_Parent->getOriginByID(origin).getPriority() > m_Parent->getOriginByID(m_Origin).getPriority()) ||
+//      (archive.size() == 0 && m_Archive.isValid()))
+//    ) {
+//    // If this mod has a higher priority than the origin mod OR
+//    // this mod has a loose file and the origin mod has an archived file,
+//    // this mod is now the origin and the previous origin is the first alternative
+//
+//    auto itor = std::find_if(
+//      m_Alternatives.begin(), m_Alternatives.end(),
+//      [&](auto&& i) { return i.originID() == m_Origin; });
+//
+//    if (itor == m_Alternatives.end()) {
+//      m_Alternatives.push_back({m_Origin, m_Archive});
+//    }
+//
+//    m_Origin = origin;
+//    m_FileTime = fileTime;
+//    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
+//  }
+//  else {
+//    // This mod is just an alternative
+//    bool found = false;
+//
+//    if (m_Origin == origin) {
+//      // already an origin
+//      return;
+//    }
+//
+//    for (auto iter = m_Alternatives.begin(); iter != m_Alternatives.end(); ++iter) {
+//      if (iter->originID() == origin) {
+//        // already an origin
+//        return;
+//      }
+//
+//      if ((m_Parent != nullptr) &&
+//        (m_Parent->getOriginByID(iter->originID()).getPriority() < m_Parent->getOriginByID(origin).getPriority())) {
+//        m_Alternatives.insert(iter, {origin, {std::wstring(archive.begin(), archive.end()), order}});
+//        found = true;
+//        break;
+//      }
+//    }
+//
+//    if (!found) {
+//      m_Alternatives.push_back({origin, {std::wstring(archive.begin(), archive.end()), order}});
+//    }
+//  }
+//}
 
 bool FileEntry::removeOrigin(OriginID origin)
 {

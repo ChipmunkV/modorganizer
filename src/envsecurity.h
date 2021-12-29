@@ -3,6 +3,7 @@
 
 #include <QUuid>
 #include <QString>
+#include <QStringList>
 
 namespace env
 {

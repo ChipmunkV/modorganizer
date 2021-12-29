@@ -24,6 +24,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <vector>
 #include <map>
+#include <set>
 #include <functional>
 
 

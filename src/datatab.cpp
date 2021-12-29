@@ -64,6 +64,10 @@ DataTab::DataTab(
     this, &DataTab::displayModInformation);
 }
 
+DataTab::~DataTab()
+{
+}
+
 void DataTab::saveState(Settings& s) const
 {
   s.geometry().saveState(ui.tree->header());

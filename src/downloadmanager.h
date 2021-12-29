@@ -23,6 +23,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "serverinfo.h"
 #include <idownloadmanager.h>
 #include <modrepositoryfileinfo.h>
+#include <optional>
 #include <set>
 #include <QObject>
 #include <QUrl>

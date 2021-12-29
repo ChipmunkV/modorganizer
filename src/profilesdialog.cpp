@@ -40,7 +40,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMessageBox>
 #include <QWhatsThis>
 
-#include <Windows.h>
+//#include <Windows.h>
 
 #include <exception>
 
@@ -255,7 +255,8 @@ void ProfilesDialog::on_removeProfileButton_clicked()
       delete item;
     }
     if (!shellDelete(QStringList(profilePath))) {
-      log::warn("Failed to shell-delete \"{}\" (errorcode {}), trying regular delete", profilePath, ::GetLastError());
+//      log::warn("Failed to shell-delete \"{}\" (errorcode {}), trying regular delete", profilePath, ::GetLastError());
+      assert(false && "Not implemented");
       if (!removeDir(profilePath)) {
         log::warn("regular delete failed too");
       }

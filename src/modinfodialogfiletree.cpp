@@ -1,4 +1,6 @@
 #include "modinfodialogfiletree.h"
+#include <QAction>
+#include <QMenu>
 #include "ui_modinfodialog.h"
 #include "modinfodialog.h"
 #include "organizercore.h"

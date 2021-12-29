@@ -28,11 +28,13 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QDebug>
 #include <QList>
-#include <usvfsparameters.h>
+//#include <usvfsparameters.h>
 #include <log.h>
 #include "executableinfo.h"
 #include "envdump.h"
 
+
+using HANDLE = void*;
 
 class LogWorker : public QThread {
 
@@ -102,7 +104,7 @@ private:
 
 };
 
-CrashDumpsType crashDumpsType(int type);
+//CrashDumpsType crashDumpsType(int type);
 
 std::vector<HANDLE> getRunningUSVFSProcesses();
 

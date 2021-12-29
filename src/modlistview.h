@@ -14,6 +14,9 @@
 #include "viewmarkingscrollbar.h"
 #include "modlistsortproxy.h"
 
+QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
+
 namespace Ui { class MainWindow; }
 
 class CategoryFactory;

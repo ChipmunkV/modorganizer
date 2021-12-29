@@ -1,6 +1,7 @@
 #ifndef SETTINGSDIALOGPATHS_H
 #define SETTINGSDIALOGPATHS_H
 
+#include <QDir>
 #include "settings.h"
 #include "settingsdialog.h"
 

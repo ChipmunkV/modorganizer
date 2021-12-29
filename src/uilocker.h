@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <mutex>
 
+using DWORD = uint32_t;
+
 class UILockerInterface;
 
 class UILocker

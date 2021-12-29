@@ -1,4 +1,11 @@
 #include "filetree.h"
+#include <QApplication>
+#include <QFileDialog>
+#include <QHeaderView>
+#include <QInputDialog>
+#include <QMenu>
+#include <QMessageBox>
+#include <QTreeView>
 #include "filetreemodel.h"
 #include "filetreeitem.h"
 #include "organizercore.h"

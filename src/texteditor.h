@@ -2,6 +2,9 @@
 #define MO_TEXTEDITOR_H
 
 #include <QPlainTextEdit>
+#include <QSyntaxHighlighter>
+
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 
 class TextEditor;
 

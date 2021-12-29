@@ -20,6 +20,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MO_REGISTER_DIRECTORYENTRY_INCLUDED
 #define MO_REGISTER_DIRECTORYENTRY_INCLUDED
 
+#include <map>
 #include "fileregister.h"
 #include <bsatk.h>
 
@@ -258,9 +259,9 @@ private:
   mutable std::mutex m_OriginsMutex;
 
 
-  FileEntryPtr insert(
-    std::wstring_view fileName, FilesOrigin& origin, FILETIME fileTime,
-    std::wstring_view archive, int order, DirectoryStats& stats);
+//  FileEntryPtr insert(
+//    std::wstring_view fileName, FilesOrigin& origin, FILETIME fileTime,
+//    std::wstring_view archive, int order, DirectoryStats& stats);
 
   FileEntryPtr insert(
     env::File& file, FilesOrigin& origin,
@@ -270,9 +271,9 @@ private:
     env::DirectoryWalker& walker, FilesOrigin& origin,
     const std::wstring& path, DirectoryStats& stats);
 
-  void addFiles(
-    FilesOrigin& origin, BSA::Folder::Ptr archiveFolder, FILETIME fileTime,
-    const std::wstring& archiveName, int order, DirectoryStats& stats);
+//  void addFiles(
+//    FilesOrigin& origin, BSA::Folder::Ptr archiveFolder, FILETIME fileTime,
+//    const std::wstring& archiveName, int order, DirectoryStats& stats);
 
   void addDir(FilesOrigin& origin, env::Directory& d, DirectoryStats& stats);
 
@@ -300,7 +301,7 @@ private:
   struct Context;
   static void onDirectoryStart(Context* cx, std::wstring_view path);
   static void onDirectoryEnd(Context* cx, std::wstring_view path);
-  static void onFile(Context* cx, std::wstring_view path, FILETIME ft);
+//  static void onFile(Context* cx, std::wstring_view path, FILETIME ft);
 
   void dump(std::FILE* f, const std::wstring& parentPath) const;
 };

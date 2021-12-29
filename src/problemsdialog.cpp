@@ -5,7 +5,7 @@
 #include <iplugin.h>
 #include <iplugindiagnose.h>
 #include <QPushButton>
-#include <Shellapi.h>
+//#include <Shellapi.h>
 
 #include "plugincontainer.h"
 

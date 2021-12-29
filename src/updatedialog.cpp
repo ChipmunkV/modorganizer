@@ -2,6 +2,8 @@
 #include "ui_updatedialog.h"
 
 #include "lootdialog.h" // for MarkdownPage
+#include <QFile>
+#include <QStyle>
 #include <QWebChannel>
 
 using namespace MOBase;

@@ -24,6 +24,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractItemView>
 #include <QStyledItemDelegate>
 
+QT_FORWARD_DECLARE_CLASS(QTreeView)
 
 class IconDelegate : public QStyledItemDelegate
 {

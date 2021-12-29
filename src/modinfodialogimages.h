@@ -3,6 +3,7 @@
 
 #include "modinfodialogtab.h"
 #include "filterwidget.h"
+#include <QPainter>
 #include <QScrollBar>
 #include "plugincontainer.h"
 #include "organizercore.h"

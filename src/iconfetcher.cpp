@@ -1,4 +1,5 @@
 #include "iconfetcher.h"
+#include <QVariant>
 #include "thread_utils.h"
 #include "shared/util.h"
 
@@ -21,7 +22,8 @@ void IconFetcher::Waiter::wakeUp()
 
 
 IconFetcher::IconFetcher()
-  : m_iconSize(GetSystemMetrics(SM_CXSMICON)), m_stop(false)
+//  : m_iconSize(GetSystemMetrics(SM_CXSMICON)), m_stop(false)
+  : m_iconSize(0), m_stop(false)
 {
   m_quickCache.file = getPixmapIcon(QFileIconProvider::File);
   m_quickCache.directory = getPixmapIcon(QFileIconProvider::Folder);

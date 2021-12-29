@@ -50,7 +50,7 @@ void MOMultiProcess::sendMessage(const QString &message)
   bool connected = false;
   for(int i = 0; i < 2 && !connected; ++i) {
     if (i > 0) {
-      Sleep(250);
+//      Sleep(250);
     }
 
     // other process may be just starting up

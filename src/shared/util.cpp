@@ -18,12 +18,13 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "util.h"
-#include "windows_error.h"
+#include <QApplication>
+//#include "windows_error.h"
 #include "../mainwindow.h"
 #include "../env.h"
 #include <log.h>
-#include <usvfs.h>
-#include <usvfs_version.h>
+//#include <usvfs.h>
+//#include <usvfs_version.h>
 
 using namespace MOBase;
 
@@ -32,16 +33,18 @@ namespace MOShared
 
 bool FileExists(const std::string &filename)
 {
-  DWORD dwAttrib = ::GetFileAttributesA(filename.c_str());
-
-  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+//  DWORD dwAttrib = ::GetFileAttributesA(filename.c_str());
+//
+//  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+  assert(false && "Not implemented");
 }
 
 bool FileExists(const std::wstring &filename)
 {
-  DWORD dwAttrib = ::GetFileAttributesW(filename.c_str());
-
-  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+//  DWORD dwAttrib = ::GetFileAttributesW(filename.c_str());
+//
+//  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+  assert(false && "Not implemented");
 }
 
 bool FileExists(const std::wstring &searchPath, const std::wstring &filename)
@@ -54,20 +57,21 @@ bool FileExists(const std::wstring &searchPath, const std::wstring &filename)
 std::string ToString(const std::wstring &source, bool utf8)
 {
   std::string result;
-  if (source.length() > 0) {
-    UINT codepage = CP_UTF8;
-    if (!utf8) {
-      codepage = AreFileApisANSI() ? GetACP() : GetOEMCP();
-    }
-    int sizeRequired = ::WideCharToMultiByte(codepage, 0, &source[0], -1, nullptr, 0, nullptr, nullptr);
-    if (sizeRequired == 0) {
-      throw windows_error("failed to convert string to multibyte");
-    }
-    // the size returned by WideCharToMultiByte contains zero termination IF -1 is specified for the length.
-    // we don't want that \0 in the string because then the length field would be wrong. Because madness
-    result.resize(sizeRequired - 1, '\0');
-    ::WideCharToMultiByte(codepage, 0, &source[0], (int)source.size(), &result[0], sizeRequired, nullptr, nullptr);
-  }
+//  if (source.length() > 0) {
+//    UINT codepage = CP_UTF8;
+//    if (!utf8) {
+//      codepage = AreFileApisANSI() ? GetACP() : GetOEMCP();
+//    }
+//    int sizeRequired = ::WideCharToMultiByte(codepage, 0, &source[0], -1, nullptr, 0, nullptr, nullptr);
+//    if (sizeRequired == 0) {
+//      throw windows_error("failed to convert string to multibyte");
+//    }
+//    // the size returned by WideCharToMultiByte contains zero termination IF -1 is specified for the length.
+//    // we don't want that \0 in the string because then the length field would be wrong. Because madness
+//    result.resize(sizeRequired - 1, '\0');
+//    ::WideCharToMultiByte(codepage, 0, &source[0], (int)source.size(), &result[0], sizeRequired, nullptr, nullptr);
+//  }
+  assert(false && "Not implemented");
 
   return result;
 }
@@ -75,22 +79,23 @@ std::string ToString(const std::wstring &source, bool utf8)
 std::wstring ToWString(const std::string &source, bool utf8)
 {
   std::wstring result;
-  if (source.length() > 0) {
-    UINT codepage = CP_UTF8;
-    if (!utf8) {
-      codepage = AreFileApisANSI() ? GetACP() : GetOEMCP();
-    }
-    int sizeRequired
-        = ::MultiByteToWideChar(codepage, 0, source.c_str(),
-                                static_cast<int>(source.length()), nullptr, 0);
-    if (sizeRequired == 0) {
-      throw windows_error("failed to convert string to wide character");
-    }
-    result.resize(sizeRequired, L'\0');
-    ::MultiByteToWideChar(codepage, 0, source.c_str(),
-                          static_cast<int>(source.length()), &result[0],
-                          sizeRequired);
-  }
+//  if (source.length() > 0) {
+//    UINT codepage = CP_UTF8;
+//    if (!utf8) {
+//      codepage = AreFileApisANSI() ? GetACP() : GetOEMCP();
+//    }
+//    int sizeRequired
+//        = ::MultiByteToWideChar(codepage, 0, source.c_str(),
+//                                static_cast<int>(source.length()), nullptr, 0);
+//    if (sizeRequired == 0) {
+//      throw windows_error("failed to convert string to wide character");
+//    }
+//    result.resize(sizeRequired, L'\0');
+//    ::MultiByteToWideChar(codepage, 0, source.c_str(),
+//                          static_cast<int>(source.length()), &result[0],
+//                          sizeRequired);
+//  }
+  assert(false && "Not implemented");
 
   return result;
 }
@@ -106,27 +111,31 @@ static auto locToLower = [] (char in) -> char {
 
 std::string& ToLowerInPlace(std::string& text)
 {
-  CharLowerBuffA(const_cast<CHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
+//  CharLowerBuffA(const_cast<CHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
+  assert(false && "Not implemented");
   return text;
 }
 
 std::string ToLowerCopy(const std::string& text)
 {
   std::string result(text);
-  CharLowerBuffA(const_cast<CHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
+//  CharLowerBuffA(const_cast<CHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
+  assert(false && "Not implemented");
   return result;
 }
 
 std::wstring& ToLowerInPlace(std::wstring& text)
 {
-  CharLowerBuffW(const_cast<WCHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
+//  CharLowerBuffW(const_cast<WCHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
+  assert(false && "Not implemented");
   return text;
 }
 
 std::wstring ToLowerCopy(const std::wstring& text)
 {
   std::wstring result(text);
-  CharLowerBuffW(const_cast<WCHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
+//  CharLowerBuffW(const_cast<WCHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
+  assert(false && "Not implemented");
   return result;
 }
 
@@ -152,176 +161,185 @@ bool CaseInsensitiveEqual(const std::wstring &lhs, const std::wstring &rhs)
                     });
 }
 
-VS_FIXEDFILEINFO GetFileVersion(const std::wstring &fileName)
-{
-  DWORD handle = 0UL;
-  DWORD size = ::GetFileVersionInfoSizeW(fileName.c_str(), &handle);
-  if (size == 0) {
-    throw windows_error("failed to determine file version info size");
-  }
-
-  boost::scoped_array<char> buffer(new char[size]);
-  try {
-    handle = 0UL;
-    if (!::GetFileVersionInfoW(fileName.c_str(), handle, size, buffer.get())) {
-      throw windows_error("failed to determine file version info");
-    }
-
-    void *versionInfoPtr = nullptr;
-    UINT versionInfoLength = 0;
-    if (!::VerQueryValue(buffer.get(), L"\\", &versionInfoPtr, &versionInfoLength)) {
-      throw windows_error("failed to determine file version");
-    }
-
-    VS_FIXEDFILEINFO result = *(VS_FIXEDFILEINFO*)versionInfoPtr;
-    return result;
-  } catch (...) {
-    throw;
-  }
-}
+//VS_FIXEDFILEINFO GetFileVersion(const std::wstring &fileName)
+//{
+//  DWORD handle = 0UL;
+//  DWORD size = ::GetFileVersionInfoSizeW(fileName.c_str(), &handle);
+//  if (size == 0) {
+//    throw windows_error("failed to determine file version info size");
+//  }
+//
+//  boost::scoped_array<char> buffer(new char[size]);
+//  try {
+//    handle = 0UL;
+//    if (!::GetFileVersionInfoW(fileName.c_str(), handle, size, buffer.get())) {
+//      throw windows_error("failed to determine file version info");
+//    }
+//
+//    void *versionInfoPtr = nullptr;
+//    UINT versionInfoLength = 0;
+//    if (!::VerQueryValue(buffer.get(), L"\\", &versionInfoPtr, &versionInfoLength)) {
+//      throw windows_error("failed to determine file version");
+//    }
+//
+//    VS_FIXEDFILEINFO result = *(VS_FIXEDFILEINFO*)versionInfoPtr;
+//    return result;
+//  } catch (...) {
+//    throw;
+//  }
+//}
 
 std::wstring GetFileVersionString(const std::wstring &fileName)
 {
-  DWORD handle = 0UL;
-  DWORD size = ::GetFileVersionInfoSizeW(fileName.c_str(), &handle);
-  if (size == 0) {
-    throw windows_error("failed to determine file version info size");
-  }
-
-  boost::scoped_array<char> buffer(new char[size]);
-  try {
-    handle = 0UL;
-    if (!::GetFileVersionInfoW(fileName.c_str(), handle, size, buffer.get())) {
-      throw windows_error("failed to determine file version info");
-    }
-
-    LPVOID strBuffer = nullptr;
-    UINT strLength = 0;
-    if (!::VerQueryValue(buffer.get(), L"\\StringFileInfo\\040904B0\\ProductVersion", &strBuffer, &strLength)) {
-      throw windows_error("failed to determine file version");
-    }
-
-    return std::wstring((LPCTSTR)strBuffer);
-  }
-  catch (...) {
-    throw;
-  }
+//  DWORD handle = 0UL;
+//  DWORD size = ::GetFileVersionInfoSizeW(fileName.c_str(), &handle);
+//  if (size == 0) {
+//    throw windows_error("failed to determine file version info size");
+//  }
+//
+//  boost::scoped_array<char> buffer(new char[size]);
+//  try {
+//    handle = 0UL;
+//    if (!::GetFileVersionInfoW(fileName.c_str(), handle, size, buffer.get())) {
+//      throw windows_error("failed to determine file version info");
+//    }
+//
+//    LPVOID strBuffer = nullptr;
+//    UINT strLength = 0;
+//    if (!::VerQueryValue(buffer.get(), L"\\StringFileInfo\\040904B0\\ProductVersion", &strBuffer, &strLength)) {
+//      throw windows_error("failed to determine file version");
+//    }
+//
+//    return std::wstring((LPCTSTR)strBuffer);
+//  }
+//  catch (...) {
+//    throw;
+//  }
+  assert(false && "Not implemented");
+  return L"";
 }
 
 VersionInfo createVersionInfo()
 {
-  VS_FIXEDFILEINFO version = GetFileVersion(env::thisProcessPath().native());
-
-  if (version.dwFileFlags & VS_FF_PRERELEASE)
-  {
-    // Pre-release builds need annotating
-    QString versionString = QString::fromStdWString(
-      GetFileVersionString(env::thisProcessPath().native()));
-
-    // The pre-release flag can be set without the string specifying what type of pre-release
-    bool noLetters = true;
-    for (QChar character : versionString)
-    {
-      if (character.isLetter())
-      {
-        noLetters = false;
-        break;
-      }
-    }
-
-    if (noLetters)
-    {
-      // Default to pre-alpha when release type is unspecified
-      return VersionInfo(version.dwFileVersionMS >> 16,
-                         version.dwFileVersionMS & 0xFFFF,
-                         version.dwFileVersionLS >> 16,
-                         version.dwFileVersionLS & 0xFFFF,
-                         VersionInfo::RELEASE_PREALPHA);
-    }
-    else
-    {
-      // Trust the string to make sense
-      return VersionInfo(versionString);
-    }
-  }
-  else
-  {
-    // Non-pre-release builds just need their version numbers reading
-    return VersionInfo(version.dwFileVersionMS >> 16,
-                       version.dwFileVersionMS & 0xFFFF,
-                       version.dwFileVersionLS >> 16,
-                       version.dwFileVersionLS & 0xFFFF);
-  }
+//  VS_FIXEDFILEINFO version = GetFileVersion(env::thisProcessPath().native());
+//
+//  if (version.dwFileFlags & VS_FF_PRERELEASE)
+//  {
+//    // Pre-release builds need annotating
+//    QString versionString = QString::fromStdWString(
+//      GetFileVersionString(env::thisProcessPath().native()));
+//
+//    // The pre-release flag can be set without the string specifying what type of pre-release
+//    bool noLetters = true;
+//    for (QChar character : versionString)
+//    {
+//      if (character.isLetter())
+//      {
+//        noLetters = false;
+//        break;
+//      }
+//    }
+//
+//    if (noLetters)
+//    {
+//      // Default to pre-alpha when release type is unspecified
+//      return VersionInfo(version.dwFileVersionMS >> 16,
+//                         version.dwFileVersionMS & 0xFFFF,
+//                         version.dwFileVersionLS >> 16,
+//                         version.dwFileVersionLS & 0xFFFF,
+//                         VersionInfo::RELEASE_PREALPHA);
+//    }
+//    else
+//    {
+//      // Trust the string to make sense
+//      return VersionInfo(versionString);
+//    }
+//  }
+//  else
+//  {
+//    // Non-pre-release builds just need their version numbers reading
+//    return VersionInfo(version.dwFileVersionMS >> 16,
+//                       version.dwFileVersionMS & 0xFFFF,
+//                       version.dwFileVersionLS >> 16,
+//                       version.dwFileVersionLS & 0xFFFF);
+//  }
+  assert(false && "Not implemented");
+  return VersionInfo();
 }
 
 QString getUsvfsDLLVersion()
 {
-  // once 2.2.2 is released, this can be changed to call USVFSVersionString()
-  // directly; until then, using GetProcAddress() allows for mixing up devbuilds
-  // and usvfs dlls
-
-  using USVFSVersionStringType = const char* WINAPI ();
-
-  QString s;
-
-  const auto m = ::LoadLibraryW(L"usvfs_x64.dll");
-
-  if (m) {
-    auto* f = reinterpret_cast<USVFSVersionStringType*>(
-      ::GetProcAddress(m, "USVFSVersionString"));
-
-    if (f) {
-      s = f();
-    }
-
-    ::FreeLibrary(m);
-  }
-
-  if (s.isEmpty()) {
-    s = "?";
-  }
-
-  return s;
+//  // once 2.2.2 is released, this can be changed to call USVFSVersionString()
+//  // directly; until then, using GetProcAddress() allows for mixing up devbuilds
+//  // and usvfs dlls
+//
+//  using USVFSVersionStringType = const char* WINAPI ();
+//
+//  QString s;
+//
+//  const auto m = ::LoadLibraryW(L"usvfs_x64.dll");
+//
+//  if (m) {
+//    auto* f = reinterpret_cast<USVFSVersionStringType*>(
+//      ::GetProcAddress(m, "USVFSVersionString"));
+//
+//    if (f) {
+//      s = f();
+//    }
+//
+//    ::FreeLibrary(m);
+//  }
+//
+//  if (s.isEmpty()) {
+//    s = "?";
+//  }
+//
+//  return s;
+  assert(false && "Not implemented");
+  return "";
 }
 
 QString getUsvfsVersionString()
 {
-  const QString dll = getUsvfsDLLVersion();
-  const QString header = USVFS_VERSION_STRING;
-
-  QString usvfsVersion;
-
-  if (dll == header) {
-    return dll;
-  } else {
-    return "dll is " + dll + ", compiled against " + header;
-  }
+//  const QString dll = getUsvfsDLLVersion();
+//  const QString header = USVFS_VERSION_STRING;
+//
+//  QString usvfsVersion;
+//
+//  if (dll == header) {
+//    return dll;
+//  } else {
+//    return "dll is " + dll + ", compiled against " + header;
+//  }
+  assert(false && "Not implemented");
+  return "";
 }
 
 void SetThisThreadName(const QString& s)
 {
-  using SetThreadDescriptionType = HRESULT (
-    HANDLE hThread,
-    PCWSTR lpThreadDescription
-  );
-
-  static SetThreadDescriptionType* SetThreadDescription = [] {
-    SetThreadDescriptionType* p = nullptr;
-
-    env::LibraryPtr kernel32(LoadLibraryW(L"kernel32.dll"));
-    if (!kernel32) {
-      return p;
-    }
-
-    p = reinterpret_cast<SetThreadDescriptionType*>(
-      GetProcAddress(kernel32.get(), "SetThreadDescription"));
-
-    return p;
-  }();
-
-  if (SetThreadDescription) {
-    SetThreadDescription(GetCurrentThread(), s.toStdWString().c_str());
-  }
+//  using SetThreadDescriptionType = HRESULT (
+//    HANDLE hThread,
+//    PCWSTR lpThreadDescription
+//  );
+//
+//  static SetThreadDescriptionType* SetThreadDescription = [] {
+//    SetThreadDescriptionType* p = nullptr;
+//
+//    env::LibraryPtr kernel32(LoadLibraryW(L"kernel32.dll"));
+//    if (!kernel32) {
+//      return p;
+//    }
+//
+//    p = reinterpret_cast<SetThreadDescriptionType*>(
+//      GetProcAddress(kernel32.get(), "SetThreadDescription"));
+//
+//    return p;
+//  }();
+//
+//  if (SetThreadDescription) {
+//    SetThreadDescription(GetCurrentThread(), s.toStdWString().c_str());
+//  }
+  assert(false && "Not implemented");
 }
 
 

@@ -1,4 +1,6 @@
 #include "settingsdialoggeneral.h"
+#include <QDirIterator>
+#include <QMessageBox>
 #include "ui_settingsdialog.h"
 #include "shared/appconfig.h"
 #include "categoriesdialog.h"

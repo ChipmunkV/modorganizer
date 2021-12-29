@@ -38,6 +38,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <scopeguard.h>
 
 #include <QFileInfo>
+#include <QFutureWatcher>
 #include <QLibrary>
 #include <QInputDialog>
 #include <QRegExp>
@@ -49,10 +50,11 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <QDirIterator>
 #include <QDebug>
+#include <QTemporaryFile>
 #include <QTextDocument>
 #include <QtConcurrent/QtConcurrentRun>
 
-#include <Shellapi.h>
+//#include <Shellapi.h>
 
 #include <boost/assign.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -87,33 +89,34 @@ InstallationManager::InstallationManager()
     :
       m_ParentWidget(nullptr),
       m_IsRunning(false) {
-  m_ArchiveHandler = CreateArchive();
-  if (!m_ArchiveHandler->isValid()) {
-    throw MyException(getErrorString(m_ArchiveHandler->getLastError()));
-  }
-  m_ArchiveHandler->setLogCallback([](auto level, auto const& message) {
-    using LogLevel = Archive::LogLevel;
-    switch (level) {
-    case LogLevel::Debug:
-      log::debug("{}", message);
-      break;
-    case LogLevel::Info:
-      log::info("{}", message);
-      break;
-    case LogLevel::Warning:
-      log::warn("{}", message);
-      break;
-    case LogLevel::Error:
-      log::error("{}", message);
-      break;
-    }
-  });
-
-  // Connect the query password slot - This is the only way I found to be able to query user
-  // from a separate thread. We use a BlockingQueuedConnection so that calling passwordRequested()
-  // will block until the end of the slot.
-  connect(this, &InstallationManager::passwordRequested,
-    this, &InstallationManager::queryPassword, Qt::BlockingQueuedConnection);
+//  m_ArchiveHandler = CreateArchive();
+//  if (!m_ArchiveHandler->isValid()) {
+//    throw MyException(getErrorString(m_ArchiveHandler->getLastError()));
+//  }
+//  m_ArchiveHandler->setLogCallback([](auto level, auto const& message) {
+//    using LogLevel = Archive::LogLevel;
+//    switch (level) {
+//    case LogLevel::Debug:
+//      log::debug("{}", message);
+//      break;
+//    case LogLevel::Info:
+//      log::info("{}", message);
+//      break;
+//    case LogLevel::Warning:
+//      log::warn("{}", message);
+//      break;
+//    case LogLevel::Error:
+//      log::error("{}", message);
+//      break;
+//    }
+//  });
+//
+//  // Connect the query password slot - This is the only way I found to be able to query user
+//  // from a separate thread. We use a BlockingQueuedConnection so that calling passwordRequested()
+//  // will block until the end of the slot.
+//  connect(this, &InstallationManager::passwordRequested,
+//    this, &InstallationManager::queryPassword, Qt::BlockingQueuedConnection);
+  assert(false && "Not implemented");
 }
 
 InstallationManager::~InstallationManager()
@@ -441,7 +444,7 @@ InstallationResult InstallationManager::testOverwrite(GuessedValue<QString> &mod
         if (!QDir().mkdir(targetDirectory)) {
           // windows may keep the directory around for a moment, preventing its re-creation. Not sure
           // if this still happens with shellDelete
-          Sleep(100);
+//          Sleep(100);
           QDir().mkdir(targetDirectory);
         }
         // restore the saved settings

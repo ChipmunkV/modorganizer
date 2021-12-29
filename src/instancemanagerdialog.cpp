@@ -1,4 +1,6 @@
 #include "instancemanagerdialog.h"
+#include <QListWidget>
+#include <QStandardItemModel>
 #include "ui_instancemanagerdialog.h"
 #include "instancemanager.h"
 #include "createinstancedialog.h"
@@ -586,12 +588,13 @@ bool InstanceManagerDialog::doDelete(const QStringList& files, bool recycle)
     return true;
   }
 
-  const auto e = GetLastError();
-  if (e == ERROR_CANCELLED) {
-    log::debug("deletion cancelled by user");
-  } else {
-    log::error("failed to delete, {}", formatSystemMessage(e));
-  }
+//  const auto e = GetLastError();
+//  if (e == ERROR_CANCELLED) {
+//    log::debug("deletion cancelled by user");
+//  } else {
+//    log::error("failed to delete, {}", formatSystemMessage(e));
+//  }
+  assert(false && "Not implemented");
 
   return false;
 }
