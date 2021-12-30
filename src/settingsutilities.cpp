@@ -1,4 +1,5 @@
 #include "settingsutilities.h"
+#include <iostream>
 #include <QDockWidget>
 #include <QHeaderView>
 #include <QMainWindow>
@@ -326,7 +327,7 @@ QString getWindowsCredential(const QString& key)
 //  }
 //
 //  return value;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getWindowsCredential\n";
   return "";
 }
 

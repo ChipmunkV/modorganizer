@@ -2682,7 +2682,7 @@ This is likely due to a corrupted or incompatible download or unrecognized archi
 <context>
     <name>MOBase::TutorialControl</name>
     <message>
-        <location filename="../../uibase/src/tutorialcontrol.cpp" line="146"/>
+        <location filename="../../uibase/src/tutorialcontrol.cpp" line="147"/>
         <source>Tutorial failed to start, please check &quot;mo_interface.log&quot; for details.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5760,48 +5760,48 @@ Continue?</source>
 <context>
     <name>PluginContainer</name>
     <message>
-        <location filename="plugincontainer.cpp" line="1010"/>
+        <location filename="plugincontainer.cpp" line="1012"/>
         <source>Plugin error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1011"/>
+        <location filename="plugincontainer.cpp" line="1013"/>
         <source>Mod Organizer failed to load the plugin &apos;%1&apos; last time it was started.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1014"/>
+        <location filename="plugincontainer.cpp" line="1016"/>
         <source>The plugin can be skipped for this session, blacklisted, or loaded normally, in which case it might fail again. Blacklisted plugins can be re-enabled later in the settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1019"/>
+        <location filename="plugincontainer.cpp" line="1021"/>
         <source>Skip this plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1020"/>
+        <location filename="plugincontainer.cpp" line="1022"/>
         <source>Blacklist this plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1021"/>
+        <location filename="plugincontainer.cpp" line="1023"/>
         <source>Load this plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1118"/>
+        <location filename="plugincontainer.cpp" line="1120"/>
         <source>Some plugins could not be loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1121"/>
-        <location filename="plugincontainer.cpp" line="1139"/>
+        <location filename="plugincontainer.cpp" line="1123"/>
+        <location filename="plugincontainer.cpp" line="1141"/>
         <source>Description missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="1130"/>
+        <location filename="plugincontainer.cpp" line="1132"/>
         <source>The following plugins could not be loaded. The reason may be missing dependencies (i.e. python) or an outdated version:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6558,7 +6558,7 @@ p, li { white-space: pre-wrap; }
         <location filename="settingsdialogdiagnostics.cpp" line="61"/>
         <location filename="organizercore.cpp" line="386"/>
         <location filename="loot.cpp" line="422"/>
-        <location filename="loglist.cpp" line="377"/>
+        <location filename="loglist.cpp" line="378"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6589,69 +6589,69 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="325"/>
+        <location filename="../../uibase/src/utility.cpp" line="335"/>
         <source>Error %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="656"/>
-        <location filename="../../uibase/src/utility.cpp" line="681"/>
+        <location filename="../../uibase/src/utility.cpp" line="673"/>
+        <location filename="../../uibase/src/utility.cpp" line="698"/>
         <source>failed to create directory &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="665"/>
-        <location filename="../../uibase/src/utility.cpp" line="688"/>
+        <location filename="../../uibase/src/utility.cpp" line="682"/>
+        <location filename="../../uibase/src/utility.cpp" line="705"/>
         <source>failed to copy &quot;%1&quot; to &quot;%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1094"/>
+        <location filename="../../uibase/src/utility.cpp" line="1120"/>
         <source>%1 B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1096"/>
+        <location filename="../../uibase/src/utility.cpp" line="1122"/>
         <source>%1 MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1097"/>
+        <location filename="../../uibase/src/utility.cpp" line="1123"/>
         <source>%1 GB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1098"/>
+        <location filename="../../uibase/src/utility.cpp" line="1124"/>
         <source>%1 TB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1108"/>
+        <location filename="../../uibase/src/utility.cpp" line="1134"/>
         <source>%1 GB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1109"/>
+        <location filename="../../uibase/src/utility.cpp" line="1135"/>
         <source>%1 TB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1095"/>
+        <location filename="../../uibase/src/utility.cpp" line="1121"/>
         <source>%1 KB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1105"/>
+        <location filename="../../uibase/src/utility.cpp" line="1131"/>
         <source>%1 B/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1106"/>
+        <location filename="../../uibase/src/utility.cpp" line="1132"/>
         <source>%1 KB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../uibase/src/utility.cpp" line="1107"/>
+        <location filename="../../uibase/src/utility.cpp" line="1133"/>
         <source>%1 MB/s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6977,7 +6977,7 @@ Destination:<byte value="xd"/>
     </message>
     <message>
         <location filename="organizercore.cpp" line="387"/>
-        <location filename="loglist.cpp" line="378"/>
+        <location filename="loglist.cpp" line="379"/>
         <source>Failed to create &quot;%1&quot;. Your user account probably lacks permission.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7002,12 +7002,12 @@ Destination:<byte value="xd"/>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.cpp" line="67"/>
+        <location filename="main.cpp" line="117"/>
         <source>Mod Organizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.cpp" line="68"/>
+        <location filename="main.cpp" line="118"/>
         <source>An instance of Mod Organizer is already running</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7166,7 +7166,7 @@ Destination:<byte value="xd"/>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="plugincontainer.cpp" line="796"/>
+        <location filename="plugincontainer.cpp" line="798"/>
         <source>failed to initialize plugin %1: %2</source>
         <translation type="unfinished"></translation>
     </message>

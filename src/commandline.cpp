@@ -234,8 +234,8 @@ bool CommandLine::forwardToPrimary(MOMultiProcess& multiProcess)
 //  }
 //
 //  return true;
-  assert(false && "Not implemented");
-  return true;
+  std::cerr << "FIXME: forward to primary process\n";
+  return false;
 }
 
 std::optional<int> CommandLine::runEarly()

@@ -151,7 +151,7 @@ private:
     boost::fusion::pair<QString, std::map<QString, MOBase::IPlugin*>>
   >;
 
-  static const unsigned int PROBLEM_PLUGINSNOTLOADED = 1;
+  static const unsigned int PROBLEM_PLUGINSNOTLOADED;
 
   /**
   * This typedefs defines the order of plugin interface. This is increasing order of

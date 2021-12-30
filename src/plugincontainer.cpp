@@ -84,6 +84,8 @@ template <> struct PluginTypeName<MOBase::IPluginProxy> { static QString value()
 template <> struct PluginTypeName<MOBase::IPluginFileMapper> { static QString value() { return QT_TR_NOOP("File Mapper"); } };
 
 
+const unsigned int PluginContainer::PROBLEM_PLUGINSNOTLOADED = 1;
+
 QStringList PluginContainer::pluginInterfaces()
 {
   // Find all the names:

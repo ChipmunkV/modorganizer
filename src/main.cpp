@@ -11,6 +11,36 @@
 #include <report.h>
 #include <log.h>
 
+#if defined(__linux__) && (defined(__x86_64__) || defined(__i386))
+#include <signal.h>
+#include <bits/sigcontext.h>
+#include <unistd.h>
+#include <sys/prctl.h>
+#include "printformatbacktrace.h"
+
+/* Signal handler to get crash backtraces on Linux */
+void bt_sighandler(int sig, struct sigcontext ctx)
+{
+# if defined(__x86_64__)
+  if (sig == SIGSEGV)
+      fprintf(stderr, "Got signal %d, faulty address is %p, from %p\n", sig, (void *) ctx.cr2, (void *) ctx.rip);
+  else
+      fprintf(stderr, "Got signal %d\n", sig);
+
+  void *ip = (void *) ctx.rip;
+# elif defined(__i386)
+  if (sig == SIGSEGV)
+  fprintf(stderr, "Got signal %d, faulty address is %p, from %p\n", sig, (void *) ctx.cr2, (void *) ctx.eip);
+  else
+  fprintf(stderr, "Got signal %d\n", sig);
+
+  void *ip = (void *) ctx.eip;
+# endif
+
+  printFormatBacktrace("", ip, 1);
+}
+#endif
+
 using namespace MOBase;
 
 //thread_local LPTOP_LEVEL_EXCEPTION_FILTER g_prevExceptionFilter = nullptr;
@@ -20,6 +50,26 @@ int run(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
+#if defined(__linux__) && (defined(__x86_64__) || defined(__i386))
+  /* Install our signal handler */
+  struct sigaction sa;
+
+  typedef void (*sigaction_int_handler_t)(int);
+  sa.sa_handler = (sigaction_int_handler_t) bt_sighandler;
+
+  /**
+   * Allow the standard handler to execute after the ours.
+   * It will dump the core and end the program without clearing static objects.
+   */
+  sa.sa_flags = SA_RESETHAND;
+  sigemptyset(&sa.sa_mask);
+
+  sigaction(SIGSEGV, &sa, NULL);
+  sigaction(SIGABRT, &sa, NULL);
+
+  /* ... add any other signal here */
+#endif
+
   const int r = run(argc, argv);
   std::cout << "mod organizer done\n";
   return r;
@@ -34,7 +84,7 @@ int run(int argc, char *argv[])
 //  if (auto r=cl.process(GetCommandLineW())) {
 //    return *r;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: command line\n";
 
   initLogging();
 
@@ -209,5 +259,5 @@ void setExceptionHandlers()
 //
 //  g_prevExceptionFilter = SetUnhandledExceptionFilter(onUnhandledException);
 //  g_prevTerminateHandler = std::set_terminate(onTerminate);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: cpp excption handlers\n";
 }

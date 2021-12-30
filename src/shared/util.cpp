@@ -18,6 +18,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "util.h"
+#include <iostream>
 #include <QApplication>
 //#include "windows_error.h"
 #include "../mainwindow.h"
@@ -263,7 +264,7 @@ VersionInfo createVersionInfo()
 //                       version.dwFileVersionLS >> 16,
 //                       version.dwFileVersionLS & 0xFFFF);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: createVersionInfo\n";
   return VersionInfo();
 }
 
@@ -339,7 +340,7 @@ void SetThisThreadName(const QString& s)
 //  if (SetThreadDescription) {
 //    SetThreadDescription(GetCurrentThread(), s.toStdWString().c_str());
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: cpp excption handlers\n";
 }
 
 

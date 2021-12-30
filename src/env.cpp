@@ -466,14 +466,14 @@ QString get(const QString& name)
 //  }
 //
 //  return QString::fromWCharArray(buffer.get(), realSize);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getenv '" + name.toStdString() + "'\n";
   return "";
 }
 
 void set(const QString& n, const QString& v)
 {
 //  ::SetEnvironmentVariableW(n.toStdWString().c_str(), v.toStdWString().c_str());
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: setenv '" + n.toStdString() + "' to '" + v.toStdString() + "'\n";
 }
 
 
@@ -1015,7 +1015,7 @@ void deleteRegistryKeyIfEmpty(const QString& name)
 //  }
 //
 //  ::RegDeleteTreeW(HKEY_CURRENT_USER, name.toStdWString().c_str());
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: delete registry key if empty, keyName '" + name.toStdString() + "'\n";
 }
 
 bool registryValueExists(const QString& keyName, const QString& valueName)
@@ -1034,7 +1034,7 @@ bool registryValueExists(const QString& keyName, const QString& valueName)
 //    nullptr, &type, nullptr, nullptr);
 //
 //  return (r == ERROR_SUCCESS);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: check registry value exists, keyName '" + keyName.toStdString() + "', valueName '" + valueName.toStdString() + "'\n";
   return false;
 }
 
