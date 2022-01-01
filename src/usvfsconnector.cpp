@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iostream> // UNUSED
 #include "usvfsconnector.h"
 #include "settings.h"
 #include "organizercore.h"
@@ -60,9 +61,8 @@ LogWorker::LogWorker()
                     .arg(QDateTime::currentDateTimeUtc().toString(
                         "yyyy-MM-dd_hh-mm-ss")))
 {
-//  m_LogFile.open(QIODevice::WriteOnly);
-//  log::debug("usvfs log messages are written to {}", m_LogFile.fileName());
-  assert(false && "Not implemented");
+  m_LogFile.open(QIODevice::WriteOnly);
+  log::debug("usvfs log messages are written to {}", m_LogFile.fileName());
 }
 
 LogWorker::~LogWorker()
@@ -177,7 +177,7 @@ UsvfsConnector::UsvfsConnector()
 //  connect(&m_LogWorker, SIGNAL(finished()), &m_WorkerThread, SLOT(quit()));
 //
 //  m_WorkerThread.start(QThread::LowestPriority);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: UsvfsConnector" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 UsvfsConnector::~UsvfsConnector()
@@ -186,7 +186,7 @@ UsvfsConnector::~UsvfsConnector()
 //  m_LogWorker.exit();
 //  m_WorkerThread.quit();
 //  m_WorkerThread.wait();
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: ~UsvfsConnector" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 
@@ -300,7 +300,6 @@ std::vector<HANDLE> getRunningUSVFSProcesses()
 //  }
 //
 //  const auto thisPid = GetCurrentProcessId();
-  assert(false && "Not implemented");
   std::vector<HANDLE> v;
 
 //  const auto rights =
@@ -327,7 +326,7 @@ std::vector<HANDLE> getRunningUSVFSProcesses()
 //
 //    v.push_back(handle);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getRunningUSVFSProcesses" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   return v;
 }

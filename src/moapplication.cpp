@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iostream> // UNUSED
+#include <cassert> // UNUSED
+#include <QLibraryInfo> // UNUSED
 #include "moapplication.h"
 #include "settings.h"
 #include "env.h"
@@ -214,8 +217,12 @@ int MOApplication::setup(MOMultiProcess& multiProcess, bool forceSelect)
     return 1;
   }
 
-//  log::debug("command line: '{}'", QString::fromWCharArray(GetCommandLineW()));
-  assert(false && "Not implemented");
+#ifdef _WIN32
+  log::debug("command line: '{}'", QString::fromWCharArray(GetCommandLineW()));
+#else
+  log::debug("command line: ");
+  std::cerr << "FIXME: get command line" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+#endif
 
   log::info(
     "starting Mod Organizer version {} revision {} in {}, usvfs: {}",
@@ -237,9 +244,11 @@ int MOApplication::setup(MOMultiProcess& multiProcess, bool forceSelect)
     purgeOldFiles();
   }
 
-//  QWindowsWindowFunctions::setWindowActivationBehavior(
-//    QWindowsWindowFunctions::AlwaysActivateWindow);
-    assert(false && "Not implemented");
+#ifdef _WIN32
+  QWindowsWindowFunctions::setWindowActivationBehavior(
+    QWindowsWindowFunctions::AlwaysActivateWindow);
+#endif
+  std::cerr << "FIXME: AlwaysActivateWindow" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
 
   // loading settings
@@ -326,6 +335,9 @@ int MOApplication::setup(MOMultiProcess& multiProcess, bool forceSelect)
 
 int MOApplication::run(MOMultiProcess& multiProcess)
 {
+  std::cerr << "FIXME: applicationDirPath: '" +  QCoreApplication::applicationDirPath().toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: qt.conf exissts: '" +  std::string(QDir(QCoreApplication::applicationDirPath()).exists("qt.conf") ? "true" : "false") + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: MOApplication::run, LibraryExecutablesPath: '" + QLibraryInfo::location(QLibraryInfo::LibraryExecutablesPath).toStdString() + "', DataPath: '" + QLibraryInfo::location(QLibraryInfo::DataPath).toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   // checking command line
   TimeThis tt("MOApplication::run()");
 
@@ -340,6 +352,7 @@ int MOApplication::run(MOMultiProcess& multiProcess)
   QString apiKey;
   if (GlobalSettings::nexusApiKey(apiKey)) {
     m_nexus->getAccessManager()->apiCheck(apiKey);
+    std::cerr << "FIXME: m_nexus apiCheck done" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   }
 
   // tutorials
@@ -348,23 +361,28 @@ int MOApplication::run(MOMultiProcess& multiProcess)
       qApp->applicationDirPath() + "/"
           + QString::fromStdWString(AppConfig::tutorialsPath()) + "/",
       m_core.get());
+  std::cerr << "FIXME: initializing tutorials done" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   // styling
   if (!setStyleFile(m_settings->interface().styleName().value_or(""))) {
     // disable invalid stylesheet
     m_settings->interface().setStyleName("");
   }
+  std::cerr << "FIXME: setStyleFile done" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
 
   int res = 1;
 
   {
     tt.start("MOApplication::doOneRun() MainWindow setup");
+    assert(m_core && "m_core is nullptr");
+    assert(m_core->currentProfile() && "currentProfile is nullptr");
     MainWindow mainWindow(*m_settings, *m_core, *m_plugins);
 
     // the nexus interface can show dialogs, make sure they're parented to the
     // main window
     m_nexus->getAccessManager()->setTopLevelWidget(&mainWindow);
+    std::cerr << "FIXME: m_nexus parented done" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
     connect(
       &mainWindow, &MainWindow::styleChanged, this,

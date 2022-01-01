@@ -18,6 +18,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "directoryentry.h"
+#include <iostream> // UNUSED
 #include <stack>
 #include "originconnection.h"
 #include "filesorigin.h"
@@ -661,7 +662,8 @@ void DirectoryEntry::addFiles(
 //      onFile((Context*)pcx, path, ft);
 //    }
 //  );
-  assert(false && "Not implemented");
+  std::wcerr << L"FIXME: DirectoryEntry::addFiles, path: '" + path + L"'";
+  std::cerr << std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 void DirectoryEntry::onDirectoryStart(Context* cx, std::wstring_view path)

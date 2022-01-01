@@ -1,4 +1,5 @@
 #include "createinstancedialogpages.h"
+#include <iostream> // UNUSED
 #include <QFileDialog>
 #include "ui_createinstancedialog.h"
 #include "instancemanager.h"
@@ -366,6 +367,7 @@ void GamePage::selectCustom()
   }
 
   // try to find a plugin that likes this directory
+  std::cerr << "FIXME: games count: " + std::to_string(m_games.size()) + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   for (auto& g : m_games) {
     if (g->game->looksValid(path)) {
       // found one

@@ -327,7 +327,7 @@ QString getWindowsCredential(const QString& key)
 //  }
 //
 //  return value;
-  std::cerr << "FIXME: getWindowsCredential\n";
+  std::cerr << "FIXME: getWindowsCredential" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return "";
 }
 

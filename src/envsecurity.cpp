@@ -1,4 +1,5 @@
 #include "envsecurity.h"
+#include <iostream> // UNUSED
 #include "env.h"
 #include "envmodule.h"
 #include <utility.h>
@@ -73,7 +74,7 @@ public:
 //
 //      f(object.get());
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: query '" + q + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   }
 
 private:
@@ -412,7 +413,7 @@ std::optional<SecurityProduct> getWindowsFirewall()
 //
 //  return SecurityProduct(
 //    {}, "Windows Firewall", WSC_SECURITY_PROVIDER_FIREWALL, true, true);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: getWindowsFirewall" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
     return std::optional<SecurityProduct>();
 }
 

@@ -35,6 +35,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <report.h>
 #include "filesystemutilities.h"
 
+#include <iostream> // UNUSED
 #include <QTimer>
 #include <QFileInfo>
 #include <QRegExp>
@@ -411,7 +412,7 @@ void DownloadManager::refreshList()
 //        cx.seen.insert(std::move(lc));
 //        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdWString());
 //    });
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: DownloadManager::refreshList" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
     log::debug("saw {} downloads", m_ActiveDownloads.size());
 

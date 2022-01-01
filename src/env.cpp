@@ -215,7 +215,7 @@ QString Environment::timezone() const
 //  const auto dst = QString("%1, %2")
 //    .arg(dstName)
 //    .arg(offsetString(dstOffset));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Environment::timezone" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   QString s;
 
@@ -324,7 +324,7 @@ std::unique_ptr<ModuleNotification> Environment::onModuleLoaded(
 //  context->setCookie(cookie);
 //
 //  return context;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: onModuleLoaded" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return std::unique_ptr<ModuleNotification>();
 }
 
@@ -406,7 +406,7 @@ void Environment::dumpDisks(const Settings& s) const
 //  dump(s.paths().profiles());
 //  dump(s.paths().overwrite());
 //  dump(QCoreApplication::applicationDirPath());
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: dumpDisks" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 
@@ -466,14 +466,14 @@ QString get(const QString& name)
 //  }
 //
 //  return QString::fromWCharArray(buffer.get(), realSize);
-  std::cerr << "FIXME: getenv '" + name.toStdString() + "'\n";
+  std::cerr << "FIXME: getenv '" + name.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return "";
 }
 
 void set(const QString& n, const QString& v)
 {
 //  ::SetEnvironmentVariableW(n.toStdWString().c_str(), v.toStdWString().c_str());
-  std::cerr << "FIXME: setenv '" + n.toStdString() + "' to '" + v.toStdString() + "'\n";
+  std::cerr << "FIXME: setenv '" + n.toStdString() + "' to '" + v.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 
@@ -1015,7 +1015,7 @@ void deleteRegistryKeyIfEmpty(const QString& name)
 //  }
 //
 //  ::RegDeleteTreeW(HKEY_CURRENT_USER, name.toStdWString().c_str());
-  std::cerr << "FIXME: delete registry key if empty, keyName '" + name.toStdString() + "'\n";
+  std::cerr << "FIXME: delete registry key if empty, keyName '" + name.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 bool registryValueExists(const QString& keyName, const QString& valueName)
@@ -1034,7 +1034,7 @@ bool registryValueExists(const QString& keyName, const QString& valueName)
 //    nullptr, &type, nullptr, nullptr);
 //
 //  return (r == ERROR_SUCCESS);
-  std::cerr << "FIXME: check registry value exists, keyName '" + keyName.toStdString() + "', valueName '" + valueName.toStdString() + "'\n";
+  std::cerr << "FIXME: check registry value exists, keyName '" + keyName.toStdString() + "', valueName '" + valueName.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return false;
 }
 

@@ -1,4 +1,5 @@
 #include "envmodule.h"
+#include <iostream> // UNUSED
 #include <QCryptographicHash>
 #include "env.h"
 #include <utility.h>
@@ -485,7 +486,6 @@ std::vector<Module> getLoadedModules()
 //    log::error("Module32First() failed, {}", formatSystemMessage(e));
 //    return {};
 //  }
-  assert(false && "Not implemented");
 
   std::vector<Module> v;
 
@@ -513,7 +513,7 @@ std::vector<Module> getLoadedModules()
 //  std::sort(v.begin(), v.end(), [](auto&& a, auto&& b) {
 //    return (a.displayPath().compare(b.displayPath(), Qt::CaseInsensitive) < 0);
 //    });
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getLoadedModules" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   return v;
 }

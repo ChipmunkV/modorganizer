@@ -34,6 +34,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <log.h>
 #include "filesystemutilities.h"
 
+#include <iostream> // UNUSED
 #include <QCoreApplication>
 #include <QDir>
 #include <QStandardPaths>
@@ -218,7 +219,9 @@ Instance::SetupResults Instance::getGamePlugin(PluginContainer& plugins)
     // normal case: both the name and dir are in the ini
 
     // find the plugin by name
+    std::cerr << "FIXME: getGamePlugin" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
     for (IPluginGame* game : plugins.plugins<IPluginGame>()) {
+      std::cerr << "FIXME: getGamePlugin, gameName: '" + game->gameName().toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
       if (m_gameName.compare(game->gameName(), Qt::CaseInsensitive) == 0) {
         // plugin found, check if the game directory is valid
 

@@ -1,4 +1,5 @@
 #include "envwindows.h"
+#include <iostream> // UNUSED
 #include <QSettings>
 #include "env.h"
 #include "envmodule.h"
@@ -25,7 +26,7 @@ WindowsInfo::WindowsInfo()
 //
 //  m_release = getRelease();
 //  m_elevated = getElevated();
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: WindowsInfo" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 bool WindowsInfo::compatibilityMode() const

@@ -136,7 +136,7 @@ std::wstring ToLowerCopy(const std::wstring& text)
 {
   std::wstring result(text);
 //  CharLowerBuffW(const_cast<WCHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: ToLowerCopy" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return result;
 }
 
@@ -264,7 +264,7 @@ VersionInfo createVersionInfo()
 //                       version.dwFileVersionLS >> 16,
 //                       version.dwFileVersionLS & 0xFFFF);
 //  }
-  std::cerr << "FIXME: createVersionInfo\n";
+  std::cerr << "FIXME: createVersionInfo" + std::string(" " __FILE__) + ':' + std::to_string(__LINE__) + "\n";
   return VersionInfo();
 }
 
@@ -312,7 +312,7 @@ QString getUsvfsVersionString()
 //  } else {
 //    return "dll is " + dll + ", compiled against " + header;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getUsvfsVersionString" + std::string(" " __FILE__) + ':' + std::to_string(__LINE__) + "\n";
   return "";
 }
 
@@ -340,7 +340,7 @@ void SetThisThreadName(const QString& s)
 //  if (SetThreadDescription) {
 //    SetThreadDescription(GetCurrentThread(), s.toStdWString().c_str());
 //  }
-  std::cerr << "FIXME: cpp excption handlers\n";
+  std::cerr << "FIXME: cpp excption handlers" + std::string(" " __FILE__) + ':' + std::to_string(__LINE__) + "\n";
 }
 
 

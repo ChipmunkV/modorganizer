@@ -103,9 +103,9 @@ void printFormatBacktrace(const std::string& debuginfoPath, void *ip, size_t fra
 			"%s"
 			">&2\n", trace[i], debuginfoPath.empty() ? "" : " --debuginfo-path=", debuginfoPath.c_str(), getpid(),
 			/**
-			 * Colorize file path and line number.
+			 * Colorize file path and line number, add eclsrc:// hyperlink.
 			 */
-			stderr_term ? "| sed -r 's_(\\.*[/A-Za-z0-9\\+_\\.\\-]*):([0-9]+)$_\\x1B[1;34m\\1\\x1B[0m:\\x1B[33m\\2\\x1B[0m_'" : "",
+			stderr_term ? "| sed -r 's_(\\.*[/A-Za-z0-9\\+_\\.\\-]*):([0-9]+)(:[0-9]+)?$_\\x1B]8;;eclsrc://\\1:\\2\\3\\x7\\x1B[1;34m\\1\\x1B[0m:\\x1B[33m\\2\\x1B[0m\\3\\x1B]8;;\\x7_'" : "",
 			tidsub
 			);
 

@@ -2362,7 +2362,7 @@ DiagnosticsSettings::DiagnosticsSettings(QSettings& settings)
 
 log::Levels DiagnosticsSettings::logLevel() const
 {
-  return get<log::Levels>(m_Settings, "Settings", "log_level", log::Levels::Info);
+  return get<log::Levels>(m_Settings, "Settings", "log_level", log::Levels::Debug);
 }
 
 void DiagnosticsSettings::setLogLevel(log::Levels level)

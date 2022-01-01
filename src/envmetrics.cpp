@@ -1,4 +1,5 @@
 #include "envmetrics.h"
+#include <iostream> // UNUSED
 #include "env.h"
 //#include <Windows.h>
 //#include <shellscalingapi.h>
@@ -272,7 +273,7 @@ void Metrics::getDisplays()
 //      QString::fromWCharArray(device.DeviceName),
 //      (device.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE));
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getDisplays" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 } // namespace

@@ -1,4 +1,5 @@
 #include "sanitychecks.h"
+#include <iostream> // UNUSED
 #include <QApplication>
 #include "env.h"
 #include "envmodule.h"
@@ -355,7 +356,7 @@ std::vector<std::pair<QString, QString>> getSystemDirectories()
 //  }
 //
 //  return systemDirs;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: getSystemDirectories" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   return std::vector<std::pair<QString, QString>>();
 }
 

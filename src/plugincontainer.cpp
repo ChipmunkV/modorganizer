@@ -6,6 +6,7 @@
 #include "iuserinterface.h"
 #include <idownloadmanager.h>
 #include "shared/appconfig.h"
+#include <iostream> // UNUSED
 #include <QAction>
 #include <QToolButton>
 #include <QCoreApplication>
@@ -1050,6 +1051,8 @@ void PluginContainer::loadPlugins()
   log::debug("looking for plugins in {}", QDir::toNativeSeparators(pluginPath));
   QDirIterator iter(pluginPath, QDir::Files | QDir::NoDotAndDotDot);
 
+  std::cerr << "FIXME: loadPlugins, skipPlugin: '" + skipPlugin.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: loadPlugins, pluginPath: '" + pluginPath.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   while (iter.hasNext()) {
     iter.next();
 
@@ -1072,10 +1075,13 @@ void PluginContainer::loadPlugins()
     }
 
     QString filepath = iter.filePath();
+    std::cerr << "FIXME: loadPlugins, filepath: '" + filepath.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
     if (QLibrary::isLibrary(filepath)) {
+      std::cerr << "FIXME: loadPlugins loadQtPlugin, filepath: '" + filepath.toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
       loadQtPlugin(filepath);
     }
   }
+  std::cerr << "FIXME: loadPlugins done" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   if (skipPlugin.isEmpty()) {
     // remove the load check file on success

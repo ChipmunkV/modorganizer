@@ -1,4 +1,5 @@
 #include "multiprocess.h"
+#include <QLibraryInfo> // UNUSED
 #include <iostream>
 #include "loglist.h"
 #include "moapplication.h"
@@ -84,7 +85,7 @@ int run(int argc, char *argv[])
 //  if (auto r=cl.process(GetCommandLineW())) {
 //    return *r;
 //  }
-  std::cerr << "FIXME: command line\n";
+  std::cerr << "FIXME: command line" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
   initLogging();
 
@@ -93,6 +94,9 @@ int run(int argc, char *argv[])
 
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   MOApplication app(argc, argv);
+  std::cerr << "FIXME: applicationDirPath: '" +  QCoreApplication::applicationDirPath().toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: qt.conf exists: '" +  std::string(QDir(QCoreApplication::applicationDirPath()).exists("qt.conf") ? "true" : "false") + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: LibraryExecutablesPath: '" + QLibraryInfo::location(QLibraryInfo::LibraryExecutablesPath).toStdString() + "', DataPath: '" + QLibraryInfo::location(QLibraryInfo::DataPath).toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 
 
   // check if the command line wants to run something right now
@@ -259,5 +263,5 @@ void setExceptionHandlers()
 //
 //  g_prevExceptionFilter = SetUnhandledExceptionFilter(onUnhandledException);
 //  g_prevTerminateHandler = std::set_terminate(onTerminate);
-  std::cerr << "FIXME: cpp excption handlers\n";
+  std::cerr << "FIXME: cpp excption handlers" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }

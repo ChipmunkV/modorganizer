@@ -109,7 +109,4 @@
     <file alias="facegen">resources/contents/facegen.png</file>
     <file alias="material">resources/contents/f4-nuclear.png</file>
   </qresource>
-  <qresource prefix="/qt/etc">
-    <file>qt.conf</file>
-  </qresource>
 </RCC>
