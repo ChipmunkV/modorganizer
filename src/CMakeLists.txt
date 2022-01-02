@@ -255,8 +255,6 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}
 )
 
-target_link_libraries(${PROJECT_NAME} lz4 z /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0)
-
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/dlls.manifest.qt5"
         DESTINATION bin/dlls
