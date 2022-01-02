@@ -264,7 +264,7 @@ void Profile::createTweakedIniFile()
 //    reportError(
 //      tr("failed to update tweaked ini file, wrong settings may be used: %1")
 //        .arg(QString::fromStdWString(formatSystemMessage(e))));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return;
   }
 
@@ -286,7 +286,7 @@ void Profile::createTweakedIniFile()
 //    const auto e = ::GetLastError();
 //    reportError(tr("failed to create tweaked ini: %1")
 //      .arg(QString::fromStdWString(formatSystemMessage(e))));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 }
 
@@ -778,7 +778,7 @@ void Profile::mergeTweak(const QString &tweakName, const QString &tweakedIni) co
 //                                   buffer.data(), tweakedIniW.c_str());
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void Profile::mergeTweaks(ModInfo::Ptr modInfo, const QString &tweakedIni) const

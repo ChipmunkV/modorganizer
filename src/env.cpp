@@ -39,7 +39,7 @@ Console::Console()
 //  freopen_s(&m_in, "CONIN$", "r", stdin);
 //  freopen_s(&m_out, "CONOUT$", "w", stdout);
 //  freopen_s(&m_err, "CONOUT$", "w", stderr);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 Console::~Console()
@@ -66,7 +66,7 @@ Console::~Console()
 //  if (m_hasConsole) {
 //    FreeConsole();
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 
@@ -104,7 +104,7 @@ ModuleNotification::~ModuleNotification()
 //  if (r != 0) {
 //    log::error("failed to unregister for module notifications, error {}", r);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void ModuleNotification::setCookie(void* c)
@@ -610,7 +610,7 @@ Service::StartType getServiceStartType(SC_HANDLE s, const QString& name)
 //      return Service::StartType::None;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return Service::StartType::None;
 }
 
@@ -675,7 +675,7 @@ Service::Status getServiceStatus(SC_HANDLE s, const QString& name)
 //      return Service::Status::None;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return Service::Status::None;
 }
 
@@ -706,7 +706,7 @@ Service getService(const QString& name)
 //  const auto status = getServiceStatus(s.get(), name);
 //
 //  return {name, startType, status};
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return Service("");
 }
 
@@ -803,7 +803,7 @@ QString formatCommandLine(const QFileInfo& targetInfo, const QString& cmd)
 //  ::LocalFree(buffer);
 //
 //  return s.trimmed();
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return "";
 }
 
@@ -867,7 +867,7 @@ Association getAssociation(const QFileInfo& targetInfo)
 //  log::debug("split into exe='{}' and cmd='{}'", p.first, p.second);
 //
 //  return {p.first, *cmd, p.second};
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return Association();
 }
 
@@ -881,7 +881,7 @@ struct RegistryKeyCloser
 //    if (key != 0) {
 //      ::RegCloseKey(key);
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -899,7 +899,7 @@ RegistryKeyPtr openRegistryKey(HKEY parent, const wchar_t* name)
 //  if (r != ERROR_SUCCESS) {
 //    return {};
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return RegistryKeyPtr(subkey);
 }
@@ -916,7 +916,7 @@ bool keyHasValues(HKEY key)
 //  if (r != ERROR_NO_MORE_ITEMS) {
 //    return true;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   // no values, no default, it's empty
   return false;
@@ -993,7 +993,7 @@ bool isKeyEmpty(HKEY key)
 //    // something went wrong or some subkey has values
 //    return false;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   // key has no values and has either no subkeys or all subkeys are empty
   return true;
@@ -1092,7 +1092,7 @@ std::filesystem::path processPath(HANDLE process=INVALID_HANDLE_VALUE)
 //
 //  std::wcerr << L"failed to get filename for " << what << L"\n";
 //  return {};
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return {};
 }
 
@@ -1104,7 +1104,7 @@ std::wstring processFilename(HANDLE process=INVALID_HANDLE_VALUE)
 //  }
 //
 //  return p.filename().native();
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return L"";
 }
 
@@ -1156,7 +1156,7 @@ DWORD findOtherPid()
 //    << L"you can try running this again as administrator\n";
 //
 //  return 0;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return 0;
 }
 
@@ -1177,7 +1177,7 @@ std::wstring tempDir()
 //
 //  // `written` does not include the null terminator
 //  return std::wstring(buffer, buffer + written);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return std::wstring();
 }
 
@@ -1246,7 +1246,7 @@ HandlePtr tempFile(const std::wstring dir)
 //    // try again with "-i"
 //    path = dir + L"\\" + prefix + L"-" + std::to_wstring(i + 1) + ext;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   std::wcerr << L"can't create dump file, ran out of filenames\n";
   return {};
@@ -1353,7 +1353,7 @@ bool createMiniDump(const wchar_t* dir, HANDLE process, CoreDumpTypes type)
 //
 //  std::wclog << L"minidump written correctly\n";
 //   return true;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return true;
 }
 
@@ -1362,7 +1362,7 @@ bool coredump(const wchar_t* dir, CoreDumpTypes type)
 {
 //  std::wclog << L"creating minidump for the current process\n";
 //  return createMiniDump(dir, GetCurrentProcess(), type);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return false;
 }
 
@@ -1392,7 +1392,7 @@ bool coredumpOther(CoreDumpTypes type)
 //  }
 //
 //  return createMiniDump(nullptr, handle.get(), type);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return false;
 }
 

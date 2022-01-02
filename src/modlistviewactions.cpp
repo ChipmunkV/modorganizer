@@ -1188,7 +1188,7 @@ void ModListViewActions::moveOverwriteContentsTo(const QString& absolutePath) co
   else {
 //    const auto e = GetLastError();
 //    log::error("Move operation failed: {}", formatSystemMessage(e));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   m_core.refresh();
@@ -1284,7 +1284,7 @@ void ModListViewActions::clearOverwrite() const
       else {
 //        const auto e = GetLastError();
 //        log::error("Delete operation failed: {}", formatSystemMessage(e));
-        assert(false && "Not implemented");
+        std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
       }
     }
   }

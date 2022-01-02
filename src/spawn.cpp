@@ -175,7 +175,7 @@ QString makeContent(const SpawnParameters& sp, DWORD code)
 //  }
 //
 //  return QString::fromStdWString(formatSystemMessage(code));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return "";
 }
 
@@ -313,7 +313,7 @@ bool confirmRestartAsAdmin(QWidget* parent, const SpawnParameters& sp)
 //    .exec();
 //
 //  return (r == QMessageBox::Yes);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return true;
 }
 
@@ -533,7 +533,7 @@ DWORD spawn(const SpawnParameters& sp, HANDLE& processHandle)
 //  ::CloseHandle(pi.hThread);
 //
 //  return ERROR_SUCCESS;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return 0;
 }
 
@@ -669,7 +669,7 @@ bool startSteam(QWidget* parent)
 //    parent, QObject::tr("Waiting"),
 //    QObject::tr("Please press OK once you're logged into steam."));
 
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return true;
 }
 
@@ -803,7 +803,7 @@ HANDLE startBinary(QWidget* parent, const SpawnParameters& sp)
 //      return INVALID_HANDLE_VALUE;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return nullptr;
 }
 
@@ -846,7 +846,7 @@ QString getExecutableForJarFile(const QString& jarFile)
 //  }
 //
 //  return QString::fromWCharArray(buffer);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return "";
 }
 
@@ -945,7 +945,7 @@ QFileInfo getCmdPath()
 //  }
 //
 //  return systemDirectory + "cmd.exe";
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return QFileInfo();
 }
 
@@ -1072,7 +1072,7 @@ bool helperExec(
 //  }
 //
 //  return (exitCode == 0);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return false;
 }
 
@@ -1094,7 +1094,7 @@ bool adminLaunch(
 //    ::GetCurrentProcessId(), moFile, workingDir);
 //
 //  return helperExec(parent, moPath, commandLine, true);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return false;
 }
 

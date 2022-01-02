@@ -371,7 +371,7 @@ void CreateInstanceDialog::finish()
       {
         case QSettings::AccessError:
 //          logCreation(formatSystemMessage(ERROR_ACCESS_DENIED));
-          assert(false && "Not implemented");
+          std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
           break;
 
         case QSettings::FormatError:

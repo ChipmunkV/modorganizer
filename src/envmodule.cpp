@@ -28,7 +28,7 @@ Module::Module(QString path, std::size_t fileSize)
 //  if (UseMD5) {
 //    m_md5 = getMD5();
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 const QString& Module::path() const
@@ -200,7 +200,7 @@ QString Module::getFileDescription(std::byte* buffer) const
 
   void* valuePointer = nullptr;
   unsigned int valueSize = 0;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 //  // getting list of available languages
 //  auto ret = VerQueryValueW(
 //    buffer, L"\\VarFileInfo\\Translation", &valuePointer, &valueSize);
@@ -230,7 +230,7 @@ QString Module::getFileDescription(std::byte* buffer) const
 //    // not an error, no file version
 //    return {};
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   // valueSize includes the null terminator
   return QString::fromWCharArray(
@@ -314,7 +314,7 @@ QString Module::getFileDescription(std::byte* buffer) const
 
 bool Module::interesting() const
 {
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   static const auto windir = []() -> QString {
 //    try
 //    {
@@ -425,7 +425,7 @@ HandlePtr Process::openHandleForWait() const
 //
 //  // don't log errors, failure can happen if the process doesn't exist
 //  return HandlePtr(OpenProcess(rights, FALSE, m_pid));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return HandlePtr();
 }
 
@@ -443,7 +443,7 @@ bool Process::canAccess() const
 //      return false;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return true;
 }
@@ -560,7 +560,7 @@ void forEachRunningProcess(F&& f)
 //      break;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 std::vector<Process> getRunningProcesses()
@@ -575,7 +575,7 @@ std::vector<Process> getRunningProcesses()
 //
 //    return true;
 //  });
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return v;
 }
@@ -608,7 +608,7 @@ Process getProcessTreeFromProcess(HANDLE h)
 //      break;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return root;
 }
@@ -663,7 +663,7 @@ std::vector<DWORD> processesInJob(HANDLE h)
 //  log::error(
 //    "failed to get processes in job, can't get a buffer large enough, "
 //    "{}/{} ids", lastCount, lastAssigned);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return {};
 }
@@ -774,7 +774,7 @@ bool isJobHandle(HANDLE h)
 //    h, JobObjectBasicAccountingInformation, &info, sizeof(info), nullptr);
 //
 //  return r;
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return false;
 }
 
@@ -798,7 +798,7 @@ QString getProcessName(DWORD pid)
 //  }
 //
 //  return getProcessName(h.get());
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return "";
 }
 
@@ -829,7 +829,7 @@ QString getProcessName(HANDLE process)
 //  }
 //
 //  return s;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return "";
 }
 
@@ -853,7 +853,7 @@ DWORD getProcessParentID(DWORD pid)
 DWORD getProcessParentID(HANDLE handle)
 {
 //  return getProcessParentID(GetProcessId(handle));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return 0;
 }
 

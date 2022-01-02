@@ -42,6 +42,7 @@ std::wstring ToWString(const std::string &source, bool utf8);
 
 std::string& ToLowerInPlace(std::string& text);
 std::string ToLowerCopy(const std::string& text);
+std::string ToLowerCopy(std::string_view text);
 
 std::wstring& ToLowerInPlace(std::wstring& text);
 std::wstring ToLowerCopy(const std::wstring& text);

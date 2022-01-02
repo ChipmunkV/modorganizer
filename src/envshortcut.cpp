@@ -39,7 +39,7 @@ public:
   {
 //    m_link = createShellLink();
 //    m_file = createPersistFile();
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void setPath(const QString& s)
@@ -50,14 +50,14 @@ public:
 //
 //    const auto r = m_link->SetPath(s.toStdWString().c_str());
 //    throwOnFail(r, QString("failed to set target path '%1'").arg(s));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void setArguments(const QString& s)
   {
 //    const auto r = m_link->SetArguments(s.toStdWString().c_str());
 //    throwOnFail(r, QString("failed to set arguments '%1'").arg(s));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void setDescription(const QString& s)
@@ -68,7 +68,7 @@ public:
 //
 //    const auto r = m_link->SetDescription(s.toStdWString().c_str());
 //    throwOnFail(r, QString("failed to set description '%1'").arg(s));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void setIcon(const QString& file, int i)
@@ -79,7 +79,7 @@ public:
 //
 //    const auto r = m_link->SetIconLocation(file.toStdWString().c_str(), i);
 //    throwOnFail(r, QString("failed to set icon '%1' @ %2").arg(file).arg(i));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void setWorkingDirectory(const QString& s)
@@ -90,14 +90,14 @@ public:
 //
 //    const auto r = m_link->SetWorkingDirectory(s.toStdWString().c_str());
 //    throwOnFail(r, QString("failed to set working directory '%1'").arg(s));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   void save(const QString& path)
   {
 //    const auto r = m_file->Save(path.toStdWString().c_str(), TRUE);
 //    throwOnFail(r, QString("failed to save link '%1'").arg(path));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
 private:
@@ -111,7 +111,7 @@ private:
 //        .arg(s)
 //        .arg(formatSystemMessage(r)));
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
 //  COMPtr<IShellLink> createShellLink()
@@ -306,7 +306,7 @@ bool Shortcut::remove(Locations loc)
 //
 //    return false;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return true;
 }

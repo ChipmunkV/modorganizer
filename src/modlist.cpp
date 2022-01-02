@@ -1064,7 +1064,7 @@ bool ModList::dropLocalFiles(const ModListDropInfo& dropInfo, int row, const QMo
   if (sourceList.count()) {
     if (!shellMove(sourceList, targetList)) {
 //      log::debug("Failed to move file (error {})", ::GetLastError());
-      assert(false && "Not implemented");
+      std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
       return false;
     }
   }

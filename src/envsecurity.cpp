@@ -244,7 +244,7 @@ QString SecurityProduct::providerToString() const
 //  if (m_provider & WSC_SECURITY_PROVIDER_SERVICE) {
 //    ps.push_back("service");
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   if (ps.empty()) {
     return "doesn't provide anything";
@@ -578,7 +578,7 @@ MallocPtr<void> getCurrentUser()
 //  }
 //
 //  return currentUserSID;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return MallocPtr<void>();
 }
 
@@ -763,7 +763,7 @@ FileSecurity getFileSecurity(const QString& path)
 //  {
 //    fs.error = f.what();
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return fs;
 }

@@ -22,7 +22,7 @@ public:
   {
 //    std::fill(std::begin(m_buffer), std::end(m_buffer), 0);
 //    std::memset(&m_ov, 0, sizeof(m_ov));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 
   env::HandlePtr create()
@@ -43,7 +43,7 @@ public:
 //
 //    m_ov.hEvent = readEventHandle;
 //    m_readEvent.reset(readEventHandle);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
     return out;
   }
@@ -122,7 +122,7 @@ private:
 //    }
 //
 //    return outputWrite;
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return nullptr;
   }
 
@@ -158,7 +158,7 @@ private:
 //    }
 //
 //    return {m_buffer, m_buffer + bytesRead};
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return "";
   }
 
@@ -209,7 +209,7 @@ private:
 //    m_ioPending = false;
 //
 //    return {m_buffer, m_buffer + bytesRead};
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return "";
   }
 };
@@ -641,7 +641,7 @@ bool Loot::waitForCompletion()
 //    emit log(log::Levels::Error, tr("Loot failed. Exit code was: 0x%1").arg(exitCode, 0, 16));
 //    return false;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return true;
 }

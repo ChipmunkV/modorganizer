@@ -88,7 +88,7 @@ public:
 //    }
 //
 //    return r;
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return false;
   }
 
@@ -239,7 +239,7 @@ void ShellMenu::exec(const QPoint& pos)
 //        m_files.size(), e.what());
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 HMENU ShellMenu::getMenu()
@@ -277,7 +277,7 @@ bool ShellMenu::wndProc(HWND h, UINT m, WPARAM wp, LPARAM lp, LRESULT* out)
 //      return true;
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return false;
 }
@@ -304,7 +304,7 @@ void ShellMenu::onMenuSelect(
 //      }
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void ShellMenu::create()
@@ -348,7 +348,7 @@ void ShellMenu::create()
 //
 //    m_menu = createDummyMenu(QObject::tr("No menu available"));
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 HMenuPtr ShellMenu::createDummyMenu(const QString& what)
@@ -375,7 +375,7 @@ HMenuPtr ShellMenu::createDummyMenu(const QString& what)
 //
 //    return {};
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return {};
 }
 
@@ -536,7 +536,7 @@ void ShellMenu::invoke(const QPoint& p, int cmd)
 //  if (FAILED(r)) {
 //    throw MenuFailed(r, fmt::format("InvokeCommand failed, verb={}", cmd));
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 
@@ -642,7 +642,7 @@ void ShellMenuCollection::exec(const QPoint& pos)
 //
 //  log::debug("SMC: invoking {} on {}", realCmd, m_active->name);
 //  m_active->menu.invoke(pos, realCmd);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 bool ShellMenuCollection::wndProc(
@@ -672,7 +672,7 @@ bool ShellMenuCollection::wndProc(
 //  }
 //
 //  return m_active->menu.wndProc(h, m, wp, lp, out);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return false;
 }
 

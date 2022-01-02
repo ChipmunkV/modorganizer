@@ -1,6 +1,7 @@
 #ifndef ENV_ENV_H
 #define ENV_ENV_H
 
+#include <iostream> // UNUSED
 #include <filesystem>
 #include <set>
 #include <QFileInfo>
@@ -33,7 +34,7 @@ struct DesktopDCReleaser
 //    if (dc != 0) {
 //      ::ReleaseDC(0, dc);
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -51,7 +52,7 @@ struct HMenuFreer
 //    if (h != 0) {
 //      ::DestroyMenu(h);
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -69,7 +70,7 @@ struct LibraryFreer
 //    if (h != 0) {
 //      ::FreeLibrary(h);
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -85,7 +86,7 @@ struct COMReleaser
 //    if (p) {
 //      p->Release();
 //    }
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -117,7 +118,7 @@ struct LocalFreer
   void operator()(T p)
   {
 //    ::LocalFree(p);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 
@@ -135,7 +136,7 @@ struct CoTaskMemFreer
   void operator()(T p)
   {
 //    ::CoTaskMemFree(p);
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 };
 

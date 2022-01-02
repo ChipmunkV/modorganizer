@@ -30,7 +30,7 @@ int getDesktopDpi()
 //  }
 //
 //  return GetDeviceCaps(dc.get(), LOGPIXELSX);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return 0;
 }
 
@@ -81,7 +81,7 @@ HMONITOR findMonitor(const QString& name)
 //  EnumDisplayMonitors(0, nullptr, callback, reinterpret_cast<LPARAM>(&data));
 //
 //  return data.hm;
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return nullptr;
 }
 
@@ -138,7 +138,7 @@ int getDpi(const QString& monitorDevice)
 //
 //  // dpiX and dpiY are always identical, as per the documentation
 //  return dpiX;
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return 0;
 }
 
@@ -224,7 +224,7 @@ void Display::getSettings()
 //  if (dm.dmFields & DM_PELSHEIGHT) {
 //    m_resY = dm.dmPelsHeight;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 

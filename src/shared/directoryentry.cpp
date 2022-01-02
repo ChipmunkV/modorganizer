@@ -67,7 +67,7 @@ static bool SupportOptimizedFind()
 //    VER_MINORVERSION, VER_GREATER_EQUAL);
 //
 //  return (::VerifyVersionInfo(&versionInfo, VER_MAJORVERSION | VER_MINORVERSION, mask) == TRUE);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return false;
 }
 
@@ -75,7 +75,7 @@ bool DirCompareByName::operator()(
     const DirectoryEntry* lhs, const DirectoryEntry* rhs) const
 {
 //  return _wcsicmp(lhs->getName().c_str(), rhs->getName().c_str()) < 0;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return false;
 }
 
@@ -203,7 +203,7 @@ void DirectoryEntry::addFromAllBSAs(
 //      originName, directory, archivePath.native(),
 //      priority, order, stats);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void DirectoryEntry::addFromBSA(
@@ -252,7 +252,7 @@ void DirectoryEntry::addFromBSA(
 //  addFiles(origin, archive.getRoot(), ft, archiveName, order, stats);
 //
 //  m_Populated = true;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void DirectoryEntry::propagateOrigin(int origin)
@@ -627,7 +627,7 @@ FileEntryPtr DirectoryEntry::insert(
 //  elapsed(stats.addFileToOriginTimes, [&]{
 //    origin.addFile(fe->getIndex());
 //  });
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return fe;
 }
@@ -945,7 +945,7 @@ void DirectoryEntry::dump(const std::wstring& file) const
 //      "failed to write list to '{}': {}",
 //      QString::fromStdWString(file).toStdString(), e.what());
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void DirectoryEntry::dump(std::FILE* f, const std::wstring& parentPath) const

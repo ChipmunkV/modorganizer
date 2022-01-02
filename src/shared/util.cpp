@@ -37,7 +37,7 @@ bool FileExists(const std::string &filename)
 //  DWORD dwAttrib = ::GetFileAttributesA(filename.c_str());
 //
 //  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 bool FileExists(const std::wstring &filename)
@@ -45,7 +45,7 @@ bool FileExists(const std::wstring &filename)
 //  DWORD dwAttrib = ::GetFileAttributesW(filename.c_str());
 //
 //  return (dwAttrib != INVALID_FILE_ATTRIBUTES);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 bool FileExists(const std::wstring &searchPath, const std::wstring &filename)
@@ -72,7 +72,7 @@ std::string ToString(const std::wstring &source, bool utf8)
 //    result.resize(sizeRequired - 1, '\0');
 //    ::WideCharToMultiByte(codepage, 0, &source[0], (int)source.size(), &result[0], sizeRequired, nullptr, nullptr);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return result;
 }
@@ -96,7 +96,7 @@ std::wstring ToWString(const std::string &source, bool utf8)
 //                          static_cast<int>(source.length()), &result[0],
 //                          sizeRequired);
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return result;
 }
@@ -113,7 +113,7 @@ static auto locToLower = [] (char in) -> char {
 std::string& ToLowerInPlace(std::string& text)
 {
 //  CharLowerBuffA(const_cast<CHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return text;
 }
 
@@ -121,14 +121,14 @@ std::string ToLowerCopy(const std::string& text)
 {
   std::string result(text);
 //  CharLowerBuffA(const_cast<CHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return result;
 }
 
 std::wstring& ToLowerInPlace(std::wstring& text)
 {
 //  CharLowerBuffW(const_cast<WCHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return text;
 }
 
@@ -137,6 +137,13 @@ std::wstring ToLowerCopy(const std::wstring& text)
   std::wstring result(text);
 //  CharLowerBuffW(const_cast<WCHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
   std::cerr << "FIXME: ToLowerCopy" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  return result;
+}
+
+std::string ToLowerCopy(std::string_view text)
+{
+  std::string result(text.begin(), text.end());
+  ToLowerInPlace(result);
   return result;
 }
 
@@ -216,7 +223,7 @@ std::wstring GetFileVersionString(const std::wstring &fileName)
 //  catch (...) {
 //    throw;
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return L"";
 }
 
@@ -296,7 +303,7 @@ QString getUsvfsDLLVersion()
 //  }
 //
 //  return s;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return "";
 }
 

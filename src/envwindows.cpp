@@ -133,7 +133,7 @@ WindowsInfo::Version WindowsInfo::getReportedVersion(HINSTANCE ntdll) const
 //  RtlGetVersion((RTL_OSVERSIONINFOW*)&vi);
 //
 //  return {vi.dwMajorVersion, vi.dwMinorVersion, vi.dwBuildNumber};
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return WindowsInfo::Version();
 }
 
@@ -162,7 +162,7 @@ WindowsInfo::Version WindowsInfo::getRealVersion(HINSTANCE ntdll) const
 //  build = 0x0fffffff & build;
 //
 //  return {major, minor, build};
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return WindowsInfo::Version();
 }
 
@@ -235,7 +235,7 @@ std::optional<bool> WindowsInfo::getElevated() const
 //  }
 //
 //  return (e.TokenIsElevated != 0);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   return std::optional<bool>();
 }
 

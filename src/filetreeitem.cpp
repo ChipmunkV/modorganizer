@@ -35,7 +35,7 @@ const QString& directoryFileType()
 //  }();
 //
 //  return name;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   static const QString name;
   return name;
 }
@@ -63,7 +63,7 @@ const QString& cachedFileTypeNoExtension()
 //  }();
 //
 //  return name;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   static const QString name;
   return name;
 }
@@ -113,7 +113,7 @@ const QString& cachedFileType(const std::wstring& file, bool isOnFilesystem)
 //  }
 //
 //  return map.emplace(sv, s).first->second;
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   static const QString type;
   return type;
 }

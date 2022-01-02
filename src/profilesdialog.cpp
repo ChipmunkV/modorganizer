@@ -256,7 +256,7 @@ void ProfilesDialog::on_removeProfileButton_clicked()
     }
     if (!shellDelete(QStringList(profilePath))) {
 //      log::warn("Failed to shell-delete \"{}\" (errorcode {}), trying regular delete", profilePath, ::GetLastError());
-      assert(false && "Not implemented");
+      std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
       if (!removeDir(profilePath)) {
         log::warn("regular delete failed too");
       }

@@ -209,7 +209,7 @@ private:
   {
     for (auto& h : m_handles) {
 //      NtClose(h);
-      assert(false && "Not implemented");
+      std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     }
 
     m_handles.clear();
@@ -416,7 +416,7 @@ Directory getFilesAndDirs(const std::wstring& path)
 //      cx->current.top()->files.push_back(File(path, ft, s));
 //    }
 //  );
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 
   return root;
 }
@@ -472,7 +472,7 @@ void getFilesAndDirsWithFindImpl(const std::wstring& path, Directory& d)
 //  }
 //
 //  ::FindClose(searchHandle);
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 Directory getFilesAndDirsWithFind(const std::wstring& path)

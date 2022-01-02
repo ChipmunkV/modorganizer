@@ -2108,7 +2108,7 @@ void SteamSettings::setLogin(QString username, QString password)
   if (!setWindowsCredential("steam_password", password)) {
 //    const auto e = GetLastError();
 //    log::error("Storing or deleting password failed: {}", formatSystemMessage(e));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
   }
 }
 
@@ -2484,7 +2484,7 @@ bool GlobalSettings::setNexusApiKey(const QString& apiKey)
   if (!setWindowsCredential("APIKEY", apiKey)) {
 //    const auto e = GetLastError();
 //    log::error("Storing API key failed: {}", formatSystemMessage(e));
-    assert(false && "Not implemented");
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     return false;
   }
 

@@ -86,7 +86,7 @@ void LogWorker::process()
 //    }
 //  }
 //  emit finished();
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void LogWorker::exit()
@@ -237,7 +237,7 @@ void UsvfsConnector::updateMapping(const MappingType &mapping)
 //  log::debug(
 //    "VFS mappings updated, linked {} dirs and {} files in {}ms",
 //    dirs, files, time.count());
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void UsvfsConnector::updateParams(
@@ -263,7 +263,7 @@ void UsvfsConnector::updateParams(
 //    std::wstring buf = exec.toStdWString();
 //    BlacklistExecutable(buf.data());
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 void UsvfsConnector::updateForcedLibraries(const QList<MOBase::ExecutableForcedLoadSetting> &forcedLibraries)
@@ -277,7 +277,7 @@ void UsvfsConnector::updateForcedLibraries(const QList<MOBase::ExecutableForcedL
 //      );
 //    }
 //  }
-  assert(false && "Not implemented");
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
 

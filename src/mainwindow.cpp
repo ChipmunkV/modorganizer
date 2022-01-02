@@ -2325,7 +2325,7 @@ void MainWindow::fileMoved(const QString &filePath, const QString &oldOriginName
 //        hFind = ::FindFirstFileW(ToWString(fullNewPath).c_str(), &findData);
 //        filePtr->addOrigin(newOrigin.getID(), findData.ftCreationTime, L"", -1);
 //        FindClose(hFind);
-        assert(false && "Not implemented");
+        std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
       }
       if (m_OrganizerCore.directoryStructure()->originExists(ToWString(oldOriginName))) {
         FilesOrigin &oldOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(oldOriginName));
@@ -3515,7 +3515,7 @@ void MainWindow::on_restoreButton_clicked()
 //        this, tr("Restore failed"),
 //        tr("Failed to restore the backup. Errorcode: %1")
 //          .arg(QString::fromStdWString(formatSystemMessage(e))));
-      assert(false && "Not implemented");
+      std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     }
     m_OrganizerCore.refreshESPList(true);
   }
@@ -3541,7 +3541,7 @@ void MainWindow::on_restoreModsButton_clicked()
 //        this, tr("Restore failed"),
 //        tr("Failed to restore the backup. Errorcode: %1")
 //          .arg(formatSystemMessage(e)));
-      assert(false && "Not implemented");
+      std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
     }
     m_OrganizerCore.refresh(false);
   }
@@ -3635,11 +3635,14 @@ void MainWindow::dropLocalFile(const QUrl &url, const QString &outputDir, bool m
   } else {
     success = shellCopy(file.absoluteFilePath(), target, true, this);
   }
-//  if (!success) {
-//    const auto e = GetLastError();
-//    log::error("file operation failed: {}", formatSystemMessage(e));
-//  }
-  assert(false && "Not implemented");
+  if (!success) {
+#ifdef _WIN32
+    const auto e = GetLastError();
+    log::error("file operation failed: {}", formatSystemMessage(e));
+#else
+    std::cerr << "FIXME: dropLocalFile error" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+#endif
+  }
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
