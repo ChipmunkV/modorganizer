@@ -332,12 +332,21 @@ void DownloadManager::refreshList()
     }
 
     const QStringList supportedExtensions = m_OrganizerCore->installationManager()->getSupportedExtensions();
+#ifdef _WIN32
     std::vector<std::wstring> nameFilters;
     for (const auto& extension : supportedExtensions) {
       nameFilters.push_back(L"." + extension.toLower().toStdWString());
     }
 
     nameFilters.push_back(QString(UNFINISHED).toLower().toStdWString());
+#else
+    std::vector<std::string> nameFilters;
+    for (const auto& extension : supportedExtensions) {
+      nameFilters.push_back("." + extension.toLower().toStdString());
+    }
+
+    nameFilters.push_back(QString(UNFINISHED).toLower().toStdString());
+#endif
 
 
     QDir dir(QDir::fromNativeSeparators(m_OutputDirectory));
@@ -357,6 +366,7 @@ void DownloadManager::refreshList()
     }
 
 
+#ifdef _WIN32
     std::set<std::wstring> seen;
 
     struct Context
@@ -365,54 +375,107 @@ void DownloadManager::refreshList()
       std::set<std::wstring>& seen;
       std::vector<std::wstring>& extensions;
     };
+#else
+    std::set<std::string> seen;
+
+    struct Context
+    {
+      DownloadManager& self;
+      std::set<std::string>& seen;
+      std::vector<std::string>& extensions;
+    };
+#endif
 
     Context cx = {*this, seen, nameFilters};
 
     for (auto&& d : m_ActiveDownloads) {
+#ifdef _WIN32
       cx.seen.insert(d->m_FileName.toLower().toStdWString());
       cx.seen.insert(QFileInfo(d->m_Output.fileName()).fileName().toLower().toStdWString());
+#else
+      cx.seen.insert(d->m_FileName.toLower().toStdString());
+      cx.seen.insert(QFileInfo(d->m_Output.fileName()).fileName().toLower().toStdString());
+#endif
     }
 
 
-//    env::forEachEntry(
-//      QDir::toNativeSeparators(m_OutputDirectory).toStdWString(), &cx, nullptr, nullptr,
-//      [](void* data, std::wstring_view f, FILETIME, uint64_t size) {
-//        auto& cx = *static_cast<Context*>(data);
-//
-//        std::wstring lc = MOShared::ToLowerCopy(f);
-//
-//        bool interestingExt = false;
-//        for (auto&& ext : cx.extensions) {
-//          if (lc.ends_with(ext)) {
-//            interestingExt = true;
-//            break;
-//          }
-//        }
-//
-//        if (!interestingExt) {
-//          return;
-//        }
-//
-//        if (cx.seen.contains(lc)) {
-//          return;
-//        }
-//
-//        QString fileName =
-//          QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" +
-//          QString::fromWCharArray(f.data(), f.size());
-//
-//        DownloadInfo *info = DownloadInfo::createFromMeta(
-//          fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);
-//
-//        if (info == nullptr) {
-//          return;
-//        }
-//
-//        cx.self.m_ActiveDownloads.push_front(info);
-//        cx.seen.insert(std::move(lc));
-//        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdWString());
-//    });
-    std::cerr << "FIXME: DownloadManager::refreshList" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+    env::forEachEntry(
+#ifdef _WIN32
+      QDir::toNativeSeparators(m_OutputDirectory).toStdWString(), &cx, nullptr, nullptr,
+      [](void* data, std::wstring_view f, FILETIME, uint64_t size) {
+        auto& cx = *static_cast<Context*>(data);
+
+        std::wstring lc = MOShared::ToLowerCopy(f);
+
+        bool interestingExt = false;
+        for (auto&& ext : cx.extensions) {
+          if (lc.ends_with(ext)) {
+            interestingExt = true;
+            break;
+          }
+        }
+
+        if (!interestingExt) {
+          return;
+        }
+
+        if (cx.seen.contains(lc)) {
+          return;
+        }
+
+        QString fileName =
+          QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" +
+          QString::fromWCharArray(f.data(), f.size());
+
+        DownloadInfo *info = DownloadInfo::createFromMeta(
+          fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);
+
+        if (info == nullptr) {
+          return;
+        }
+
+        cx.self.m_ActiveDownloads.push_front(info);
+        cx.seen.insert(std::move(lc));
+        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdWString());
+    }
+#else
+      QDir::toNativeSeparators(m_OutputDirectory).toStdString(), &cx, nullptr, nullptr,
+      [](void* data, const QString& f, uint64_t size) {
+        auto& cx = *static_cast<Context*>(data);
+
+        std::string lc = MOShared::ToLowerCopy(f.toStdString());
+
+        bool interestingExt = false;
+        for (auto&& ext : cx.extensions) {
+          if (lc.ends_with(ext)) {
+            interestingExt = true;
+            break;
+          }
+        }
+
+        if (!interestingExt) {
+          return;
+        }
+
+        if (cx.seen.contains(lc)) {
+          return;
+        }
+
+        QString fileName = QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" + f;
+
+        DownloadInfo *info = DownloadInfo::createFromMeta(
+          fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);
+
+        if (info == nullptr) {
+          return;
+        }
+
+        cx.self.m_ActiveDownloads.push_front(info);
+        cx.seen.insert(std::move(lc));
+        cx.seen.insert(QFileInfo(info->m_Output.fileName()).fileName().toLower().toStdString());
+    }
+#endif
+    );
 
     log::debug("saw {} downloads", m_ActiveDownloads.size());
 

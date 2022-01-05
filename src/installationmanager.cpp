@@ -90,35 +90,33 @@ InstallationManager::InstallationManager()
     :
       m_ParentWidget(nullptr),
       m_IsRunning(false) {
-//  m_ArchiveHandler = CreateArchive();
-//  if (!m_ArchiveHandler->isValid()) {
-//    throw MyException(getErrorString(m_ArchiveHandler->getLastError()));
-//  }
-//  m_ArchiveHandler->setLogCallback([](auto level, auto const& message) {
-//    using LogLevel = Archive::LogLevel;
-//    switch (level) {
-//    case LogLevel::Debug:
-//      log::debug("{}", message);
-//      break;
-//    case LogLevel::Info:
-//      log::info("{}", message);
-//      break;
-//    case LogLevel::Warning:
-//      log::warn("{}", message);
-//      break;
-//    case LogLevel::Error:
-//      log::error("{}", message);
-//      break;
-//    }
-//  });
-//
-//  // Connect the query password slot - This is the only way I found to be able to query user
-//  // from a separate thread. We use a BlockingQueuedConnection so that calling passwordRequested()
-//  // will block until the end of the slot.
-//  connect(this, &InstallationManager::passwordRequested,
-//    this, &InstallationManager::queryPassword, Qt::BlockingQueuedConnection);
-//  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
-  std::cerr << "FIXME: InstallationManager" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  m_ArchiveHandler = CreateArchive();
+  if (!m_ArchiveHandler->isValid()) {
+    throw MyException(getErrorString(m_ArchiveHandler->getLastError()));
+  }
+  m_ArchiveHandler->setLogCallback([](auto level, auto const& message) {
+    using LogLevel = Archive::LogLevel;
+    switch (level) {
+    case LogLevel::Debug:
+      log::debug("{}", message);
+      break;
+    case LogLevel::Info:
+      log::info("{}", message);
+      break;
+    case LogLevel::Warning:
+      log::warn("{}", message);
+      break;
+    case LogLevel::Error:
+      log::error("{}", message);
+      break;
+    }
+  });
+
+  // Connect the query password slot - This is the only way I found to be able to query user
+  // from a separate thread. We use a BlockingQueuedConnection so that calling passwordRequested()
+  // will block until the end of the slot.
+  connect(this, &InstallationManager::passwordRequested,
+    this, &InstallationManager::queryPassword, Qt::BlockingQueuedConnection);
 }
 
 InstallationManager::~InstallationManager()
@@ -146,9 +144,13 @@ bool InstallationManager::extractFiles(QString extractPath, QString title, bool 
 
   // Callback for errors:
   QString errorMessage;
-  auto errorCallback = [&errorMessage, this](std::wstring const& message) {
+  auto errorCallback = [&errorMessage, this](PathStr const& message) {
     m_ArchiveHandler->cancel();
+#ifdef _WIN32
     errorMessage = QString::fromStdWString(message);
+#else
+    errorMessage = QString::fromStdString(message);
+#endif
   };
 
   // The future that will hold the result:
@@ -157,7 +159,11 @@ bool InstallationManager::extractFiles(QString extractPath, QString title, bool 
   if (silent) {
     future = QtConcurrent::run([&]() -> bool {
       return m_ArchiveHandler->extract(
+#ifdef _WIN32
         extractPath.toStdWString(),
+#else
+        extractPath.toStdString(),
+#endif
         nullptr,
         nullptr,
         errorCallback
@@ -228,7 +234,11 @@ bool InstallationManager::extractFiles(QString extractPath, QString title, bool 
       Qt::QueuedConnection);
     futureWatcher.setFuture(QtConcurrent::run([&]() -> bool {
       return m_ArchiveHandler->extract(
+#ifdef _WIN32
         extractPath.toStdWString(),
+#else
+        extractPath.toStdString(),
+#endif
         progressCallback,
         showFilenames ? fileChangeCallback : nullptr,
         errorCallback
@@ -506,7 +516,16 @@ InstallationResult InstallationManager::doInstall(
 
   result.m_name = modName;
 
-  QString targetDirectory = QDir(m_ModsDirectory + "/" + modName).canonicalPath();
+  QDir targetDir(m_ModsDirectory + "/" + modName);
+#ifndef _WIN32
+  if (!targetDir.exists() && !targetDir.mkpath(".")) {
+    return { IPluginInstaller::RESULT_FAILED };
+  }
+#endif
+  QString targetDirectory = targetDir.canonicalPath();
+  std::cerr << "FIXME: targetDirectory '" + (m_ModsDirectory + "/" + modName).toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: targetDirectory Dir '" + QDir(m_ModsDirectory + "/" + modName).path().toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  std::cerr << "FIXME: targetDirectory Dir canonicaal '" + QDir(m_ModsDirectory + "/" + modName).canonicalPath().toStdString() + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   QString targetDirectoryNative = QDir::toNativeSeparators(targetDirectory);
 
   log::debug("installing to \"{}\"", targetDirectoryNative);
@@ -694,7 +713,11 @@ InstallationResult InstallationManager::install(
   // open the archive and construct the directory tree the installers work on
 
   bool archiveOpen = m_ArchiveHandler->open(
+#ifdef _WIN32
     fileName.toStdWString(), [this]() -> std::wstring {
+#else
+    fileName.toStdString(), [this]() -> std::wstring {
+#endif
       m_Password = QString();
 
       // Note: If we are not in the Qt event thread, we cannot use queryPassword() directly,
@@ -728,6 +751,7 @@ InstallationResult InstallationManager::install(
 
   InstallationResult installResult(IPluginInstaller::RESULT_NOTATTEMPTED);
 
+  std::cerr << "FIXME: installers count '" + std::to_string(installers.size()) + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   for (IPluginInstaller *installer : installers) {
     // don't use inactive installers (installer can't be null here but vc static code analysis thinks it could)
     if ((installer == nullptr) || !m_PluginContainer->isEnabled(installer)) {

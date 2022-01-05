@@ -26,8 +26,10 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <guessedvalue.h>
 
 #include <QObject>
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-//#include <Windows.h>
+#include <Windows.h>
+#endif
 #include <archive.h>
 #include <QProgressDialog>
 #include <set>

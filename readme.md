@@ -1,5 +1,37 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/hxenwxmpaob5xung?svg=true)](https://ci.appveyor.com/project/ModOrganizer2/modorganizer-736bd)
 
+# Here working on the Linux-native build of the Mod Organizer 2
+
+This is work-in-progress project that aims to build native Linux binaries from the MO2 source code.
+
+It's not usable in current state.
+
+CMake scripts didn't require a lot of modifications.
+Build instructions are here: [modorganizer-deb-packaging](https://github.com/ChipmunkV/modorganizer-deb-packaging) (scripts for generating MO2 deb package)
+
+## Porting order and conventions
+
+* comment-out all the code that doesn't compile, trace a `FIXME` message and call abort instead, mark temporary includes you need like that: `#include <cassert> // UNUSED`
+* add missing includes, they are missing mostly due to the removal of the precompiled headers (PCH)
+* fix cross-platform code
+* launch and do stuff until an abort or a crash
+* add back commented-out parts while adding Linux implementations for them, use `#ifdef _WIN32` where needed, keep `FIXME` for incomplete implementations
+
+The commit structure is not defined, we'll look into organizing them before doing rebases.
+
+For now building only the core libraries and plugins to get something workable and to see what's needed from the virtual filesystem.
+Will probably reimplement the virtual filesystem by using FUSE or Linux OverlayFS.
+Linux namespaces may be handy to make each game process see its own set of filesystem mounts.
+
+Wine will be used for things like the Windows registry access.
+Launching games from MO2 will probably rely on Lutris or Steam.
+
+## Motivation
+
+* Linux users are more likely to look into the code and fix the issues if they don't need a Windows VM to build and debug MO2
+* Linux users won't need a deep knowledge of Wine when debugging issues with MO2
+* game runtime performance and battery life should be better with Linux OverlayFS
+
 # Mod Organizer
 
 Mod Organizer (MO) is a tool for managing mod collections of arbitrary size. It is specifically designed for people who like to experiment with mods and thus need an easy and reliable way to install and uninstall them.

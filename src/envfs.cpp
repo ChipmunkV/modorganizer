@@ -1,5 +1,8 @@
 #include "envfs.h"
 #include <stack>
+#ifndef _WIN32
+#include <QDirIterator>
+#endif
 #include "env.h"
 #include "shared/util.h"
 #include <utility.h>
@@ -225,165 +228,215 @@ void setHandleCloserThreadCount(std::size_t n)
   g_handleClosers.setMax(n);
 }
 
-//void forEachEntryImpl(
-//  void* cx, HandleCloserThread& hc, std::vector<std::unique_ptr<unsigned char[]>>& buffers,
-//  POBJECT_ATTRIBUTES poa, std::size_t depth,
-//  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
-//{
-//  IO_STATUS_BLOCK iosb;
-//  UNICODE_STRING ObjectName;
-//  OBJECT_ATTRIBUTES oa = { sizeof(oa), 0, &ObjectName };
-//  NTSTATUS status;
-//
-//  status = NtOpenFile(
-//    &oa.RootDirectory, FILE_GENERIC_READ, poa, &iosb, FILE_SHARE_VALID_FLAGS,
-//    FILE_SYNCHRONOUS_IO_NONALERT|FILE_OPEN_FOR_BACKUP_INTENT);
-//
-//  if (status < 0) {
-//    log::error(
-//      "failed to open directory '{}': {}",
-//      toString(poa), formatNtMessage(status));
-//
-//    return;
-//  }
-//
-//  hc.add(oa.RootDirectory);
-//  unsigned char* buffer;
-//
-//  if (depth >= buffers.size()) {
-//    buffers.emplace_back(std::make_unique<unsigned char[]>(AllocSize));
-//    buffer = buffers.back().get();
-//  } else {
-//    buffer = buffers[depth].get();
-//  }
-//
-//  union
-//  {
-//    PVOID pv;
-//    PBYTE pb;
-//    PFILE_DIRECTORY_INFORMATION DirInfo;
-//  };
-//
-//  for (;;) {
-//    status = NtQueryDirectoryFile(
-//      oa.RootDirectory, NULL, NULL, NULL, &iosb,
-//      buffer, AllocSize, FileDirectoryInformation, FALSE, NULL, FALSE);
-//
-//    if (status == STATUS_NO_MORE_FILES) {
-//      break;
-//    } else if (status < 0) {
-//      log::error(
-//        "failed to read directory '{}': {}",
-//        toString(poa), formatNtMessage(status));
-//
-//      break;
-//    }
-//
-//    ULONG NextEntryOffset = 0;
-//
-//    pv = buffer;
-//
-//    auto isDotDir = [](auto* o) {
-//      if (o->Length == 2 && o->Buffer[0] == '.') {
-//        return true;
-//      }
-//
-//      if (o->Length == 4 && o->Buffer[0] == '.' && o->Buffer[1] == '.') {
-//        return true;
-//      }
-//
-//      return false;
-//    };
-//
-//    std::size_t count = 0;
-//
-//    for (;;) {
-//      ++count;
-//      pb += NextEntryOffset;
-//
-//      ObjectName.Buffer = DirInfo->FileName;
-//      ObjectName.Length = (USHORT)DirInfo->FileNameLength;
-//
-//      if (!isDotDir(&ObjectName)) {
-//        ObjectName.MaximumLength = ObjectName.Length;
-//
-//        if (DirInfo->FileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-//          if (dirStartF && dirEndF) {
-//            dirStartF(cx, toStringView(&oa));
-//            forEachEntryImpl(cx, hc, buffers, &oa, depth+1, dirStartF, dirEndF, fileF);
-//            dirEndF(cx, toStringView(&oa));
-//          }
-//        } else {
-//          FILETIME ft;
-//          ft.dwLowDateTime = DirInfo->LastWriteTime.LowPart;
-//          ft.dwHighDateTime = DirInfo->LastWriteTime.HighPart;
-//
-//          fileF(cx, toStringView(&oa), ft, DirInfo->AllocationSize.QuadPart);
-//        }
-//      }
-//
-//      NextEntryOffset = DirInfo->NextEntryOffset;
-//
-//      if (NextEntryOffset == 0) {
-//        break;
-//      }
-//    }
-//  }
-//}
-//
-//std::wstring makeNtPath(const std::wstring& path)
-//{
-//  constexpr const wchar_t* nt_prefix = L"\\??\\";
-//  constexpr const wchar_t* nt_unc_prefix = L"\\??\\UNC\\";
-//  constexpr const wchar_t* share_prefix = L"\\\\";
-//
-//  if (path.starts_with(nt_prefix)) {
-//    // already an nt path
-//    return path;
-//  } else if (path.starts_with(share_prefix)) {
-//    // network shared need \??\UNC\ as a prefix
-//    return nt_unc_prefix + path.substr(2);
-//  } else {
-//    // prepend the \??\ prefix
-//    return nt_prefix + path;
-//  }
-//}
+#ifdef _WIN32
+void forEachEntryImpl(
+  void* cx, HandleCloserThread& hc, std::vector<std::unique_ptr<unsigned char[]>>& buffers,
+  POBJECT_ATTRIBUTES poa, std::size_t depth,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  IO_STATUS_BLOCK iosb;
+  UNICODE_STRING ObjectName;
+  OBJECT_ATTRIBUTES oa = { sizeof(oa), 0, &ObjectName };
+  NTSTATUS status;
 
-//void DirectoryWalker::forEachEntry(
-//  const std::wstring& path, void* cx,
-//  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
-//{
-//  auto& hc = g_handleClosers.request();
-//
-//  if (!NtOpenFile) {
-//    LibraryPtr m(::LoadLibraryW(L"ntdll.dll"));
-//    NtOpenFile = (NtOpenFile_type)::GetProcAddress(m.get(), "NtOpenFile");
-//    NtQueryDirectoryFile = (NtQueryDirectoryFile_type)::GetProcAddress(m.get(), "NtQueryDirectoryFile");
-//    NtClose = (NtClose_type)::GetProcAddress(m.get(), "NtClose");
-//  }
-//
-//  const std::wstring ntpath = makeNtPath(path);
-//
-//  UNICODE_STRING ObjectName = {};
-//  ObjectName.Buffer = const_cast<wchar_t*>(ntpath.c_str());
-//  ObjectName.Length = (USHORT)ntpath.size() * sizeof(wchar_t);
-//  ObjectName.MaximumLength = ObjectName.Length;
-//
-//  OBJECT_ATTRIBUTES oa = {};
-//  oa.Length = sizeof(oa);
-//  oa.ObjectName = &ObjectName;
-//
-//  forEachEntryImpl(cx, hc, m_buffers, &oa, 0, dirStartF, dirEndF, fileF);
-//  hc.wakeup();
-//}
+  status = NtOpenFile(
+    &oa.RootDirectory, FILE_GENERIC_READ, poa, &iosb, FILE_SHARE_VALID_FLAGS,
+    FILE_SYNCHRONOUS_IO_NONALERT|FILE_OPEN_FOR_BACKUP_INTENT);
+
+  if (status < 0) {
+    log::error(
+      "failed to open directory '{}': {}",
+      toString(poa), formatNtMessage(status));
+
+    return;
+  }
+
+  hc.add(oa.RootDirectory);
+  unsigned char* buffer;
+
+  if (depth >= buffers.size()) {
+    buffers.emplace_back(std::make_unique<unsigned char[]>(AllocSize));
+    buffer = buffers.back().get();
+  } else {
+    buffer = buffers[depth].get();
+  }
+
+  union
+  {
+    PVOID pv;
+    PBYTE pb;
+    PFILE_DIRECTORY_INFORMATION DirInfo;
+  };
+
+  for (;;) {
+    status = NtQueryDirectoryFile(
+      oa.RootDirectory, NULL, NULL, NULL, &iosb,
+      buffer, AllocSize, FileDirectoryInformation, FALSE, NULL, FALSE);
+
+    if (status == STATUS_NO_MORE_FILES) {
+      break;
+    } else if (status < 0) {
+      log::error(
+        "failed to read directory '{}': {}",
+        toString(poa), formatNtMessage(status));
+
+      break;
+    }
+
+    ULONG NextEntryOffset = 0;
+
+    pv = buffer;
+
+    auto isDotDir = [](auto* o) {
+      if (o->Length == 2 && o->Buffer[0] == '.') {
+        return true;
+      }
+
+      if (o->Length == 4 && o->Buffer[0] == '.' && o->Buffer[1] == '.') {
+        return true;
+      }
+
+      return false;
+    };
+
+    std::size_t count = 0;
+
+    for (;;) {
+      ++count;
+      pb += NextEntryOffset;
+
+      ObjectName.Buffer = DirInfo->FileName;
+      ObjectName.Length = (USHORT)DirInfo->FileNameLength;
+
+      if (!isDotDir(&ObjectName)) {
+        ObjectName.MaximumLength = ObjectName.Length;
+
+        if (DirInfo->FileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+          if (dirStartF && dirEndF) {
+            dirStartF(cx, toStringView(&oa));
+            forEachEntryImpl(cx, hc, buffers, &oa, depth+1, dirStartF, dirEndF, fileF);
+            dirEndF(cx, toStringView(&oa));
+          }
+        } else {
+          FILETIME ft;
+          ft.dwLowDateTime = DirInfo->LastWriteTime.LowPart;
+          ft.dwHighDateTime = DirInfo->LastWriteTime.HighPart;
+
+          fileF(cx, toStringView(&oa), ft, DirInfo->AllocationSize.QuadPart);
+        }
+      }
+
+      NextEntryOffset = DirInfo->NextEntryOffset;
+
+      if (NextEntryOffset == 0) {
+        break;
+      }
+    }
+  }
+}
+
+std::wstring makeNtPath(const std::wstring& path)
+{
+  constexpr const wchar_t* nt_prefix = L"\\??\\";
+  constexpr const wchar_t* nt_unc_prefix = L"\\??\\UNC\\";
+  constexpr const wchar_t* share_prefix = L"\\\\";
+
+  if (path.starts_with(nt_prefix)) {
+    // already an nt path
+    return path;
+  } else if (path.starts_with(share_prefix)) {
+    // network shared need \??\UNC\ as a prefix
+    return nt_unc_prefix + path.substr(2);
+  } else {
+    // prepend the \??\ prefix
+    return nt_prefix + path;
+  }
+}
+
+void DirectoryWalker::forEachEntry(
+  const std::wstring& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  auto& hc = g_handleClosers.request();
+
+  if (!NtOpenFile) {
+    LibraryPtr m(::LoadLibraryW(L"ntdll.dll"));
+    NtOpenFile = (NtOpenFile_type)::GetProcAddress(m.get(), "NtOpenFile");
+    NtQueryDirectoryFile = (NtQueryDirectoryFile_type)::GetProcAddress(m.get(), "NtQueryDirectoryFile");
+    NtClose = (NtClose_type)::GetProcAddress(m.get(), "NtClose");
+  }
+
+  const std::wstring ntpath = makeNtPath(path);
+
+  UNICODE_STRING ObjectName = {};
+  ObjectName.Buffer = const_cast<wchar_t*>(ntpath.c_str());
+  ObjectName.Length = (USHORT)ntpath.size() * sizeof(wchar_t);
+  ObjectName.MaximumLength = ObjectName.Length;
+
+  OBJECT_ATTRIBUTES oa = {};
+  oa.Length = sizeof(oa);
+  oa.ObjectName = &ObjectName;
+
+  forEachEntryImpl(cx, hc, m_buffers, &oa, 0, dirStartF, dirEndF, fileF);
+  hc.wakeup();
+}
 
 
-//void forEachEntry(
-//  const std::wstring& path, void* cx,
-//  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
-//{
-//  DirectoryWalker().forEachEntry(path, cx, dirStartF, dirEndF, fileF);
-//}
+void forEachEntry(
+  const std::wstring& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  DirectoryWalker().forEachEntry(path, cx, dirStartF, dirEndF, fileF);
+}
+#else
+void forEachEntryImpl(
+  void* cx, const std::string& path, std::size_t depth,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  if (dirStartF || dirEndF || depth) {
+    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  }
+
+  QDirIterator it(QString::fromStdString(path), QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+  while (it.hasNext()) {
+    QFileInfo f(it.next());
+    fileF(cx, f.fileName(), f.size());
+  }
+}
+
+std::wstring makeNtPath(const std::wstring& path)
+{
+  constexpr const wchar_t* nt_prefix = L"\\??\\";
+  constexpr const wchar_t* nt_unc_prefix = L"\\??\\UNC\\";
+  constexpr const wchar_t* share_prefix = L"\\\\";
+
+  if (path.starts_with(nt_prefix)) {
+    // already an nt path
+    return path;
+  } else if (path.starts_with(share_prefix)) {
+    // network shared need \??\UNC\ as a prefix
+    return nt_unc_prefix + path.substr(2);
+  } else {
+    // prepend the \??\ prefix
+    return nt_prefix + path;
+  }
+}
+
+void DirectoryWalker::forEachEntry(
+  const std::string& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  forEachEntryImpl(cx, path, 0, dirStartF, dirEndF, fileF);
+}
+
+
+void forEachEntry(
+  const std::string& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
+{
+  DirectoryWalker().forEachEntry(path, cx, dirStartF, dirEndF, fileF);
+}
+#endif
 
 Directory getFilesAndDirs(const std::wstring& path)
 {

@@ -4,6 +4,9 @@
 #include "thread_utils.h"
 #include <condition_variable>
 #include <thread>
+#ifndef _WIN32
+#include <QString>
+#endif
 
 namespace env
 {
@@ -174,9 +177,15 @@ private:
 };
 
 
+#ifdef _WIN32
 using DirStartF = void (void*, std::wstring_view);
 using DirEndF = void (void*, std::wstring_view);
-//using FileF = void (void*, std::wstring_view, FILETIME, uint64_t);
+using FileF = void (void*, std::wstring_view, FILETIME, uint64_t);
+#else
+using DirStartF = void (void*, std::string_view);
+using DirEndF = void (void*, std::string_view);
+using FileF = void (void*, const QString&, uint64_t);
+#endif
 
 void setHandleCloserThreadCount(std::size_t n);
 
@@ -184,18 +193,30 @@ void setHandleCloserThreadCount(std::size_t n);
 class DirectoryWalker
 {
 public:
-//  void forEachEntry(
-//    const std::wstring& path, void* cx,
-//    DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#ifdef _WIN32
+  void forEachEntry(
+    const std::wstring& path, void* cx,
+    DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#else
+  void forEachEntry(
+    const std::string& path, void* cx,
+    DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#endif
 
 private:
   std::vector<std::unique_ptr<unsigned char[]>> m_buffers;
 };
 
 
-//void forEachEntry(
-//  const std::wstring& path, void* cx,
-//  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#ifdef _WIN32
+void forEachEntry(
+  const std::wstring& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#else
+void forEachEntry(
+  const std::string& path, void* cx,
+  DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
+#endif
 
 Directory getFilesAndDirs(const std::wstring& path);
 Directory getFilesAndDirsWithFind(const std::wstring& path);

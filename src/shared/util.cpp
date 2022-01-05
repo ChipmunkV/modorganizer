@@ -19,6 +19,9 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "util.h"
 #include <iostream>
+#ifndef _WIN32
+#include <boost/locale.hpp>
+#endif
 #include <QApplication>
 //#include "windows_error.h"
 #include "../mainwindow.h"
@@ -112,16 +115,22 @@ static auto locToLower = [] (char in) -> char {
 
 std::string& ToLowerInPlace(std::string& text)
 {
-//  CharLowerBuffA(const_cast<CHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+#ifdef _WIN32
+  CharLowerBuffA(const_cast<CHAR *>(text.c_str()), static_cast<DWORD>(text.size()));
+#else
+  boost::locale::to_lower(text, boost::locale::generator()(""));
+#endif
   return text;
 }
 
 std::string ToLowerCopy(const std::string& text)
 {
   std::string result(text);
-//  CharLowerBuffA(const_cast<CHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+#ifdef _WIN32
+  CharLowerBuffA(const_cast<CHAR *>(result.c_str()), static_cast<DWORD>(result.size()));
+#else
+  boost::locale::to_lower(result, boost::locale::generator()(""));
+#endif
   return result;
 }
 
