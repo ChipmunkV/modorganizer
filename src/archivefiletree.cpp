@@ -95,7 +95,11 @@ public: // Overrides:
         path.clear();
       }
       else {
+#ifdef _WIN32
         path.append("\\");
+#else
+        path.append("/");
+#endif
       }
     }
 
@@ -230,7 +234,11 @@ std::shared_ptr<ArchiveFileTree> ArchiveFileTree::makeTree(Archive const& archiv
     }
 
     files.push_back(std::make_tuple(
+#ifdef _WIN32
       QString::fromStdWString(data[i]->getArchiveFilePath()).replace("\\", "/").split("/", Qt::SkipEmptyParts),
+#else
+      QString::fromStdWString(data[i]->getArchiveFilePath()).split("/", Qt::SkipEmptyParts),
+#endif
       data[i]->isDirectory(),
       (int) i));
   }

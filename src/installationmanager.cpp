@@ -396,7 +396,11 @@ QString InstallationManager::generateBackupName(const QString &directoryName) co
 
 InstallationResult InstallationManager::testOverwrite(GuessedValue<QString> &modName)
 {
+#ifdef _WIN32
   QString targetDirectory = QDir::fromNativeSeparators(m_ModsDirectory + "\\" + modName);
+#else
+  QString targetDirectory = QDir::fromNativeSeparators(m_ModsDirectory + "/" + modName);
+#endif
 
   // this is only returned on success
   InstallationResult result{ IPluginInstaller::RESULT_SUCCESS };
