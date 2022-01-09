@@ -48,6 +48,7 @@ std::wstring& ToLowerInPlace(std::wstring& text);
 std::wstring ToLowerCopy(const std::wstring& text);
 std::wstring ToLowerCopy(std::wstring_view text);
 
+bool CaseInsensitiveEqual(const std::string &lhs, const std::string &rhs);
 bool CaseInsensitiveEqual(const std::wstring &lhs, const std::wstring &rhs);
 
 MOBase::VersionInfo createVersionInfo();

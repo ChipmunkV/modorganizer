@@ -6,7 +6,7 @@
 namespace MOShared
 {
 
-std::wstring tail(const std::wstring &source, const size_t count)
+PathStr tail(const PathStr &source, const size_t count)
 {
   if (count >= source.length()) {
     return source;
@@ -22,7 +22,7 @@ FilesOrigin::FilesOrigin()
 }
 
 FilesOrigin::FilesOrigin(
-  OriginID ID, const std::wstring &name, const std::wstring &path, int priority,
+  OriginID ID, const PathStr &name, const PathStr &path, int priority,
   boost::shared_ptr<MOShared::FileRegister> fileRegister,
   boost::shared_ptr<MOShared::OriginConnection> originConnection) :
   m_ID(ID), m_Disabled(false), m_Name(name), m_Path(path),
@@ -36,7 +36,7 @@ void FilesOrigin::setPriority(int priority)
   m_Priority = priority;
 }
 
-void FilesOrigin::setName(const std::wstring &name)
+void FilesOrigin::setName(const PathStr &name)
 {
   m_OriginConnection.lock()->changeNameLookup(m_Name, name);
 
@@ -106,7 +106,7 @@ void FilesOrigin::removeFile(FileIndex index)
   }
 }
 
-bool FilesOrigin::containsArchive(std::wstring archiveName)
+bool FilesOrigin::containsArchive(PathStr archiveName)
 {
   std::scoped_lock lock(m_Mutex);
 

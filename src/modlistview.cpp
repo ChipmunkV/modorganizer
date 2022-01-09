@@ -1046,6 +1046,7 @@ void ModListView::setHighlightedMods(const std::vector<unsigned int>& pluginIndi
   for (auto idx : pluginIndices) {
     QString pluginName = m_core->pluginList()->getName(idx);
 
+#ifdef _WIN32
     const MOShared::FileEntryPtr fileEntry = directoryEntry.findFile(pluginName.toStdWString());
     if (fileEntry.get() != nullptr) {
       QString originName = QString::fromStdWString(directoryEntry.getOriginByID(fileEntry->getOrigin()).getName());
@@ -1054,6 +1055,16 @@ void ModListView::setHighlightedMods(const std::vector<unsigned int>& pluginIndi
         m_markers.highlight.insert(index);
       }
     }
+#else
+    const MOShared::FileEntryPtr fileEntry = directoryEntry.findFile(pluginName.toStdString());
+    if (fileEntry.get() != nullptr) {
+      QString originName = QString::fromStdString(directoryEntry.getOriginByID(fileEntry->getOrigin()).getName());
+      const auto index = ModInfo::getIndex(originName);
+      if (index != UINT_MAX) {
+        m_markers.highlight.insert(index);
+      }
+    }
+#endif
   }
   dataChanged(model()->index(0, 0), model()->index(model()->rowCount(), model()->columnCount()));
   verticalScrollBar()->repaint();

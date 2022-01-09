@@ -6,6 +6,8 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
+#include "pathstr.h"
+
 class DirectoryRefreshProgress;
 
 namespace MOShared
@@ -13,7 +15,7 @@ namespace MOShared
 
 struct DirectoryEntryFileKey
 {
-  DirectoryEntryFileKey(std::wstring v)
+  DirectoryEntryFileKey(PathStr v)
     : value(std::move(v)), hash(getHash(value))
   {
   }
@@ -23,12 +25,12 @@ struct DirectoryEntryFileKey
     return (value == o.value);
   }
 
-  static std::size_t getHash(const std::wstring& value)
+  static std::size_t getHash(const PathStr& value)
   {
-    return std::hash<std::wstring>()(value);
+    return std::hash<PathStr>()(value);
   }
 
-  std::wstring value;
+  PathStr value;
   const std::size_t hash;
 };
 
@@ -53,19 +55,19 @@ constexpr OriginID InvalidOriginID = -1;
 // -1
 class DataArchiveOrigin
 {
-  std::wstring name_ = L"";
+  PathStr name_ = ALOGSTR"";
   int order_ = -1;
-  
+
 public:
 
   int order() const { return order_; }
-  const std::wstring& name() const { return name_; }
-  
+  const PathStr& name() const { return name_; }
+
   bool isValid() const {
     return name_.size() > 0;
   }
 
-  DataArchiveOrigin(std::wstring name, int order)
+  DataArchiveOrigin(PathStr name, int order)
     : name_(std::move(name)), order_(order) {}
 
   DataArchiveOrigin() = default;
@@ -87,7 +89,7 @@ public:
 
   FileAlternative() = default;
 
-  FileAlternative(OriginID originID, DataArchiveOrigin archive) 
+  FileAlternative(OriginID originID, DataArchiveOrigin archive)
     : originID_(originID), archive_(std::move(archive)) {}
 };
 

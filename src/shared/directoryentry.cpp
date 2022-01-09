@@ -25,9 +25,14 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include "fileentry.h"
 #include "../envfs.h"
 #include "util.h"
-//#include "windows_error.h"
+#ifdef _WIN32
+#include "windows_error.h"
+#endif
 #include <log.h>
 #include <utility.h>
+#ifndef _WIN32
+#include <boost/locale.hpp>
+#endif
 
 namespace MOShared
 {
@@ -74,14 +79,17 @@ static bool SupportOptimizedFind()
 bool DirCompareByName::operator()(
     const DirectoryEntry* lhs, const DirectoryEntry* rhs) const
 {
-//  return _wcsicmp(lhs->getName().c_str(), rhs->getName().c_str()) < 0;
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
-  return false;
+#ifdef _WIN32
+  return _wcsicmp(lhs->getName().c_str(), rhs->getName().c_str()) < 0;
+#else
+  auto l = boost::locale::generator()("");
+  return boost::locale::to_lower(lhs->getName(), l) < boost::locale::to_lower(rhs->getName(), l);
+#endif
 }
 
 
 DirectoryEntry::DirectoryEntry(
-  std::wstring name, DirectoryEntry* parent, int originID) :
+  PathStr name, DirectoryEntry* parent, int originID) :
     m_OriginConnection(new OriginConnection),
     m_Name(std::move(name)), m_Parent(parent), m_Populated(false), m_TopLevel(true)
 {
@@ -90,7 +98,7 @@ DirectoryEntry::DirectoryEntry(
 }
 
 DirectoryEntry::DirectoryEntry(
-  std::wstring name, DirectoryEntry* parent, int originID,
+  PathStr name, DirectoryEntry* parent, int originID,
   boost::shared_ptr<FileRegister> fileRegister,
   boost::shared_ptr<OriginConnection> originConnection) :
     m_FileRegister(fileRegister), m_OriginConnection(originConnection),
@@ -117,7 +125,7 @@ void DirectoryEntry::clear()
 }
 
 void DirectoryEntry::addFromOrigin(
-  const std::wstring &originName, const std::wstring &directory, int priority,
+  const PathStr &originName, const PathStr &directory, int priority,
   DirectoryStats& stats)
 {
   env::DirectoryWalker walker;
@@ -125,8 +133,8 @@ void DirectoryEntry::addFromOrigin(
 }
 
 void DirectoryEntry::addFromOrigin(
-  env::DirectoryWalker& walker, const std::wstring &originName,
-  const std::wstring &directory, int priority, DirectoryStats& stats)
+  env::DirectoryWalker& walker, const PathStr &originName,
+  const PathStr &directory, int priority, DirectoryStats& stats)
 {
   FilesOrigin &origin = createOrigin(originName, directory, priority, stats);
 
@@ -138,7 +146,7 @@ void DirectoryEntry::addFromOrigin(
 }
 
 void DirectoryEntry::addFromList(
-  const std::wstring &originName, const std::wstring &directory,
+  const PathStr &originName, const PathStr &directory,
   env::Directory& root, int priority, DirectoryStats& stats)
 {
   stats = {};
@@ -159,7 +167,7 @@ void DirectoryEntry::addDir(
 
   elapsed(stats.fileTimes, [&]{
     for (auto& f : d.files) {
-      insert(f, origin, L"", -1, stats);
+      insert(f, origin, ALOGSTR"", -1, stats);
     }
   });
 
@@ -167,92 +175,98 @@ void DirectoryEntry::addDir(
 }
 
 void DirectoryEntry::addFromAllBSAs(
-  const std::wstring& originName, const std::wstring& directory,
-  int priority, const std::vector<std::wstring>& archives,
-  const std::set<std::wstring>& enabledArchives,
-  const std::vector<std::wstring>& loadOrder,
+  const PathStr& originName, const PathStr& directory,
+  int priority, const std::vector<PathStr>& archives,
+  const std::set<PathStr>& enabledArchives,
+  const std::vector<PathStr>& loadOrder,
   DirectoryStats& stats)
 {
-//  for (const auto& archive : archives) {
-//    const std::filesystem::path archivePath(archive);
-//    const auto filename = archivePath.filename().native();
-//
-//    if (!enabledArchives.contains(filename)) {
-//      continue;
-//    }
-//
-//    const auto filenameLc = ToLowerCopy(filename);
-//
-//    int order = -1;
-//
-//    for (auto plugin : loadOrder)
-//    {
-//      const auto pluginNameLc =
-//        ToLowerCopy(std::filesystem::path(plugin).stem().native());
-//
-//      if (filenameLc.starts_with(pluginNameLc + L" - ") ||
-//          filenameLc.starts_with(pluginNameLc + L".")) {
-//        auto itor = std::find(loadOrder.begin(), loadOrder.end(), plugin);
-//        if (itor != loadOrder.end()) {
-//          order = std::distance(loadOrder.begin(), itor);
-//        }
-//      }
-//    }
-//
-//    addFromBSA(
-//      originName, directory, archivePath.native(),
-//      priority, order, stats);
-//  }
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  for (const auto& archive : archives) {
+    const std::filesystem::path archivePath(archive);
+    const auto filename = archivePath.filename().native();
+
+    if (!enabledArchives.contains(filename)) {
+      continue;
+    }
+
+    const auto filenameLc = ToLowerCopy(filename);
+
+    int order = -1;
+
+    for (auto plugin : loadOrder)
+    {
+      const auto pluginNameLc =
+        ToLowerCopy(std::filesystem::path(plugin).stem().native());
+
+      if (filenameLc.starts_with(pluginNameLc + ALOGSTR" - ") ||
+          filenameLc.starts_with(pluginNameLc + ALOGSTR".")) {
+        auto itor = std::find(loadOrder.begin(), loadOrder.end(), plugin);
+        if (itor != loadOrder.end()) {
+          order = std::distance(loadOrder.begin(), itor);
+        }
+      }
+    }
+
+    addFromBSA(
+      originName, directory, archivePath.native(),
+      priority, order, stats);
+  }
 }
 
 void DirectoryEntry::addFromBSA(
-  const std::wstring& originName, const std::wstring& directory,
-  const std::wstring& archivePath, int priority, int order, DirectoryStats& stats)
+  const PathStr& originName, const PathStr& directory,
+  const PathStr& archivePath, int priority, int order, DirectoryStats& stats)
 {
-//  FilesOrigin& origin = createOrigin(originName, directory, priority, stats);
-//  const auto archiveName = std::filesystem::path(archivePath).filename().native();
-//
-//  if (containsArchive(archiveName)) {
-//    return;
-//  }
-//
-//  BSA::Archive archive;
-//  BSA::EErrorCode res = BSA::ERROR_NONE;
-//
-//  try
-//  {
-//    // read() can return an error, but it can also throw if the file is not a
-//    // valid bsa
-//    res = archive.read(ToString(archivePath, false).c_str(), false);
-//  }
-//  catch(std::exception& e)
-//  {
-//    log::error("invalid bsa '{}', error {}", archivePath, e.what());
-//    return;
-//  }
-//
-//  if ((res != BSA::ERROR_NONE) && (res != BSA::ERROR_INVALIDHASHES)) {
-//    log::error("invalid bsa '{}', error {}", archivePath, res);
-//    return;
-//  }
-//
-//  std::error_code ec;
-//  const auto lwt = std::filesystem::last_write_time(archivePath, ec);
-//  FILETIME ft = {};
-//
-//  if (ec) {
-//    log::warn(
-//      "failed to get last modified date for '{}', {}",
-//      archivePath, ec.message());
-//  } else {
-//    ft = ToFILETIME(lwt);
-//  }
-//
-//  addFiles(origin, archive.getRoot(), ft, archiveName, order, stats);
-//
-//  m_Populated = true;
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  FilesOrigin& origin = createOrigin(originName, directory, priority, stats);
+  const auto archiveName = std::filesystem::path(archivePath).filename().native();
+
+  if (containsArchive(archiveName)) {
+    return;
+  }
+
+  BSA::Archive archive;
+  BSA::EErrorCode res = BSA::ERROR_NONE;
+
+  try
+  {
+    // read() can return an error, but it can also throw if the file is not a
+    // valid bsa
+#ifdef _WIN32
+    res = archive.read(ToString(archivePath, false).c_str(), false);
+#else
+    res = archive.read(archivePath.c_str(), false);
+#endif
+  }
+  catch(std::exception& e)
+  {
+    log::error("invalid bsa '{}', error {}", archivePath, e.what());
+    return;
+  }
+
+  if ((res != BSA::ERROR_NONE) && (res != BSA::ERROR_INVALIDHASHES)) {
+    log::error("invalid bsa '{}', error {}", archivePath, res);
+    return;
+  }
+
+  std::error_code ec;
+  const auto lwt = std::filesystem::last_write_time(archivePath, ec);
+  FILETIME ft = {};
+
+#ifdef _WIN32
+  if (ec) {
+    log::warn(
+      "failed to get last modified date for '{}', {}",
+      archivePath, ec.message());
+  } else {
+    ft = ToFILETIME(lwt);
+  }
+#else
+  std::cerr << "FIXME: Not implemented ToFILETIME" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+#endif
+
+  addFiles(origin, archive.getRoot(), ft, archiveName, order, stats);
+
+  m_Populated = true;
 }
 
 void DirectoryEntry::propagateOrigin(int origin)
@@ -267,7 +281,7 @@ void DirectoryEntry::propagateOrigin(int origin)
   }
 }
 
-bool DirectoryEntry::originExists(const std::wstring &name) const
+bool DirectoryEntry::originExists(const PathStr &name) const
 {
   return m_OriginConnection->exists(name);
 }
@@ -277,7 +291,7 @@ FilesOrigin &DirectoryEntry::getOriginByID(int ID) const
   return m_OriginConnection->getByID(ID);
 }
 
-FilesOrigin &DirectoryEntry::getOriginByName(const std::wstring &name) const
+FilesOrigin &DirectoryEntry::getOriginByName(const PathStr &name) const
 {
   return m_OriginConnection->getByName(name);
 }
@@ -322,7 +336,7 @@ std::vector<FileEntryPtr> DirectoryEntry::getFiles() const
 }
 
 DirectoryEntry* DirectoryEntry::findSubDirectory(
-  const std::wstring &name, bool alreadyLowerCase) const
+  const PathStr &name, bool alreadyLowerCase) const
 {
   SubDirectoriesLookup::const_iterator itor;
 
@@ -339,14 +353,14 @@ DirectoryEntry* DirectoryEntry::findSubDirectory(
   return itor->second;
 }
 
-DirectoryEntry* DirectoryEntry::findSubDirectoryRecursive(const std::wstring &path)
+DirectoryEntry* DirectoryEntry::findSubDirectoryRecursive(const PathStr &path)
 {
   DirectoryStats dummy;
   return getSubDirectoryRecursive(path, false, dummy, InvalidOriginID);
 }
 
 const FileEntryPtr DirectoryEntry::findFile(
-  const std::wstring &name, bool alreadyLowerCase) const
+  const PathStr &name, bool alreadyLowerCase) const
 {
   FilesLookup::const_iterator iter;
 
@@ -374,12 +388,12 @@ const FileEntryPtr DirectoryEntry::findFile(const DirectoryEntryFileKey& key) co
   }
 }
 
-bool DirectoryEntry::hasFile(const std::wstring& name) const
+bool DirectoryEntry::hasFile(const PathStr& name) const
 {
   return m_Files.contains(ToLowerCopy(name));
 }
 
-bool DirectoryEntry::containsArchive(std::wstring archiveName)
+bool DirectoryEntry::containsArchive(PathStr archiveName)
 {
   for (auto iter = m_Files.begin(); iter != m_Files.end(); ++iter) {
     FileEntryPtr entry = m_FileRegister->getFile(iter->second);
@@ -392,13 +406,13 @@ bool DirectoryEntry::containsArchive(std::wstring archiveName)
 }
 
 const FileEntryPtr DirectoryEntry::searchFile(
-  const std::wstring &path, const DirectoryEntry** directory) const
+  const PathStr &path, const DirectoryEntry** directory) const
 {
   if (directory != nullptr) {
     *directory = nullptr;
   }
 
-  if ((path.length() == 0) || (path == L"*")) {
+  if ((path.length() == 0) || (path == ALOGSTR"*")) {
     // no file name -> the path ended on a (back-)slash
     if (directory != nullptr) {
       *directory = this;
@@ -407,7 +421,11 @@ const FileEntryPtr DirectoryEntry::searchFile(
     return FileEntryPtr();
   }
 
+#ifdef _WIN32
   const size_t len =  path.find_first_of(L"\\/");
+#else
+  const size_t len =  path.find_first_of("/");
+#endif
 
   if (len == std::string::npos) {
     // no more path components
@@ -423,7 +441,7 @@ const FileEntryPtr DirectoryEntry::searchFile(
     }
   } else {
     // file is in a subdirectory, recurse into the matching subdirectory
-    std::wstring pathComponent = path.substr(0, len);
+    PathStr pathComponent = path.substr(0, len);
     DirectoryEntry* temp = findSubDirectory(pathComponent);
 
     if (temp != nullptr) {
@@ -444,16 +462,20 @@ void DirectoryEntry::removeFile(FileIndex index)
   removeFileFromList(index);
 }
 
-bool DirectoryEntry::removeFile(const std::wstring &filePath, int* origin)
+bool DirectoryEntry::removeFile(const PathStr &filePath, int* origin)
 {
+#ifdef _WIN32
   size_t pos = filePath.find_first_of(L"\\/");
+#else
+  size_t pos = filePath.find_first_of("/");
+#endif
 
   if (pos == std::string::npos) {
     return this->remove(filePath, origin);
   }
 
-  std::wstring dirName = filePath.substr(0, pos);
-  std::wstring rest = filePath.substr(pos + 1);
+  PathStr dirName = filePath.substr(0, pos);
+  PathStr rest = filePath.substr(pos + 1);
 
   DirectoryStats dummy;
   DirectoryEntry* entry = getSubDirectoryRecursive(dirName, false, dummy);
@@ -465,9 +487,13 @@ bool DirectoryEntry::removeFile(const std::wstring &filePath, int* origin)
   }
 }
 
-void DirectoryEntry::removeDir(const std::wstring &path)
+void DirectoryEntry::removeDir(const PathStr &path)
 {
+#ifdef _WIN32
   size_t pos = path.find_first_of(L"\\/");
+#else
+  size_t pos = path.find_first_of("/");
+#endif
 
   if (pos == std::string::npos) {
     for (auto iter = m_SubDirectories.begin(); iter != m_SubDirectories.end(); ++iter) {
@@ -481,8 +507,8 @@ void DirectoryEntry::removeDir(const std::wstring &path)
       }
     }
   } else {
-    std::wstring dirName = path.substr(0, pos);
-    std::wstring rest = path.substr(pos + 1);
+    PathStr dirName = path.substr(0, pos);
+    PathStr rest = path.substr(pos + 1);
 
     DirectoryStats dummy;
     DirectoryEntry* entry = getSubDirectoryRecursive(dirName, false, dummy);
@@ -493,7 +519,7 @@ void DirectoryEntry::removeDir(const std::wstring &path)
   }
 }
 
-bool DirectoryEntry::remove(const std::wstring &fileName, int* origin)
+bool DirectoryEntry::remove(const PathStr &fileName, int* origin)
 {
   const auto lcFileName = ToLowerCopy(fileName);
 
@@ -521,7 +547,7 @@ bool DirectoryEntry::hasContentsFromOrigin(int originID) const
 }
 
 FilesOrigin &DirectoryEntry::createOrigin(
-  const std::wstring &originName, const std::wstring &directory, int priority,
+  const PathStr &originName, const PathStr &directory, int priority,
   DirectoryStats& stats)
 {
   auto r = m_OriginConnection->getOrCreate(
@@ -542,92 +568,91 @@ void DirectoryEntry::removeFiles(const std::set<FileIndex> &indices)
   removeFilesFromList(indices);
 }
 
-//FileEntryPtr DirectoryEntry::insert(
-//  std::wstring_view fileName, FilesOrigin &origin, FILETIME fileTime,
-//  std::wstring_view archive, int order, DirectoryStats& stats)
-//{
-//  std::wstring fileNameLower = ToLowerCopy(fileName);
-//  FileEntryPtr fe;
-//
-//  DirectoryEntryFileKey key(std::move(fileNameLower));
-//
-//  {
-//    std::unique_lock lock(m_FilesMutex);
-//
-//    FilesLookup::iterator itor;
-//
-//    elapsed(stats.filesLookupTimes, [&]{
-//      itor = m_FilesLookup.find(key);
-//    });
-//
-//    if (itor != m_FilesLookup.end()) {
-//      lock.unlock();
-//      ++stats.fileExists;
-//      fe = m_FileRegister->getFile(itor->second);
-//    } else {
-//      ++stats.fileCreate;
-//      fe = m_FileRegister->createFile(
-//        std::wstring(fileName.begin(), fileName.end()), this, stats);
-//
-//      elapsed(stats.addFileTimes, [&] {
-//        addFileToList(std::move(key.value), fe->getIndex());
-//      });
-//
-//      // fileNameLower has moved from this point
-//    }
-//  }
-//
-//  elapsed(stats.addOriginToFileTimes, [&]{
-//    fe->addOrigin(origin.getID(), fileTime, archive, order);
-//  });
-//
-//  elapsed(stats.addFileToOriginTimes, [&]{
-//    origin.addFile(fe->getIndex());
-//  });
-//
-//  return fe;
-//}
+FileEntryPtr DirectoryEntry::insert(
+  PathStrView fileName, FilesOrigin &origin, FILETIME fileTime,
+  PathStrView archive, int order, DirectoryStats& stats)
+{
+  PathStr fileNameLower = ToLowerCopy(fileName);
+  FileEntryPtr fe;
+
+  DirectoryEntryFileKey key(std::move(fileNameLower));
+
+  {
+    std::unique_lock lock(m_FilesMutex);
+
+    FilesLookup::iterator itor;
+
+    elapsed(stats.filesLookupTimes, [&]{
+      itor = m_FilesLookup.find(key);
+    });
+
+    if (itor != m_FilesLookup.end()) {
+      lock.unlock();
+      ++stats.fileExists;
+      fe = m_FileRegister->getFile(itor->second);
+    } else {
+      ++stats.fileCreate;
+      fe = m_FileRegister->createFile(
+        PathStr(fileName.begin(), fileName.end()), this, stats);
+
+      elapsed(stats.addFileTimes, [&] {
+        addFileToList(std::move(key.value), fe->getIndex());
+      });
+
+      // fileNameLower has moved from this point
+    }
+  }
+
+  elapsed(stats.addOriginToFileTimes, [&]{
+    fe->addOrigin(origin.getID(), fileTime, archive, order);
+  });
+
+  elapsed(stats.addFileToOriginTimes, [&]{
+    origin.addFile(fe->getIndex());
+  });
+
+  return fe;
+}
 
 FileEntryPtr DirectoryEntry::insert(
-  env::File& file, FilesOrigin &origin, std::wstring_view archive, int order,
+  env::File& file, FilesOrigin &origin, PathStrView archive, int order,
   DirectoryStats& stats)
 {
   FileEntryPtr fe;
 
-//  {
-//    std::unique_lock lock(m_FilesMutex);
-//
-//    FilesMap::iterator itor;
-//
-//    elapsed(stats.filesLookupTimes, [&]{
-//      itor = m_Files.find(file.lcname);
-//    });
-//
-//    if (itor != m_Files.end()) {
-//      lock.unlock();
-//      ++stats.fileExists;
-//      fe = m_FileRegister->getFile(itor->second);
-//    } else {
-//      ++stats.fileCreate;
-//      fe = m_FileRegister->createFile(std::move(file.name), this, stats);
-//      // file.name has been moved from this point
-//
-//      elapsed(stats.addFileTimes, [&]{
-//        addFileToList(std::move(file.lcname), fe->getIndex());
-//      });
-//
-//      // file.lcname has been moved from this point
-//    }
-//  }
-//
-//  elapsed(stats.addOriginToFileTimes, [&]{
-//    fe->addOrigin(origin.getID(), file.lastModified, archive, order);
-//  });
-//
-//  elapsed(stats.addFileToOriginTimes, [&]{
-//    origin.addFile(fe->getIndex());
-//  });
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  {
+    std::unique_lock lock(m_FilesMutex);
+
+    FilesMap::iterator itor;
+
+    elapsed(stats.filesLookupTimes, [&]{
+      itor = m_Files.find(file.lcname);
+    });
+
+    if (itor != m_Files.end()) {
+      lock.unlock();
+      ++stats.fileExists;
+      fe = m_FileRegister->getFile(itor->second);
+    } else {
+      ++stats.fileCreate;
+      fe = m_FileRegister->createFile(std::move(file.name), this, stats);
+      // file.name has been moved from this point
+
+      elapsed(stats.addFileTimes, [&]{
+        addFileToList(std::move(file.lcname), fe->getIndex());
+      });
+
+      // file.lcname has been moved from this point
+    }
+  }
+
+  elapsed(stats.addOriginToFileTimes, [&]{
+    fe->addOrigin(origin.getID(), file.lastModified, archive, order);
+  });
+
+  elapsed(stats.addFileToOriginTimes, [&]{
+    origin.addFile(fe->getIndex());
+  });
 
   return fe;
 }
@@ -641,32 +666,31 @@ struct DirectoryEntry::Context
 
 void DirectoryEntry::addFiles(
   env::DirectoryWalker& walker, FilesOrigin &origin,
-  const std::wstring& path, DirectoryStats& stats)
+  const PathStr& path, DirectoryStats& stats)
 {
+  std::cerr << "FIXME: DirectoryEntry::addFiles '" + path + "'" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
   Context cx = {origin, stats};
   cx.current.push(this);
 
-//  walker.forEachEntry(path, &cx,
-//    [](void* pcx, std::wstring_view path)
-//    {
-//      onDirectoryStart((Context*)pcx, path);
-//    },
-//
-//    [](void* pcx, std::wstring_view path)
-//    {
-//      onDirectoryEnd((Context*)pcx, path);
-//    },
-//
-//    [](void* pcx, std::wstring_view path, FILETIME ft, uint64_t)
-//    {
-//      onFile((Context*)pcx, path, ft);
-//    }
-//  );
-  std::wcerr << L"FIXME: DirectoryEntry::addFiles, path: '" + path + L"'";
-  std::cerr << std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  walker.forEachEntry(path, &cx,
+    [](void* pcx, PathStrView path)
+    {
+      onDirectoryStart((Context*)pcx, path);
+    },
+
+    [](void* pcx, PathStrView path)
+    {
+      onDirectoryEnd((Context*)pcx, path);
+    },
+
+    [](void* pcx, PathStrView path, FILETIME ft, uint64_t)
+    {
+      onFile((Context*)pcx, path, ft);
+    }
+  );
 }
 
-void DirectoryEntry::onDirectoryStart(Context* cx, std::wstring_view path)
+void DirectoryEntry::onDirectoryStart(Context* cx, PathStrView path)
 {
   elapsed(cx->stats.dirTimes, [&] {
     auto* sd = cx->current.top()->getSubDirectory(
@@ -676,58 +700,66 @@ void DirectoryEntry::onDirectoryStart(Context* cx, std::wstring_view path)
   });
 }
 
-void DirectoryEntry::onDirectoryEnd(Context* cx, std::wstring_view path)
+void DirectoryEntry::onDirectoryEnd(Context* cx, PathStrView path)
 {
   elapsed(cx->stats.dirTimes, [&] {
     cx->current.pop();
   });
 }
 
-//void DirectoryEntry::onFile(Context* cx, std::wstring_view path, FILETIME ft)
-//{
-//  elapsed(cx->stats.fileTimes, [&]{
-//    cx->current.top()->insert(path, cx->origin, ft, L"", -1, cx->stats);
-//  });
-//}
+void DirectoryEntry::onFile(Context* cx, PathStrView path, FILETIME ft)
+{
+  elapsed(cx->stats.fileTimes, [&]{
+    cx->current.top()->insert(path, cx->origin, ft, ALOGSTR"", -1, cx->stats);
+  });
+}
 
-//void DirectoryEntry::addFiles(
-//  FilesOrigin& origin, const BSA::Folder::Ptr archiveFolder, FILETIME fileTime,
-//  const std::wstring& archiveName, int order, DirectoryStats& stats)
-//{
-//  // add files
-//  const auto fileCount = archiveFolder->getNumFiles();
-//  for (unsigned int i=0; i<fileCount; ++i) {
-//    const BSA::File::Ptr file = archiveFolder->getFile(i);
-//
-//    auto f = insert(
-//      ToWString(file->getName(), true), origin, fileTime,
-//      archiveName, order, stats);
-//
-//    if (f) {
-//      if (file->getUncompressedFileSize() > 0) {
-//        f->setFileSize(file->getFileSize(), file->getUncompressedFileSize());
-//      } else {
-//        f->setFileSize(file->getFileSize(), FileEntry::NoFileSize);
-//      }
-//    }
-//  }
-//
-//  // recurse into subdirectories
-//  const auto dirCount = archiveFolder->getNumSubFolders();
-//  for (unsigned int i=0; i<dirCount; ++i) {
-//    const BSA::Folder::Ptr folder = archiveFolder->getSubFolder(i);
-//
-//    DirectoryEntry* folderEntry = getSubDirectoryRecursive(
-//      ToWString(folder->getName(), true), true, stats, origin.getID());
-//
-//    folderEntry->addFiles(origin, folder, fileTime, archiveName, order, stats);
-//  }
-//}
+void DirectoryEntry::addFiles(
+  FilesOrigin& origin, const BSA::Folder::Ptr archiveFolder, FILETIME fileTime,
+  const PathStr& archiveName, int order, DirectoryStats& stats)
+{
+  // add files
+  const auto fileCount = archiveFolder->getNumFiles();
+  for (unsigned int i=0; i<fileCount; ++i) {
+    const BSA::File::Ptr file = archiveFolder->getFile(i);
+
+    auto f = insert(
+#ifdef _WIN32
+      ToWString(file->getName(), true), origin, fileTime,
+#else
+      file->getName(), origin, fileTime,
+#endif
+      archiveName, order, stats);
+
+    if (f) {
+      if (file->getUncompressedFileSize() > 0) {
+        f->setFileSize(file->getFileSize(), file->getUncompressedFileSize());
+      } else {
+        f->setFileSize(file->getFileSize(), FileEntry::NoFileSize);
+      }
+    }
+  }
+
+  // recurse into subdirectories
+  const auto dirCount = archiveFolder->getNumSubFolders();
+  for (unsigned int i=0; i<dirCount; ++i) {
+    const BSA::Folder::Ptr folder = archiveFolder->getSubFolder(i);
+
+    DirectoryEntry* folderEntry = getSubDirectoryRecursive(
+#ifdef _WIN32
+      ToWString(folder->getName(), true), true, stats, origin.getID());
+#else
+      folder->getName(), true, stats, origin.getID());
+#endif
+
+    folderEntry->addFiles(origin, folder, fileTime, archiveName, order, stats);
+  }
+}
 
 DirectoryEntry* DirectoryEntry::getSubDirectory(
-  std::wstring_view name, bool create, DirectoryStats& stats, int originID)
+  PathStrView name, bool create, DirectoryStats& stats, int originID)
 {
-  std::wstring nameLc = ToLowerCopy(name);
+  PathStr nameLc = ToLowerCopy(name);
 
   std::scoped_lock lock(m_SubDirMutex);
 
@@ -745,7 +777,7 @@ DirectoryEntry* DirectoryEntry::getSubDirectory(
     ++stats.subdirCreate;
 
     auto* entry = new DirectoryEntry(
-      std::wstring(name.begin(), name.end()), this, originID,
+      PathStr(name.begin(), name.end()), this, originID,
       m_FileRegister, m_OriginConnection);
 
     elapsed(stats.addDirectoryTimes, [&] {
@@ -796,16 +828,20 @@ DirectoryEntry* DirectoryEntry::getSubDirectory(
 }
 
 DirectoryEntry* DirectoryEntry::getSubDirectoryRecursive(
-  const std::wstring& path, bool create, DirectoryStats& stats, int originID)
+  const PathStr& path, bool create, DirectoryStats& stats, int originID)
 {
   if (path.length() == 0) {
     // path ended with a backslash?
     return this;
   }
 
+#ifdef _WIN32
   const size_t pos = path.find_first_of(L"\\/");
+#else
+  const size_t pos = path.find_first_of("/");
+#endif
 
-  if (pos == std::wstring::npos) {
+  if (pos == PathStr::npos) {
     return getSubDirectory(path, create, stats);
   } else {
     DirectoryEntry* nextChild = getSubDirectory(
@@ -837,7 +873,7 @@ void DirectoryEntry::removeDirRecursive()
   m_SubDirectoriesLookup.clear();
 }
 
-void DirectoryEntry::addDirectoryToList(DirectoryEntry* e, std::wstring nameLc)
+void DirectoryEntry::addDirectoryToList(DirectoryEntry* e, PathStr nameLc)
 {
   m_SubDirectories.insert(e);
   m_SubDirectoriesLookup.emplace(std::move(nameLc), e);
@@ -911,7 +947,7 @@ void DirectoryEntry::removeFilesFromList(const std::set<FileIndex>& indices)
   }
 }
 
-void DirectoryEntry::addFileToList(std::wstring fileNameLower, FileIndex index)
+void DirectoryEntry::addFileToList(PathStr fileNameLower, FileIndex index)
 {
   m_FilesLookup.emplace(fileNameLower, index);
   m_Files.emplace(std::move(fileNameLower), index);
@@ -923,7 +959,7 @@ struct DumpFailed : public std::runtime_error
   using runtime_error::runtime_error;
 };
 
-void DirectoryEntry::dump(const std::wstring& file) const
+void DirectoryEntry::dump(const PathStr& file) const
 {
 //  try
 //  {
@@ -948,7 +984,7 @@ void DirectoryEntry::dump(const std::wstring& file) const
   std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
-void DirectoryEntry::dump(std::FILE* f, const std::wstring& parentPath) const
+void DirectoryEntry::dump(std::FILE* f, const PathStr& parentPath) const
 {
   {
     std::scoped_lock lock(m_FilesMutex);
@@ -965,10 +1001,18 @@ void DirectoryEntry::dump(std::FILE* f, const std::wstring& parentPath) const
       }
 
       const auto& o = m_OriginConnection->getByID(file->getOrigin());
+#ifdef _WIN32
       const auto path = parentPath + L"\\" + file->getName();
       const auto line = path + L"\t(" + o.getName() + L")\r\n";
 
       const auto lineu8 = MOShared::ToString(line, true);
+#else
+      const auto path = parentPath + "/" + file->getName();
+      const auto line = path + "\t(" + o.getName() + ")\n";
+
+      const auto lineu8 = line;
+#endif
+
 
       if (std::fwrite(lineu8.data(), lineu8.size(), 1, f) != 1) {
         const auto e = errno;
@@ -981,7 +1025,11 @@ void DirectoryEntry::dump(std::FILE* f, const std::wstring& parentPath) const
   {
     std::scoped_lock lock(m_SubDirMutex);
     for (auto&& d : m_SubDirectories) {
+#ifdef _WIN32
       const auto path = parentPath + L"\\" + d->m_Name;
+#else
+      const auto path = parentPath + "/" + d->m_Name;
+#endif
       d->dump(f, path);
     }
   }

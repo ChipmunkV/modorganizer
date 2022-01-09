@@ -192,52 +192,58 @@ UsvfsConnector::~UsvfsConnector()
 
 void UsvfsConnector::updateMapping(const MappingType &mapping)
 {
-//  const auto start = std::chrono::high_resolution_clock::now();
-//
-//  QProgressDialog progress(qApp->activeWindow());
-//  progress.setLabelText(tr("Preparing vfs"));
-//  progress.setMaximum(static_cast<int>(mapping.size()));
-//  progress.show();
-//
-//  int value = 0;
-//  int files = 0;
-//  int dirs = 0;
-//
-//  log::debug("Updating VFS mappings...");
-//
-//  ClearVirtualMappings();
-//
-//  for (auto map : mapping) {
-//    if (progress.wasCanceled()) {
-//      ClearVirtualMappings();
-//      throw UsvfsConnectorException("VFS mapping canceled by user");
-//    }
-//    progress.setValue(value++);
-//    if (value % 10 == 0) {
-//      QCoreApplication::processEvents();
-//    }
-//
-//    if (map.isDirectory) {
-//      VirtualLinkDirectoryStatic(map.source.toStdWString().c_str(),
-//                                 map.destination.toStdWString().c_str(),
-//                                 (map.createTarget ? LINKFLAG_CREATETARGET : 0)
-//                                     | LINKFLAG_RECURSIVE
-//                                 );
-//      ++dirs;
-//    } else {
-//      VirtualLinkFile(map.source.toStdWString().c_str(),
-//                      map.destination.toStdWString().c_str(), 0);
-//      ++files;
-//    }
-//  }
-//
-//  const auto end = std::chrono::high_resolution_clock::now();
-//  const auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-//
-//  log::debug(
-//    "VFS mappings updated, linked {} dirs and {} files in {}ms",
-//    dirs, files, time.count());
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+#ifdef _WIN32
+  const auto start = std::chrono::high_resolution_clock::now();
+
+  QProgressDialog progress(qApp->activeWindow());
+  progress.setLabelText(tr("Preparing vfs"));
+  progress.setMaximum(static_cast<int>(mapping.size()));
+  progress.show();
+
+  int value = 0;
+  int files = 0;
+  int dirs = 0;
+
+  log::debug("Updating VFS mappings...");
+
+  ClearVirtualMappings();
+
+  for (auto map : mapping) {
+    if (progress.wasCanceled()) {
+      ClearVirtualMappings();
+      throw UsvfsConnectorException("VFS mapping canceled by user");
+    }
+    progress.setValue(value++);
+    if (value % 10 == 0) {
+      QCoreApplication::processEvents();
+    }
+
+    if (map.isDirectory) {
+      VirtualLinkDirectoryStatic(map.source.toStdWString().c_str(),
+                                 map.destination.toStdWString().c_str(),
+                                 (map.createTarget ? LINKFLAG_CREATETARGET : 0)
+                                     | LINKFLAG_RECURSIVE
+                                 );
+      ++dirs;
+    } else {
+      VirtualLinkFile(map.source.toStdWString().c_str(),
+                      map.destination.toStdWString().c_str(), 0);
+      ++files;
+    }
+  }
+
+  const auto end = std::chrono::high_resolution_clock::now();
+  const auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+  log::debug(
+    "VFS mappings updated, linked {} dirs and {} files in {}ms",
+    dirs, files, time.count());
+#else
+  for (const Mapping& m : mapping) {
+    std::cerr << "m\nsource: '" + m.source.toStdString() + "'\ndestination: '" + m.destination.toStdString() + "'\nisDirectory: '" + (m.isDirectory ? "true" : "false") + "'\ncreateTarget: '" + (m.createTarget ? "true" : "false") + "'\n" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  }
+  std::cerr << "FIXME: Not implemented UsvfsConnector::updateMapping" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+#endif
 }
 
 void UsvfsConnector::updateParams(

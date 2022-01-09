@@ -22,8 +22,13 @@ DiagnosticsSettingsTab::DiagnosticsSettingsTab(Settings& s, SettingsDialog& d)
     ui->diagnosticsExplainedLabel->text()
     .replace("LOGS_FULL_PATH", logsPath)
     .replace("LOGS_DIR", QString::fromStdWString(AppConfig::logPath()))
+#ifdef _WIN32
     .replace("DUMPS_FULL_PATH", QString::fromStdWString(OrganizerCore::getGlobalCoreDumpPath()))
     .replace("DUMPS_DIR", QString::fromStdWString(AppConfig::dumpsDir()))
+#else
+    .replace("DUMPS_FULL_PATH", QString::fromStdString(OrganizerCore::getGlobalCoreDumpPath()))
+    .replace("DUMPS_DIR", QString::fromStdString(AppConfig::dumpsDir()))
+#endif
   );
 }
 

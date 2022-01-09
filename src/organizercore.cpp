@@ -99,7 +99,7 @@ OrganizerCore::OrganizerCore(Settings &settings)
   , m_ModList(m_PluginContainer, this)
   , m_PluginList(*this)
   , m_DirectoryRefresher(new DirectoryRefresher(settings.refreshThreadCount()))
-  , m_DirectoryStructure(new DirectoryEntry(L"data", nullptr, 0))
+  , m_DirectoryStructure(new DirectoryEntry(ALOGSTR"data", nullptr, 0))
   , m_VirtualFileTree([this]() { return VirtualFileTree::makeTree(m_DirectoryStructure); })
   , m_DownloadManager(&NexusInterface::instance(), this)
   , m_DirectoryUpdate(false)
@@ -366,7 +366,11 @@ void OrganizerCore::downloadRequested(QNetworkReply *reply, QString gameName, in
 
 void OrganizerCore::removeOrigin(const QString &name)
 {
+#ifdef _WIN32
   FilesOrigin &origin = m_DirectoryStructure->getOriginByName(ToWString(name));
+#else
+  FilesOrigin &origin = m_DirectoryStructure->getOriginByName(name.toStdString());
+#endif
   origin.enable(false);
   refreshLists();
 }
@@ -418,7 +422,11 @@ bool OrganizerCore::bootstrap()
     m_Settings.paths().mods(),
     m_Settings.paths().downloads(),
     m_Settings.paths().overwrite(),
+#ifdef _WIN32
     QString::fromStdWString(getGlobalCoreDumpPath())
+#else
+    QString::fromStdString(getGlobalCoreDumpPath())
+#endif
   };
 
   for (auto&& dir : dirs) {
@@ -437,14 +445,22 @@ bool OrganizerCore::bootstrap()
 
   // log if there are any dmp files
   const auto hasCrashDumps =
+#ifdef _WIN32
     !QDir(QString::fromStdWString(getGlobalCoreDumpPath()))
+#else
+    !QDir(QString::fromStdString(getGlobalCoreDumpPath()))
+#endif
       .entryList({"*.dmp"}, QDir::Files)
       .empty();
 
   if (hasCrashDumps) {
     log::debug(
       "there are crash dumps in '{}'",
+#ifdef _WIN32
       QString::fromStdWString(getGlobalCoreDumpPath()));
+#else
+      QString::fromStdString(getGlobalCoreDumpPath()));
+#endif
   }
 
   return true;
@@ -455,7 +471,11 @@ void OrganizerCore::createDefaultProfile()
   QString profilesPath = settings().paths().profiles();
   if (QDir(profilesPath).entryList(QDir::AllDirs | QDir::NoDotAndDotDot).size() == 0) {
     Profile newProf(
+#ifdef _WIN32
       QString::fromStdWString(AppConfig::defaultProfileName()),
+#else
+      QString::fromStdString(AppConfig::defaultProfileName()),
+#endif
       managedGame(), false);
 
     m_ProfileCreated(&newProf);
@@ -485,7 +505,11 @@ void OrganizerCore::setLogLevel(log::Levels level)
   updateVFSParams(
     m_Settings.diagnostics().logLevel(),
     m_Settings.diagnostics().coreDumpType(),
+#ifdef _WIN32
     QString::fromStdWString(getGlobalCoreDumpPath()),
+#else
+    QString::fromStdString(getGlobalCoreDumpPath()),
+#endif
     m_Settings.diagnostics().spawnDelay(),
     m_Settings.executablesBlacklist());
 
@@ -495,7 +519,11 @@ void OrganizerCore::setLogLevel(log::Levels level)
 bool OrganizerCore::cycleDiagnostics()
 {
   const auto maxDumps = settings().diagnostics().maxCoreDumps();
+#ifdef _WIN32
   const auto path = QString::fromStdWString(getGlobalCoreDumpPath());
+#else
+  const auto path = QString::fromStdString(getGlobalCoreDumpPath());
+#endif
 
   if (maxDumps > 0) {
     removeOldFiles(path, "*.dmp", maxDumps, QDir::Time|QDir::Reversed);
@@ -514,12 +542,16 @@ void OrganizerCore::setGlobalCoreDumpType(env::CoreDumpTypes type)
   g_coreDumpType = type;
 }
 
-std::wstring OrganizerCore::getGlobalCoreDumpPath()
+PathStr OrganizerCore::getGlobalCoreDumpPath()
 {
   if (qApp) {
     const auto dp = qApp->property("dataPath");
     if (!dp.isNull()) {
+#ifdef _WIN32
       return dp.toString().toStdWString() + L"/" + AppConfig::dumpsDir();
+#else
+      return dp.toString().toStdString() + "/" + AppConfig::dumpsDir();
+#endif
     }
   }
 
@@ -904,7 +936,11 @@ QString OrganizerCore::resolvePath(const QString &fileName) const
     return QString();
   }
   const FileEntryPtr file
+#ifdef _WIN32
       = m_DirectoryStructure->searchFile(ToWString(fileName), nullptr);
+#else
+      = m_DirectoryStructure->searchFile(fileName.toStdString(), nullptr);
+#endif
   if (file.get() != nullptr) {
     return ToQString(file->getFullPath());
   } else {
@@ -917,7 +953,11 @@ QStringList OrganizerCore::listDirectories(const QString &directoryName) const
   QStringList result;
   DirectoryEntry *dir = m_DirectoryStructure;
   if (!directoryName.isEmpty())
+#ifdef _WIN32
     dir = dir->findSubDirectoryRecursive(ToWString(directoryName));
+#else
+    dir = dir->findSubDirectoryRecursive(directoryName.toStdString());
+#endif
   if (dir != nullptr) {
     for (const auto& d : dir->getSubDirectories()) {
       result.append(ToQString(d->getName()));
@@ -933,7 +973,11 @@ QStringList OrganizerCore::findFiles(
   QStringList result;
   DirectoryEntry *dir = m_DirectoryStructure;
   if (!path.isEmpty() && path != ".")
+#ifdef _WIN32
     dir = dir->findSubDirectoryRecursive(ToWString(path));
+#else
+    dir = dir->findSubDirectoryRecursive(path.toStdString());
+#endif
   if (dir != nullptr) {
     std::vector<FileEntryPtr> files = dir->getFiles();
     for (FileEntryPtr &file: files) {
@@ -949,7 +993,11 @@ QStringList OrganizerCore::findFiles(
 QStringList OrganizerCore::getFileOrigins(const QString &fileName) const
 {
   QStringList result;
+#ifdef _WIN32
   const FileEntryPtr file = m_DirectoryStructure->searchFile(ToWString(fileName), nullptr);
+#else
+  const FileEntryPtr file = m_DirectoryStructure->searchFile(fileName.toStdString(), nullptr);
+#endif
 
   if (file.get() != nullptr) {
     result.append(ToQString(
@@ -970,7 +1018,11 @@ QList<MOBase::IOrganizer::FileInfo> OrganizerCore::findFileInfos(
   QList<IOrganizer::FileInfo> result;
   DirectoryEntry *dir = m_DirectoryStructure;
   if (!path.isEmpty() && path != ".")
+#ifdef _WIN32
     dir = dir->findSubDirectoryRecursive(ToWString(path));
+#else
+    dir = dir->findSubDirectoryRecursive(path.toStdString());
+#endif
   if (dir != nullptr) {
     std::vector<FileEntryPtr> files = dir->getFiles();
     for (FileEntryPtr file : files) {
@@ -1039,7 +1091,11 @@ bool OrganizerCore::previewFileWithAlternatives(
 
 
 
+#ifdef _WIN32
   const FileEntryPtr file = directoryStructure()->searchFile(ToWString(fileName), nullptr);
+#else
+  const FileEntryPtr file = directoryStructure()->searchFile(fileName.toStdString(), nullptr);
+#endif
 
   if (file.get() == nullptr) {
     reportError(tr("file not found: %1").arg(qUtf8Printable(fileName)));
@@ -1286,7 +1342,11 @@ void OrganizerCore::updateModsActiveState(const QList<unsigned int> &modIndices,
     QDir dir(modInfo->absolutePath());
     for (const QString &esm :
       dir.entryList(QStringList() << "*.esm", QDir::Files)) {
+#ifdef _WIN32
       const FileEntryPtr file = m_DirectoryStructure->findFile(ToWString(esm));
+#else
+      const FileEntryPtr file = m_DirectoryStructure->findFile(esm.toStdString());
+#endif
       if (file.get() == nullptr) {
         log::warn("failed to activate {}", esm);
         continue;
@@ -1302,7 +1362,11 @@ void OrganizerCore::updateModsActiveState(const QList<unsigned int> &modIndices,
 
     for (const QString &esl :
       dir.entryList(QStringList() << "*.esl", QDir::Files)) {
+#ifdef _WIN32
       const FileEntryPtr file = m_DirectoryStructure->findFile(ToWString(esl));
+#else
+      const FileEntryPtr file = m_DirectoryStructure->findFile(esl.toStdString());
+#endif
       if (file.get() == nullptr) {
         log::warn("failed to activate {}", esl);
         continue;
@@ -1318,7 +1382,11 @@ void OrganizerCore::updateModsActiveState(const QList<unsigned int> &modIndices,
     }
     QStringList esps = dir.entryList(QStringList() << "*.esp", QDir::Files);
     for (const QString &esp : esps) {
+#ifdef _WIN32
       const FileEntryPtr file = m_DirectoryStructure->findFile(ToWString(esp));
+#else
+      const FileEntryPtr file = m_DirectoryStructure->findFile(esp.toStdString());
+#endif
       if (file.get() == nullptr) {
         log::warn("failed to activate {}", esp);
         continue;
@@ -1616,7 +1684,11 @@ void OrganizerCore::modPrioritiesChanged(const QModelIndexList& indices)
     if (currentProfile()->modEnabled(i)) {
       ModInfo::Ptr modInfo = ModInfo::getByIndex(i);
       // priorities in the directory structure are one higher because data is 0
+#ifdef _WIN32
       directoryStructure()->getOriginByName(MOBase::ToWString(modInfo->internalName())).setPriority(priority + 1);
+#else
+      directoryStructure()->getOriginByName(modInfo->internalName().toStdString()).setPriority(priority + 1);
+#endif
     }
   }
   refreshBSAList();
@@ -1640,11 +1712,19 @@ void OrganizerCore::modStatusChanged(unsigned int index)
       updateModInDirectoryStructure(index, modInfo);
     } else {
       updateModActiveState(index, false);
+#ifdef _WIN32
       if (m_DirectoryStructure->originExists(ToWString(modInfo->name()))) {
         FilesOrigin &origin
             = m_DirectoryStructure->getOriginByName(ToWString(modInfo->name()));
         origin.enable(false);
       }
+#else
+      if (m_DirectoryStructure->originExists(modInfo->name().toStdString())) {
+        FilesOrigin &origin
+            = m_DirectoryStructure->getOriginByName(modInfo->name().toStdString());
+        origin.enable(false);
+      }
+#endif
       if (m_UserInterface != nullptr) {
         m_UserInterface->archivesWriter().write();
       }
@@ -1653,12 +1733,21 @@ void OrganizerCore::modStatusChanged(unsigned int index)
     for (unsigned int i = 0; i < m_CurrentProfile->numMods(); ++i) {
       ModInfo::Ptr modInfo = ModInfo::getByIndex(i);
       int priority = m_CurrentProfile->getModPriority(i);
+#ifdef _WIN32
       if (m_DirectoryStructure->originExists(ToWString(modInfo->name()))) {
         // priorities in the directory structure are one higher because data is
         // 0
         m_DirectoryStructure->getOriginByName(ToWString(modInfo->name()))
             .setPriority(priority + 1);
       }
+#else
+      if (m_DirectoryStructure->originExists(modInfo->name().toStdString())) {
+        // priorities in the directory structure are one higher because data is
+        // 0
+        m_DirectoryStructure->getOriginByName(modInfo->name().toStdString())
+            .setPriority(priority + 1);
+      }
+#endif
     }
     m_DirectoryStructure->getFileRegister()->sortOrigins();
 
@@ -1690,11 +1779,19 @@ void OrganizerCore::modStatusChanged(QList<unsigned int> index) {
     if (!modsToDisable.isEmpty()) {
       updateModsActiveState(modsToDisable.keys(), false);
       for (auto idx : modsToDisable.keys()) {
+#ifdef _WIN32
         if (m_DirectoryStructure->originExists(ToWString(modsToDisable[idx]->name()))) {
           FilesOrigin &origin
             = m_DirectoryStructure->getOriginByName(ToWString(modsToDisable[idx]->name()));
           origin.enable(false);
         }
+#else
+        if (m_DirectoryStructure->originExists(modsToDisable[idx]->name().toStdString())) {
+          FilesOrigin &origin
+            = m_DirectoryStructure->getOriginByName(modsToDisable[idx]->name().toStdString());
+          origin.enable(false);
+        }
+#endif
       }
       if (m_UserInterface != nullptr) {
         m_UserInterface->archivesWriter().write();
@@ -1704,12 +1801,21 @@ void OrganizerCore::modStatusChanged(QList<unsigned int> index) {
     for (unsigned int i = 0; i < m_CurrentProfile->numMods(); ++i) {
       ModInfo::Ptr modInfo = ModInfo::getByIndex(i);
       int priority = m_CurrentProfile->getModPriority(i);
+#ifdef _WIN32
       if (m_DirectoryStructure->originExists(ToWString(modInfo->name()))) {
         // priorities in the directory structure are one higher because data is
         // 0
         m_DirectoryStructure->getOriginByName(ToWString(modInfo->name()))
           .setPriority(priority + 1);
       }
+#else
+      if (m_DirectoryStructure->originExists(modInfo->name().toStdString())) {
+        // priorities in the directory structure are one higher because data is
+        // 0
+        m_DirectoryStructure->getOriginByName(modInfo->name().toStdString())
+          .setPriority(priority + 1);
+      }
+#endif
     }
     m_DirectoryStructure->getFileRegister()->sortOrigins();
 
@@ -2075,9 +2181,15 @@ std::vector<Mapping> OrganizerCore::fileMapping(
       continue;
     }
 
+#ifdef _WIN32
     QString originPath
         = QString::fromStdWString(base->getOriginByID(origin).getPath());
     QString fileName = QString::fromStdWString(current->getName());
+#else
+    QString originPath
+        = QString::fromStdString(base->getOriginByID(origin).getPath());
+    QString fileName = QString::fromStdString(current->getName());
+#endif
 //    QString fileName = ToQString(current->getName());
     QString source   = originPath + relPath + fileName;
     QString target   = dataPath + relPath + fileName;
@@ -2090,9 +2202,15 @@ std::vector<Mapping> OrganizerCore::fileMapping(
   for (const auto& d : directoryEntry->getSubDirectories()) {
     int origin = d->anyOrigin();
 
+#ifdef _WIN32
     QString originPath
         = QString::fromStdWString(base->getOriginByID(origin).getPath());
     QString dirName = QString::fromStdWString(d->getName());
+#else
+    QString originPath
+        = QString::fromStdString(base->getOriginByID(origin).getPath());
+    QString dirName = QString::fromStdString(d->getName());
+#endif
     QString source  = originPath + relPath + dirName;
     QString target  = dataPath + relPath + dirName;
 

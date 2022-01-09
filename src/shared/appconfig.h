@@ -22,6 +22,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 
+#include "pathstr.h"
+
 namespace AppConfig {
 
 

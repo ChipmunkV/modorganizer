@@ -86,7 +86,11 @@ void SyncOverwriteDialog::readTree(const QString &path, DirectoryEntry *director
     QTreeWidgetItem *newItem = new QTreeWidgetItem(subTree, QStringList(file));
 
     if (fileInfo.isDir()) {
+#ifdef _WIN32
       DirectoryEntry *subDir = directoryStructure->findSubDirectory(ToWString(file));
+#else
+      DirectoryEntry *subDir = directoryStructure->findSubDirectory(file.toStdString());
+#endif
       if (subDir != nullptr) {
         readTree(fileInfo.absoluteFilePath(), subDir, newItem);
       } else {
@@ -95,7 +99,11 @@ void SyncOverwriteDialog::readTree(const QString &path, DirectoryEntry *director
         newItem = nullptr;
       }
     } else {
+#ifdef _WIN32
       const FileEntryPtr entry = directoryStructure->findFile(ToWString(file));
+#else
+      const FileEntryPtr entry = directoryStructure->findFile(file.toStdString());
+#endif
       QComboBox* combo = new QComboBox(ui->syncTree);
       combo->addItem(tr("<don't sync>"), -1);
       if (entry.get() != nullptr) {

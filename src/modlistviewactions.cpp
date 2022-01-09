@@ -530,11 +530,20 @@ void ModListViewActions::displayModInformation(ModInfo::Ptr modInfo, unsigned in
   }
 
   if (m_core.currentProfile()->modEnabled(modIndex) && !modInfo->isForeign()) {
+#ifdef _WIN32
     FilesOrigin& origin = m_core.directoryStructure()->getOriginByName(ToWString(modInfo->name()));
+#else
+    FilesOrigin& origin = m_core.directoryStructure()->getOriginByName(modInfo->name().toStdString());
+#endif
     origin.enable(false);
 
+#ifdef _WIN32
     if (m_core.directoryStructure()->originExists(ToWString(modInfo->name()))) {
       FilesOrigin& origin = m_core.directoryStructure()->getOriginByName(ToWString(modInfo->name()));
+#else
+    if (m_core.directoryStructure()->originExists(modInfo->name().toStdString())) {
+      FilesOrigin& origin = m_core.directoryStructure()->getOriginByName(modInfo->name().toStdString());
+#endif
       origin.enable(false);
 
       m_core.directoryRefresher()->addModToStructure(m_core.directoryStructure()
@@ -978,7 +987,11 @@ void ModListViewActions::restoreHiddenFiles(const QModelIndexList& indices) cons
             break;
           }
           emit originModified((m_core.directoryStructure()->getOriginByName(
+#ifdef _WIN32
             ToWString(modInfo->internalName()))).getID());
+#else
+            modInfo->internalName().toStdString())).getID());
+#endif
         }
       }
     }
@@ -995,7 +1008,11 @@ void ModListViewActions::restoreHiddenFiles(const QModelIndexList& indices) cons
       result = restoreHiddenFilesRecursive(renamer, modDir);
 
       emit originModified((m_core.directoryStructure()->getOriginByName(
+#ifdef _WIN32
         ToWString(modInfo->internalName()))).getID());
+#else
+        modInfo->internalName().toStdString())).getID());
+#endif
     }
   }
 

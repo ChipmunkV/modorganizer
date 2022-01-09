@@ -2,6 +2,9 @@
 #define MO_REGISTER_FILEENTRY_INCLUDED
 
 #include "fileregisterfwd.h"
+#ifndef _WIN32
+#include "filetime.h"
+#endif
 
 namespace MOShared
 {
@@ -13,7 +16,7 @@ public:
     std::numeric_limits<uint64_t>::max();
 
   FileEntry();
-  FileEntry(FileIndex index, std::wstring name, DirectoryEntry *parent);
+  FileEntry(FileIndex index, PathStr name, DirectoryEntry *parent);
 
   // noncopyable
   FileEntry(const FileEntry&) = delete;
@@ -24,8 +27,8 @@ public:
     return m_Index;
   }
 
-//  void addOrigin(
-//    OriginID origin, FILETIME fileTime, std::wstring_view archive, int order);
+  void addOrigin(
+    OriginID origin, FILETIME fileTime, PathStrView archive, int order);
 
   // remove the specified origin from the list of origins that contain this
   // file. if no origin is left, the file is effectively deleted and true is
@@ -42,7 +45,7 @@ public:
     return m_Alternatives;
   }
 
-  const std::wstring &getName() const
+  const PathStr &getName() const
   {
     return m_Name;
   }
@@ -63,29 +66,29 @@ public:
     return m_Archive;
   }
 
-  bool isFromArchive(std::wstring archiveName = L"") const;
+  bool isFromArchive(PathStr archiveName = ALOGSTR"") const;
 
   // if originID is -1, uses the main origin; if this file doesn't exist in the
   // given origin, returns an empty string
   //
-  std::wstring getFullPath(OriginID originID=InvalidOriginID) const;
+  PathStr getFullPath(OriginID originID=InvalidOriginID) const;
 
-  std::wstring getRelativePath() const;
+  PathStr getRelativePath() const;
 
   DirectoryEntry *getParent()
   {
     return m_Parent;
   }
 
-//  void setFileTime(FILETIME fileTime) const
-//  {
-//    m_FileTime = fileTime;
-//  }
-//
-//  FILETIME getFileTime() const
-//  {
-//    return m_FileTime;
-//  }
+  void setFileTime(FILETIME fileTime) const
+  {
+    m_FileTime = fileTime;
+  }
+
+  FILETIME getFileTime() const
+  {
+    return m_FileTime;
+  }
 
   void setFileSize(uint64_t size, uint64_t compressedSize)
   {
@@ -105,16 +108,16 @@ public:
 
 private:
   FileIndex m_Index;
-  std::wstring m_Name;
+  PathStr m_Name;
   OriginID m_Origin;
   DataArchiveOrigin m_Archive;
   AlternativesVector m_Alternatives;
   DirectoryEntry *m_Parent;
-//  mutable FILETIME m_FileTime;
+  mutable FILETIME m_FileTime;
   uint64_t m_FileSize, m_CompressedFileSize;
   mutable std::mutex m_OriginsMutex;
 
-  bool recurseParents(std::wstring &path, const DirectoryEntry *parent) const;
+  bool recurseParents(PathStr &path, const DirectoryEntry *parent) const;
 };
 
 } // namespace

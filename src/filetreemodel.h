@@ -119,7 +119,7 @@ private:
   // for `forFetching`, see top of filetreemodel.cpp
   void update(
     FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-    const std::wstring& parentPath, bool forFetching);
+    const PathStr& parentPath, bool forFetching);
 
   void doFetchMore(const QModelIndex& parent, bool forFetch, bool doSort);
 
@@ -131,23 +131,23 @@ private:
 
   // for `forFetching`, see top of filetreemodel.cpp
   bool updateDirectories(
-    FileTreeItem& parentItem, const std::wstring& path,
+    FileTreeItem& parentItem, const PathStr& path,
     const MOShared::DirectoryEntry& parentEntry, bool forFetching);
 
   // for `forFetching`, see top of filetreemodel.cpp
   void removeDisappearingDirectories(
     FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-    const std::wstring& parentPath, std::unordered_set<std::wstring_view>& seen,
+    const PathStr& parentPath, std::unordered_set<PathStrView>& seen,
     bool forFetching);
 
   bool addNewDirectories(
     FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-    const std::wstring& parentPath,
-    const std::unordered_set<std::wstring_view>& seen);
+    const PathStr& parentPath,
+    const std::unordered_set<PathStrView>& seen);
 
 
   bool updateFiles(
-    FileTreeItem& parentItem, const std::wstring& path,
+    FileTreeItem& parentItem, const PathStr& path,
     const MOShared::DirectoryEntry& parentEntry);
 
   void removeDisappearingFiles(
@@ -156,23 +156,23 @@ private:
 
   bool addNewFiles(
     FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-    const std::wstring& parentPath, int firstFileRow,
+    const PathStr& parentPath, int firstFileRow,
     const std::unordered_set<MOShared::FileIndex>& seen);
 
 
   FileTreeItem::Ptr createDirectoryItem(
-    FileTreeItem& parentItem, const std::wstring& parentPath,
+    FileTreeItem& parentItem, const PathStr& parentPath,
     const MOShared::DirectoryEntry& d);
 
   FileTreeItem::Ptr createFileItem(
-    FileTreeItem& parentItem, const std::wstring& parentPath,
+    FileTreeItem& parentItem, const PathStr& parentPath,
     const MOShared::FileEntry& file);
 
   void updateFileItem(FileTreeItem& item, const MOShared::FileEntry& file);
 
 
   QVariant displayData(const FileTreeItem* item, int column) const;
-  std::wstring makeModName(const MOShared::FileEntry& file, int originID) const;
+  PathStr makeModName(const MOShared::FileEntry& file, int originID) const;
 
   void ensureLoaded(FileTreeItem* item) const;
   void updatePendingIcons();

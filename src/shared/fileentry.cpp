@@ -11,77 +11,77 @@ FileEntry::FileEntry() :
 {
 }
 
-FileEntry::FileEntry(FileIndex index, std::wstring name, DirectoryEntry *parent) :
-  m_Index(index), m_Name(std::move(name)), m_Origin(-1), m_Archive(L"", -1), m_Parent(parent),
+FileEntry::FileEntry(FileIndex index, PathStr name, DirectoryEntry *parent) :
+  m_Index(index), m_Name(std::move(name)), m_Origin(-1), m_Archive(ALOGSTR"", -1), m_Parent(parent),
   m_FileSize(NoFileSize), m_CompressedFileSize(NoFileSize)
 {
 }
 
-//void FileEntry::addOrigin(
-//  OriginID origin, FILETIME fileTime, std::wstring_view archive, int order)
-//{
-//  std::scoped_lock lock(m_OriginsMutex);
-//
-//  if (m_Parent != nullptr) {
-//    m_Parent->propagateOrigin(origin);
-//  }
-//
-//  if (m_Origin == -1) {
-//    // If this file has no previous origin, this mod is now the origin with no
-//    // alternatives
-//    m_Origin = origin;
-//    m_FileTime = fileTime;
-//    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
-//  }
-//  else if (
-//    (m_Parent != nullptr) && (
-//    (m_Parent->getOriginByID(origin).getPriority() > m_Parent->getOriginByID(m_Origin).getPriority()) ||
-//      (archive.size() == 0 && m_Archive.isValid()))
-//    ) {
-//    // If this mod has a higher priority than the origin mod OR
-//    // this mod has a loose file and the origin mod has an archived file,
-//    // this mod is now the origin and the previous origin is the first alternative
-//
-//    auto itor = std::find_if(
-//      m_Alternatives.begin(), m_Alternatives.end(),
-//      [&](auto&& i) { return i.originID() == m_Origin; });
-//
-//    if (itor == m_Alternatives.end()) {
-//      m_Alternatives.push_back({m_Origin, m_Archive});
-//    }
-//
-//    m_Origin = origin;
-//    m_FileTime = fileTime;
-//    m_Archive = DataArchiveOrigin(std::wstring(archive.begin(), archive.end()), order);
-//  }
-//  else {
-//    // This mod is just an alternative
-//    bool found = false;
-//
-//    if (m_Origin == origin) {
-//      // already an origin
-//      return;
-//    }
-//
-//    for (auto iter = m_Alternatives.begin(); iter != m_Alternatives.end(); ++iter) {
-//      if (iter->originID() == origin) {
-//        // already an origin
-//        return;
-//      }
-//
-//      if ((m_Parent != nullptr) &&
-//        (m_Parent->getOriginByID(iter->originID()).getPriority() < m_Parent->getOriginByID(origin).getPriority())) {
-//        m_Alternatives.insert(iter, {origin, {std::wstring(archive.begin(), archive.end()), order}});
-//        found = true;
-//        break;
-//      }
-//    }
-//
-//    if (!found) {
-//      m_Alternatives.push_back({origin, {std::wstring(archive.begin(), archive.end()), order}});
-//    }
-//  }
-//}
+void FileEntry::addOrigin(
+  OriginID origin, FILETIME fileTime, PathStrView archive, int order)
+{
+  std::scoped_lock lock(m_OriginsMutex);
+
+  if (m_Parent != nullptr) {
+    m_Parent->propagateOrigin(origin);
+  }
+
+  if (m_Origin == -1) {
+    // If this file has no previous origin, this mod is now the origin with no
+    // alternatives
+    m_Origin = origin;
+    m_FileTime = fileTime;
+    m_Archive = DataArchiveOrigin(PathStr(archive.begin(), archive.end()), order);
+  }
+  else if (
+    (m_Parent != nullptr) && (
+    (m_Parent->getOriginByID(origin).getPriority() > m_Parent->getOriginByID(m_Origin).getPriority()) ||
+      (archive.size() == 0 && m_Archive.isValid()))
+    ) {
+    // If this mod has a higher priority than the origin mod OR
+    // this mod has a loose file and the origin mod has an archived file,
+    // this mod is now the origin and the previous origin is the first alternative
+
+    auto itor = std::find_if(
+      m_Alternatives.begin(), m_Alternatives.end(),
+      [&](auto&& i) { return i.originID() == m_Origin; });
+
+    if (itor == m_Alternatives.end()) {
+      m_Alternatives.push_back({m_Origin, m_Archive});
+    }
+
+    m_Origin = origin;
+    m_FileTime = fileTime;
+    m_Archive = DataArchiveOrigin(PathStr(archive.begin(), archive.end()), order);
+  }
+  else {
+    // This mod is just an alternative
+    bool found = false;
+
+    if (m_Origin == origin) {
+      // already an origin
+      return;
+    }
+
+    for (auto iter = m_Alternatives.begin(); iter != m_Alternatives.end(); ++iter) {
+      if (iter->originID() == origin) {
+        // already an origin
+        return;
+      }
+
+      if ((m_Parent != nullptr) &&
+        (m_Parent->getOriginByID(iter->originID()).getPriority() < m_Parent->getOriginByID(origin).getPriority())) {
+        m_Alternatives.insert(iter, {origin, {PathStr(archive.begin(), archive.end()), order}});
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      m_Alternatives.push_back({origin, {PathStr(archive.begin(), archive.end()), order}});
+    }
+  }
+}
 
 bool FileEntry::removeOrigin(OriginID origin)
 {
@@ -123,7 +123,7 @@ bool FileEntry::removeOrigin(OriginID origin)
       m_Origin = currentID;
     } else {
       m_Origin = -1;
-      m_Archive = DataArchiveOrigin(L"", -1);
+      m_Archive = DataArchiveOrigin(ALOGSTR"", -1);
       return true;
     }
   } else {
@@ -180,7 +180,7 @@ void FileEntry::sortOrigins()
   }
 }
 
-bool FileEntry::isFromArchive(std::wstring archiveName) const
+bool FileEntry::isFromArchive(PathStr archiveName) const
 {
   std::scoped_lock lock(m_OriginsMutex);
 
@@ -201,7 +201,7 @@ bool FileEntry::isFromArchive(std::wstring archiveName) const
   return false;
 }
 
-std::wstring FileEntry::getFullPath(OriginID originID) const
+PathStr FileEntry::getFullPath(OriginID originID) const
 {
   std::scoped_lock lock(m_OriginsMutex);
 
@@ -216,32 +216,44 @@ std::wstring FileEntry::getFullPath(OriginID originID) const
     return {};
   }
 
-  std::wstring result = o->getPath();
+  PathStr result = o->getPath();
 
   // all intermediate directories
   recurseParents(result, m_Parent);
 
+#ifdef _WIN32
   return result + L"\\" + m_Name;
+#else
+  return result + "/" + m_Name;
+#endif
 }
 
-std::wstring FileEntry::getRelativePath() const
+PathStr FileEntry::getRelativePath() const
 {
-  std::wstring result;
+  PathStr result;
 
   // all intermediate directories
   recurseParents(result, m_Parent);
 
+#ifdef _WIN32
   return result + L"\\" + m_Name;
+#else
+  return result + "/" + m_Name;
+#endif
 }
 
-bool FileEntry::recurseParents(std::wstring &path, const DirectoryEntry *parent) const
+bool FileEntry::recurseParents(PathStr &path, const DirectoryEntry *parent) const
 {
   if (parent == nullptr) {
     return false;
   } else {
     // don't append the topmost parent because it is the virtual data-root
     if (recurseParents(path, parent->getParent())) {
+#ifdef _WIN32
       path.append(L"\\").append(parent->getName());
+#else
+      path.append("/").append(parent->getName());
+#endif
     }
 
     return true;

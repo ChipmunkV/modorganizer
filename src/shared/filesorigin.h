@@ -18,7 +18,7 @@ public:
   FilesOrigin();
 
   FilesOrigin(
-    OriginID ID, const std::wstring &name, const std::wstring &path,
+    OriginID ID, const PathStr &name, const PathStr &path,
     int priority,
     boost::shared_ptr<FileRegister> fileRegister,
     boost::shared_ptr<OriginConnection> originConnection);
@@ -36,8 +36,8 @@ public:
     return m_Priority;
   }
 
-  void setName(const std::wstring &name);
-  const std::wstring &getName() const
+  void setName(const PathStr &name);
+  const PathStr &getName() const
   {
     return m_Name;
   }
@@ -47,7 +47,7 @@ public:
     return m_ID;
   }
 
-  const std::wstring &getPath() const
+  const PathStr &getPath() const
   {
     return m_Path;
   }
@@ -71,14 +71,14 @@ public:
 
   void removeFile(FileIndex index);
 
-  bool containsArchive(std::wstring archiveName);
+  bool containsArchive(PathStr archiveName);
 
 private:
   OriginID m_ID;
   bool m_Disabled;
   std::set<FileIndex> m_Files;
-  std::wstring m_Name;
-  std::wstring m_Path;
+  PathStr m_Name;
+  PathStr m_Path;
   int m_Priority;
   boost::weak_ptr<FileRegister> m_FileRegister;
   boost::weak_ptr<OriginConnection> m_OriginConnection;

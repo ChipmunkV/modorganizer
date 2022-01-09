@@ -195,7 +195,7 @@ void* makeInternalPointer(FileTreeItem* item)
 
 FileTreeModel::FileTreeModel(OrganizerCore& core, QObject* parent) :
   QAbstractItemModel(parent), m_core(core), m_enabled(true),
-  m_root(FileTreeItem::createDirectory(this, nullptr, L"", L"")),
+  m_root(FileTreeItem::createDirectory(this, nullptr, ALOGSTR"", ALOGSTR"")),
   m_flags(NoFlags), m_fullyLoaded(false), m_sortingEnabled(true)
 {
   m_root->setExpanded(true);
@@ -211,7 +211,7 @@ void FileTreeModel::refresh()
   TimeThis tt("FileTreeModel::refresh()");
 
   m_fullyLoaded = false;
-  update(*m_root, *m_core.directoryStructure(), L"", false);
+  update(*m_root, *m_core.directoryStructure(), ALOGSTR"", false);
   sortItem(*m_root, false);
 }
 
@@ -364,8 +364,13 @@ void FileTreeModel::doFetchMore(
 
   const auto path = item->dataRelativeFilePath();
 
+#ifdef _WIN32
   auto* parentEntry = m_core.directoryStructure()
     ->findSubDirectoryRecursive(path.toStdWString());
+#else
+  auto* parentEntry = m_core.directoryStructure()
+    ->findSubDirectoryRecursive(path.toStdString());
+#endif
 
   if (!parentEntry) {
     log::error("FileTreeModel::fetchMore(): directory '{}' not found", path);
@@ -373,7 +378,11 @@ void FileTreeModel::doFetchMore(
   }
 
   const auto parentPath = item->dataRelativeParentPath();
+#ifdef _WIN32
   update(*item, *parentEntry, parentPath.toStdWString(), forFetch);
+#else
+  update(*item, *parentEntry, parentPath.toStdString(), forFetch);
+#endif
 
   if (!forFetch && doSort) {
     sortItem(*item, false);
@@ -550,14 +559,18 @@ QModelIndex FileTreeModel::indexFromItem(FileTreeItem& item, int col) const
 
 void FileTreeModel::update(
   FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-  const std::wstring& parentPath, bool forFetching)
+  const PathStr& parentPath, bool forFetching)
 {
   trace(log::debug("updating {}", parentItem.debugName()));
 
   auto path = parentPath;
   if (!parentEntry.isTopLevel()) {
     if (!path.empty()) {
+#ifdef _WIN32
       path += L"\\";
+#else
+      path += "/";
+#endif
     }
 
     path += parentEntry.getName();
@@ -589,13 +602,13 @@ void FileTreeModel::update(
 }
 
 bool FileTreeModel::updateDirectories(
-  FileTreeItem& parentItem, const std::wstring& parentPath,
+  FileTreeItem& parentItem, const PathStr& parentPath,
   const MOShared::DirectoryEntry& parentEntry, bool forFetching)
 {
   // removeDisappearingDirectories() will add directories that are in the
   // tree and still on the filesystem to this set; addNewDirectories() will
   // use this to figure out if a directory is new or not
-  std::unordered_set<std::wstring_view> seen;
+  std::unordered_set<PathStrView> seen;
 
   removeDisappearingDirectories(parentItem, parentEntry, parentPath, seen, forFetching);
   return addNewDirectories(parentItem, parentEntry, parentPath, seen);
@@ -603,7 +616,7 @@ bool FileTreeModel::updateDirectories(
 
 void FileTreeModel::removeDisappearingDirectories(
   FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-  const std::wstring& parentPath, std::unordered_set<std::wstring_view>& seen,
+  const PathStr& parentPath, std::unordered_set<PathStrView>& seen,
   bool forFetching)
 {
   auto& children = parentItem.children();
@@ -690,8 +703,8 @@ void FileTreeModel::removeDisappearingDirectories(
 
 bool FileTreeModel::addNewDirectories(
   FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-  const std::wstring& parentPath,
-  const std::unordered_set<std::wstring_view>& seen)
+  const PathStr& parentPath,
+  const std::unordered_set<PathStrView>& seen)
 {
   // keeps track of the contiguous directories that need to be added to
   // avoid calling beginAddRows(), etc. for each item
@@ -740,7 +753,7 @@ bool FileTreeModel::addNewDirectories(
 }
 
 bool FileTreeModel::updateFiles(
-  FileTreeItem& parentItem, const std::wstring& parentPath,
+  FileTreeItem& parentItem, const PathStr& parentPath,
   const MOShared::DirectoryEntry& parentEntry)
 {
   // removeDisappearingFiles() will add files that are in the tree and still on
@@ -816,7 +829,7 @@ void FileTreeModel::removeDisappearingFiles(
 
 bool FileTreeModel::addNewFiles(
   FileTreeItem& parentItem, const MOShared::DirectoryEntry& parentEntry,
-  const std::wstring& parentPath, const int firstFileRow,
+  const PathStr& parentPath, const int firstFileRow,
   const std::unordered_set<FileIndex>& seen)
 {
   // keeps track of the contiguous files that need to be added to
@@ -925,7 +938,7 @@ void FileTreeModel::sortItems()
 }
 
 FileTreeItem::Ptr FileTreeModel::createDirectoryItem(
-  FileTreeItem& parentItem, const std::wstring& parentPath,
+  FileTreeItem& parentItem, const PathStr& parentPath,
   const DirectoryEntry& d)
 {
   auto item = FileTreeItem::createDirectory(
@@ -941,7 +954,7 @@ FileTreeItem::Ptr FileTreeModel::createDirectoryItem(
 }
 
 FileTreeItem::Ptr FileTreeModel::createFileItem(
-  FileTreeItem& parentItem, const std::wstring& parentPath,
+  FileTreeItem& parentItem, const PathStr& parentPath,
   const FileEntry& file)
 {
   auto item = FileTreeItem::createFile(
@@ -1115,10 +1128,14 @@ QVariant FileTreeModel::displayData(const FileTreeItem* item, int column) const
   }
 }
 
-std::wstring FileTreeModel::makeModName(
+PathStr FileTreeModel::makeModName(
   const MOShared::FileEntry& file, int originID) const
 {
-  static const std::wstring Unmanaged = UnmanagedModName().toStdWString();
+#ifdef _WIN32
+  static const PathStr Unmanaged = UnmanagedModName().toStdWString();
+#else
+  static const PathStr Unmanaged = UnmanagedModName().toStdString();
+#endif
 
   const auto& origin = m_core.directoryStructure()->getOriginByID(originID);
 
@@ -1126,11 +1143,11 @@ std::wstring FileTreeModel::makeModName(
     return Unmanaged;
   }
 
-  std::wstring name = origin.getName();
+  PathStr name = origin.getName();
 
   const auto& archive = file.getArchive();
   if (!archive.name().empty()) {
-    name += L" (" + archive.name() + L")";
+    name += ALOGSTR" (" + archive.name() + ALOGSTR")";
   }
 
   return name;
@@ -1177,7 +1194,11 @@ QString FileTreeModel::makeTooltip(const FileTreeItem& item) const
 
 
   const auto file = m_core.directoryStructure()->searchFile(
+#ifdef _WIN32
     item.dataRelativeFilePath().toStdWString(), nullptr);
+#else
+    item.dataRelativeFilePath().toStdString(), nullptr);
+#endif
 
   if (file) {
     const auto alternatives = file->getAlternatives();
@@ -1185,7 +1206,11 @@ QString FileTreeModel::makeTooltip(const FileTreeItem& item) const
 
     for (auto&& alt : alternatives) {
       const auto& origin = m_core.directoryStructure()->getOriginByID(alt.originID());
+#ifdef _WIN32
       list.push_back(QString::fromStdWString(origin.getName()));
+#else
+      list.push_back(QString::fromStdString(origin.getName()));
+#endif
     }
 
     if (list.size() == 1) {

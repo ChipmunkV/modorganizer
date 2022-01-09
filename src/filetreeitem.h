@@ -28,11 +28,11 @@ public:
 
   static Ptr createFile(
     FileTreeModel* model, FileTreeItem* parent,
-    std::wstring dataRelativeParentPath, std::wstring file);
+    PathStr dataRelativeParentPath, PathStr file);
 
   static Ptr createDirectory(
     FileTreeModel* model, FileTreeItem* parent,
-    std::wstring dataRelativeParentPath, std::wstring file);
+    PathStr dataRelativeParentPath, PathStr file);
 
   FileTreeItem(const FileTreeItem&) = delete;
   FileTreeItem& operator=(const FileTreeItem&) = delete;
@@ -40,8 +40,8 @@ public:
   FileTreeItem& operator=(FileTreeItem&&) = default;
 
   void setOrigin(
-    int originID, const std::wstring& realPath,
-    Flags flags, const std::wstring& mod);
+    int originID, const PathStr& realPath,
+    Flags flags, const PathStr& mod);
 
   void add(Ptr child)
   {
@@ -119,12 +119,12 @@ public:
     return m_file;
   }
 
-  const std::wstring& filenameWs() const
+  const PathStr& filenameWs() const
   {
     return m_wsFile;
   }
 
-  const std::wstring& filenameWsLowerCase() const
+  const PathStr& filenameWsLowerCase() const
   {
     return m_wsLcFile;
   }
@@ -290,14 +290,14 @@ private:
   mutable std::size_t m_indexGuess;
 
   const QString m_virtualParentPath;
-  const std::wstring m_wsFile, m_wsLcFile;
+  const PathStr m_wsFile, m_wsLcFile;
   const MOShared::DirectoryEntryFileKey m_key;
   const QString m_file;
   const bool m_isDirectory;
 
   int m_originID;
   QString m_realPath;
-  std::wstring m_wsRealPath;
+  PathStr m_wsRealPath;
   Flags m_flags;
   QString m_mod;
 
@@ -314,7 +314,7 @@ private:
 
   FileTreeItem(
     FileTreeModel* model, FileTreeItem* parent,
-    std::wstring dataRelativeParentPath, bool isDirectory, std::wstring file);
+    PathStr dataRelativeParentPath, bool isDirectory, PathStr file);
 
   void getFileType() const;
   void queueSort();

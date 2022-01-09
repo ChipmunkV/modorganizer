@@ -6,31 +6,33 @@
 #include <thread>
 #ifndef _WIN32
 #include <QString>
+#include "filetime.h"
 #endif
+#include "pathstr.h"
 
 namespace env
 {
 
 struct File
 {
-  std::wstring name;
-  std::wstring lcname;
-//  FILETIME lastModified;
+  PathStr name;
+  PathStr lcname;
+  FILETIME lastModified;
   uint64_t size;
 
-//  File(std::wstring_view name, FILETIME ft, uint64_t size);
+  File(PathStrView name, FILETIME ft, uint64_t size);
 };
 
 struct Directory
 {
-  std::wstring name;
-  std::wstring lcname;
+  PathStr name;
+  PathStr lcname;
 
   std::vector<Directory> dirs;
   std::vector<File> files;
 
   Directory();
-  Directory(std::wstring_view name);
+  Directory(PathStrView name);
 };
 
 
@@ -178,13 +180,13 @@ private:
 
 
 #ifdef _WIN32
-using DirStartF = void (void*, std::wstring_view);
-using DirEndF = void (void*, std::wstring_view);
-using FileF = void (void*, std::wstring_view, FILETIME, uint64_t);
+using DirStartF = void (void*, PathStrView);
+using DirEndF = void (void*, PathStrView);
+using FileF = void (void*, PathStrView, FILETIME, uint64_t);
 #else
-using DirStartF = void (void*, std::string_view);
-using DirEndF = void (void*, std::string_view);
-using FileF = void (void*, const QString&, uint64_t);
+using DirStartF = void (void*, PathStrView);
+using DirEndF = void (void*, PathStrView);
+using FileF = void (void*, PathStrView, FILETIME, uint64_t);
 #endif
 
 void setHandleCloserThreadCount(std::size_t n);
@@ -195,7 +197,7 @@ class DirectoryWalker
 public:
 #ifdef _WIN32
   void forEachEntry(
-    const std::wstring& path, void* cx,
+    const PathStr& path, void* cx,
     DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
 #else
   void forEachEntry(
@@ -210,7 +212,7 @@ private:
 
 #ifdef _WIN32
 void forEachEntry(
-  const std::wstring& path, void* cx,
+  const PathStr& path, void* cx,
   DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
 #else
 void forEachEntry(
@@ -218,8 +220,8 @@ void forEachEntry(
   DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF);
 #endif
 
-Directory getFilesAndDirs(const std::wstring& path);
-Directory getFilesAndDirsWithFind(const std::wstring& path);
+Directory getFilesAndDirs(const PathStr& path);
+Directory getFilesAndDirsWithFind(const PathStr& path);
 
 } // namespace
 

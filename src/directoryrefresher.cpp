@@ -204,14 +204,14 @@ void DirectoryRefresher::setMods(const std::vector<std::tuple<QString, QString, 
 
 void DirectoryRefresher::cleanStructure(DirectoryEntry *structure)
 {
-  static const wchar_t *files[] = { L"meta.ini", L"readme.txt" };
-  for (int i = 0; i < sizeof(files) / sizeof(wchar_t*); ++i) {
+  static const PathChar *files[] = { ALOGSTR"meta.ini", ALOGSTR"readme.txt" };
+  for (int i = 0; i < sizeof(files) / sizeof(PathChar*); ++i) {
     structure->removeFile(files[i]);
   }
 
-  static const wchar_t *dirs[] = { L"fomod" };
-  for (int i = 0; i < sizeof(dirs) / sizeof(wchar_t*); ++i) {
-    structure->removeDir(std::wstring(dirs[i]));
+  static const PathChar *dirs[] = { ALOGSTR"fomod" };
+  for (int i = 0; i < sizeof(dirs) / sizeof(PathChar*); ++i) {
+    structure->removeDir(PathStr(dirs[i]));
   }
 }
 
@@ -228,26 +228,43 @@ void DirectoryRefresher::addModBSAToStructure(
     loadOrder = gamePlugins->getLoadOrder();
   }
 
-  std::vector<std::wstring> lo;
+  std::vector<PathStr> lo;
   for (auto&& s : loadOrder) {
+#ifdef _WIN32
     lo.push_back(s.toStdWString());
+#else
+    lo.push_back(s.toStdString());
+#endif
   }
 
-  std::vector<std::wstring> archivesW;
+  std::vector<PathStr> archivesW;
   for (auto&& a : archives) {
+#ifdef _WIN32
     archivesW.push_back(a.toStdWString());
+#else
+    archivesW.push_back(a.toStdString());
+#endif
   }
 
-  std::set<std::wstring> enabledArchives;
+  std::set<PathStr> enabledArchives;
   for (auto&& a : m_EnabledArchives) {
+#ifdef _WIN32
     enabledArchives.insert(a.toStdWString());
+#else
+    enabledArchives.insert(a.toStdString());
+#endif
   }
 
   DirectoryStats dummy;
 
   root->addFromAllBSAs(
+#ifdef _WIN32
     modName.toStdWString(),
     QDir::toNativeSeparators(directory).toStdWString(),
+#else
+    modName.toStdString(),
+    QDir::toNativeSeparators(directory).toStdString(),
+#endif
     priority,
     archivesW,
     enabledArchives,
@@ -259,7 +276,7 @@ void DirectoryRefresher::stealModFilesIntoStructure(
   DirectoryEntry *directoryStructure, const QString &modName,
   int priority, const QString &directory, const QStringList &stealFiles)
 {
-//  std::wstring directoryW = ToWString(QDir::toNativeSeparators(directory));
+//  PathStr directoryW = ToWString(QDir::toNativeSeparators(directory));
 //
 //  // instead of adding all the files of the target directory, we just change the root of the specified
 //  // files to this mod
@@ -302,7 +319,11 @@ void DirectoryRefresher::addModFilesToStructure(
 {
   TimeThis tt("DirectoryRefresher::addModFilesToStructure()");
 
-  std::wstring directoryW = ToWString(QDir::toNativeSeparators(directory));
+#ifdef _WIN32
+  PathStr directoryW = ToWString(QDir::toNativeSeparators(directory));
+#else
+  PathStr directoryW = QDir::toNativeSeparators(directory).toStdString();
+#endif
   DirectoryStats dummy;
 
   if (stealFiles.length() > 0) {
@@ -310,7 +331,11 @@ void DirectoryRefresher::addModFilesToStructure(
       directoryStructure, modName, priority, directory, stealFiles);
   } else {
     directoryStructure->addFromOrigin(
+#ifdef _WIN32
       ToWString(modName), directoryW, priority, dummy);
+#else
+      modName.toStdString(), directoryW, priority, dummy);
+#endif
   }
 }
 
@@ -329,9 +354,17 @@ void DirectoryRefresher::addModToStructure(DirectoryEntry *directoryStructure
     stealModFilesIntoStructure(
       directoryStructure, modName, priority, directory, stealFiles);
   } else {
-    std::wstring directoryW = ToWString(QDir::toNativeSeparators(directory));
+#ifdef _WIN32
+    PathStr directoryW = ToWString(QDir::toNativeSeparators(directory));
+#else
+    PathStr directoryW = QDir::toNativeSeparators(directory).toStdString();
+#endif
     directoryStructure->addFromOrigin(
+#ifdef _WIN32
       ToWString(modName), directoryW, priority, dummy);
+#else
+      modName.toStdString(), directoryW, priority, dummy);
+#endif
   }
 
   if (Settings::instance().archiveParsing()) {
@@ -345,11 +378,11 @@ struct ModThread
 {
   DirectoryRefreshProgress* progress = nullptr;
   DirectoryEntry* ds = nullptr;
-  std::wstring modName;
-  std::wstring path;
+  PathStr modName;
+  PathStr path;
   int prio = -1;
-  std::vector<std::wstring> archives;
-  std::set<std::wstring> enabledArchives;
+  std::vector<PathStr> archives;
+  std::set<PathStr> enabledArchives;
   DirectoryStats* stats =  nullptr;
   env::DirectoryWalker walker;
 
@@ -372,7 +405,11 @@ struct ModThread
     std::unique_lock lock(mutex);
     cv.wait(lock, [&]{ return ready; });
 
+#ifdef _WIN32
     SetThisThreadName(QString::fromStdWString(modName + L" refresher"));
+#else
+    SetThisThreadName(QString::fromStdString(modName + " refresher"));
+#endif
     ds->addFromOrigin(walker, modName, path, prio, *stats);
 
     if (Settings::instance().archiveParsing()) {
@@ -384,9 +421,13 @@ struct ModThread
         loadOrder = gamePlugins->getLoadOrder();
       }
 
-      std::vector<std::wstring> lo;
+      std::vector<PathStr> lo;
       for (auto&& s : loadOrder) {
+#ifdef _WIN32
         lo.push_back(s.toStdWString());
+#else
+        lo.push_back(s.toStdString());
+#endif
       }
 
       ds->addFromAllBSAs(
@@ -446,18 +487,31 @@ void DirectoryRefresher::addMultipleModsFilesToStructure(
 
         mt.progress = progress;
         mt.ds = directoryStructure;
+#ifdef _WIN32
         mt.modName = e.modName.toStdWString();
         mt.path = QDir::toNativeSeparators(e.absolutePath).toStdWString();
+#else
+        mt.modName = e.modName.toStdString();
+        mt.path = QDir::toNativeSeparators(e.absolutePath).toStdString();
+#endif
         mt.prio = prio;
 
         mt.archives.clear();
         for (auto&& a : e.archives) {
+#ifdef _WIN32
           mt.archives.push_back(a.toStdWString());
+#else
+          mt.archives.push_back(a.toStdString());
+#endif
         }
 
         mt.enabledArchives.clear();
         for (auto&& a : m_EnabledArchives) {
+#ifdef _WIN32
           mt.enabledArchives.insert(a.toStdWString());
+#else
+          mt.enabledArchives.insert(a.toStdString());
+#endif
         }
 
         mt.stats = &stats[i];
@@ -485,16 +539,20 @@ void DirectoryRefresher::refresh()
   {
     QMutexLocker locker(&m_RefreshLock);
 
-    m_Root.reset(new DirectoryEntry(L"data", nullptr, 0));
+    m_Root.reset(new DirectoryEntry(ALOGSTR"data", nullptr, 0));
 
     IPluginGame *game = qApp->property("managed_game").value<IPluginGame*>();
 
-    std::wstring dataDirectory =
+    PathStr dataDirectory =
+#ifdef _WIN32
       QDir::toNativeSeparators(game->dataDirectory().absolutePath()).toStdWString();
+#else
+      QDir::toNativeSeparators(game->dataDirectory().absolutePath()).toStdString();
+#endif
 
     {
       DirectoryStats dummy;
-      m_Root->addFromOrigin(L"data", dataDirectory, 0, dummy);
+      m_Root->addFromOrigin(ALOGSTR"data", dataDirectory, 0, dummy);
     }
 
     std::sort(m_Mods.begin(), m_Mods.end(), [](auto lhs, auto rhs) {

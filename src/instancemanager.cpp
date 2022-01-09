@@ -342,7 +342,11 @@ void Instance::getProfile(const Settings& s)
   }
 
   // profile missing from ini, use the default
+#ifdef _WIN32
   m_profile = QString::fromStdWString(AppConfig::defaultProfileName());
+#else
+  m_profile = QString::fromStdString(AppConfig::defaultProfileName());
+#endif
 
   log::warn(
     "no profile found in ini {}, using default '{}'",
@@ -440,7 +444,11 @@ std::vector<Instance::Object> Instance::objectsForDeletion() const
     settings.paths().cache(),
     settings.paths().profiles(),
     settings.paths().overwrite(),
+#ifdef _WIN32
     QDir(m_dir).filePath(QString::fromStdWString(AppConfig::dumpsDir())),
+#else
+    QDir(m_dir).filePath(QString::fromStdString(AppConfig::dumpsDir())),
+#endif
     QDir(m_dir).filePath(QString::fromStdWString(AppConfig::logPath())),
   };
 

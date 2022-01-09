@@ -138,16 +138,21 @@ typedef struct _IO_STATUS_BLOCK {
 namespace env
 {
 
-std::wstring_view toStringView(const UNICODE_STRING* s)
+PathStrView toStringView(const UNICODE_STRING* s)
 {
+#ifdef _WIN32
   if (s && s->Buffer) {
-    return {s->Buffer, (s->Length / sizeof(wchar_t))};
+    return {s->Buffer, (s->Length / sizeof(PathChar))};
   } else {
     return {};
   }
+#else
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  return {};
+#endif
 }
 
-std::wstring_view toStringView(POBJECT_ATTRIBUTES poa)
+PathStrView toStringView(POBJECT_ATTRIBUTES poa)
 {
   if (poa->ObjectName) {
     return toStringView(poa->ObjectName);
@@ -159,7 +164,11 @@ std::wstring_view toStringView(POBJECT_ATTRIBUTES poa)
 QString toString(POBJECT_ATTRIBUTES poa)
 {
   const auto sv = toStringView(poa);
+#ifdef _WIN32
   return QString::fromWCharArray(sv.data(), static_cast<int>(sv.size()));
+#else
+  return QString::fromUtf8(sv.data(), static_cast<int>(sv.size()));
+#endif
 }
 
 
@@ -335,7 +344,7 @@ void forEachEntryImpl(
   }
 }
 
-std::wstring makeNtPath(const std::wstring& path)
+PathStr makeNtPath(const PathStr& path)
 {
   constexpr const wchar_t* nt_prefix = L"\\??\\";
   constexpr const wchar_t* nt_unc_prefix = L"\\??\\UNC\\";
@@ -354,7 +363,7 @@ std::wstring makeNtPath(const std::wstring& path)
 }
 
 void DirectoryWalker::forEachEntry(
-  const std::wstring& path, void* cx,
+  const PathStr& path, void* cx,
   DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
 {
   auto& hc = g_handleClosers.request();
@@ -366,7 +375,7 @@ void DirectoryWalker::forEachEntry(
     NtClose = (NtClose_type)::GetProcAddress(m.get(), "NtClose");
   }
 
-  const std::wstring ntpath = makeNtPath(path);
+  const PathStr ntpath = makeNtPath(path);
 
   UNICODE_STRING ObjectName = {};
   ObjectName.Buffer = const_cast<wchar_t*>(ntpath.c_str());
@@ -383,7 +392,7 @@ void DirectoryWalker::forEachEntry(
 
 
 void forEachEntry(
-  const std::wstring& path, void* cx,
+  const PathStr& path, void* cx,
   DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
 {
   DirectoryWalker().forEachEntry(path, cx, dirStartF, dirEndF, fileF);
@@ -393,19 +402,25 @@ void forEachEntryImpl(
   void* cx, const std::string& path, std::size_t depth,
   DirStartF* dirStartF, DirEndF* dirEndF, FileF* fileF)
 {
-  if (dirStartF || dirEndF || depth) {
-    std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
-  }
-
-  QDirIterator it(QString::fromStdString(path), QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+  QDirIterator it(QString::fromStdString(path), QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
   while (it.hasNext()) {
     QFileInfo f(it.next());
-    fileF(cx, f.fileName(), f.size());
+    if (f.isDir()) {
+      if (dirStartF && dirEndF) {
+        dirStartF(cx, f.filePath().toStdString());
+        forEachEntryImpl(cx, f.filePath().toStdString(), depth+1, dirStartF, dirEndF, fileF);
+        dirEndF(cx, f.filePath().toStdString());
+      }
+    } else {
+      fileF(cx, f.fileName().toStdString(), FILETIME(), f.size());
+    }
   }
+  std::cerr << "FIXME: Not implemented FILETIME" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
-std::wstring makeNtPath(const std::wstring& path)
+PathStr makeNtPath(const PathStr& path)
 {
+#ifdef _WIN32
   constexpr const wchar_t* nt_prefix = L"\\??\\";
   constexpr const wchar_t* nt_unc_prefix = L"\\??\\UNC\\";
   constexpr const wchar_t* share_prefix = L"\\\\";
@@ -420,6 +435,10 @@ std::wstring makeNtPath(const std::wstring& path)
     // prepend the \??\ prefix
     return nt_prefix + path;
   }
+#else
+  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  return PathStr();
+#endif
 }
 
 void DirectoryWalker::forEachEntry(
@@ -438,7 +457,7 @@ void forEachEntry(
 }
 #endif
 
-Directory getFilesAndDirs(const std::wstring& path)
+Directory getFilesAndDirs(const PathStr& path)
 {
   struct Context
   {
@@ -451,19 +470,19 @@ Directory getFilesAndDirs(const std::wstring& path)
   cx.current.push(&root);
 
 //  env::forEachEntry(path, &cx,
-//    [](void* pcx, std::wstring_view path) {
+//    [](void* pcx, PathStrView path) {
 //      Context* cx = (Context*)pcx;
 //
 //      cx->current.top()->dirs.push_back(Directory(path));
 //      cx->current.push(&cx->current.top()->dirs.back());
 //    },
 //
-//    [](void* pcx, std::wstring_view path) {
+//    [](void* pcx, PathStrView path) {
 //      Context* cx = (Context*)pcx;
 //      cx->current.pop();
 //    },
 //
-//    [](void* pcx, std::wstring_view path, FILETIME ft, uint64_t s) {
+//    [](void* pcx, PathStrView path, FILETIME ft, uint64_t s) {
 //      Context* cx = (Context*)pcx;
 //
 //      cx->current.top()->files.push_back(File(path, ft, s));
@@ -474,7 +493,7 @@ Directory getFilesAndDirs(const std::wstring& path)
   return root;
 }
 
-//File::File(std::wstring_view n, FILETIME ft, uint64_t s) :
+//File::File(PathStrView n, FILETIME ft, uint64_t s) :
 //  name(n.begin(), n.end()),
 //  lcname(MOShared::ToLowerCopy(name)),
 //  lastModified(ft), size(s)
@@ -485,15 +504,15 @@ Directory::Directory()
 {
 }
 
-Directory::Directory(std::wstring_view n)
+Directory::Directory(PathStrView n)
   : name(n.begin(), n.end()), lcname(MOShared::ToLowerCopy(name))
 {
 }
 
 
-void getFilesAndDirsWithFindImpl(const std::wstring& path, Directory& d)
+void getFilesAndDirsWithFindImpl(const PathStr& path, Directory& d)
 {
-//  const std::wstring searchString = path + L"\\*";
+//  const PathStr searchString = path + L"\\*";
 //
 //  WIN32_FIND_DATAW findData;
 //
@@ -508,7 +527,7 @@ void getFilesAndDirsWithFindImpl(const std::wstring& path, Directory& d)
 //      if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 //        if ((wcscmp(findData.cFileName, L".") != 0) &&
 //          (wcscmp(findData.cFileName, L"..") != 0)) {
-//          const std::wstring newPath = path + L"\\" + findData.cFileName;
+//          const PathStr newPath = path + L"\\" + findData.cFileName;
 //          d.dirs.push_back(Directory(findData.cFileName));
 //          getFilesAndDirsWithFindImpl(newPath, d.dirs.back());
 //        }
@@ -528,7 +547,7 @@ void getFilesAndDirsWithFindImpl(const std::wstring& path, Directory& d)
   std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
 }
 
-Directory getFilesAndDirsWithFind(const std::wstring& path)
+Directory getFilesAndDirsWithFind(const PathStr& path)
 {
   Directory d;
   getFilesAndDirsWithFindImpl(path, d);

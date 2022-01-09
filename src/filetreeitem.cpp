@@ -68,18 +68,18 @@ const QString& cachedFileTypeNoExtension()
   return name;
 }
 
-const QString& cachedFileType(const std::wstring& file, bool isOnFilesystem)
+const QString& cachedFileType(const PathStr& file, bool isOnFilesystem)
 {
-//  static std::map<std::wstring, QString, std::less<>> map;
+//  static std::map<PathStr, QString, std::less<>> map;
 //  static std::mutex mutex;
 //
 //  const auto dot = file.find_last_of(L'.');
-//  if (dot == std::wstring::npos) {
+//  if (dot == PathStr::npos) {
 //    return cachedFileTypeNoExtension();
 //  }
 //
 //  std::scoped_lock lock(mutex);
-//  const auto sv = std::wstring_view(file.c_str() + dot, file.size() - dot);
+//  const auto sv = PathStrView(file.c_str() + dot, file.size() - dot);
 //
 //  auto itor = map.find(sv);
 //  if (itor != map.end()) {
@@ -122,13 +122,21 @@ const QString& cachedFileType(const std::wstring& file, bool isOnFilesystem)
 
 FileTreeItem::FileTreeItem(
   FileTreeModel* model, FileTreeItem* parent,
-  std::wstring dataRelativeParentPath, bool isDirectory, std::wstring file) :
+  PathStr dataRelativeParentPath, bool isDirectory, PathStr file) :
     m_model(model), m_parent(parent), m_indexGuess(NoIndexGuess),
+#ifdef _WIN32
     m_virtualParentPath(QString::fromStdWString(dataRelativeParentPath)),
+#else
+    m_virtualParentPath(QString::fromStdString(dataRelativeParentPath)),
+#endif
     m_wsFile(file),
     m_wsLcFile(ToLowerCopy(file)),
     m_key(m_wsLcFile),
+#ifdef _WIN32
     m_file(QString::fromStdWString(file)),
+#else
+    m_file(QString::fromStdString(file)),
+#endif
     m_isDirectory(isDirectory),
     m_originID(-1),
     m_flags(NoFlags),
@@ -140,7 +148,7 @@ FileTreeItem::FileTreeItem(
 
 FileTreeItem::Ptr FileTreeItem::createFile(
   FileTreeModel* model, FileTreeItem* parent,
-  std::wstring dataRelativeParentPath, std::wstring file)
+  PathStr dataRelativeParentPath, PathStr file)
 {
   return std::unique_ptr<FileTreeItem>(new FileTreeItem(
     model, parent, std::move(dataRelativeParentPath), false, std::move(file)));
@@ -148,21 +156,29 @@ FileTreeItem::Ptr FileTreeItem::createFile(
 
 FileTreeItem::Ptr FileTreeItem::createDirectory(
   FileTreeModel* model, FileTreeItem* parent,
-  std::wstring dataRelativeParentPath, std::wstring file)
+  PathStr dataRelativeParentPath, PathStr file)
 {
   return std::unique_ptr<FileTreeItem>(new FileTreeItem(
     model, parent, std::move(dataRelativeParentPath), true, std::move(file)));
 }
 
 void FileTreeItem::setOrigin(
-  int originID, const std::wstring& realPath, Flags flags,
-  const std::wstring& mod)
+  int originID, const PathStr& realPath, Flags flags,
+  const PathStr& mod)
 {
   m_originID = originID;
   m_wsRealPath = realPath;
+#ifdef _WIN32
   m_realPath = QString::fromStdWString(realPath);
+#else
+  m_realPath = QString::fromStdString(realPath);
+#endif
   m_flags = flags;
+#ifdef _WIN32
   m_mod = QString::fromStdWString(mod);
+#else
+  m_mod = QString::fromStdString(mod);
+#endif
 
   m_fileSize.reset();
   m_lastModified.reset();

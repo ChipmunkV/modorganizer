@@ -22,23 +22,40 @@ using namespace MOBase;
 
 bool canPreviewFile(const PluginContainer& pc, const FileEntry& file)
 {
+#ifdef _WIN32
   return canPreviewFile(
     pc, file.isFromArchive(), QString::fromStdWString(file.getName()));
+#else
+  return canPreviewFile(
+    pc, file.isFromArchive(), QString::fromStdString(file.getName()));
+#endif
 }
 
 bool canRunFile(const FileEntry& file)
 {
+#ifdef _WIN32
   return canRunFile(file.isFromArchive(), QString::fromStdWString(file.getName()));
+#else
+  return canRunFile(file.isFromArchive(), QString::fromStdString(file.getName()));
+#endif
 }
 
 bool canOpenFile(const FileEntry& file)
 {
+#ifdef _WIN32
   return canOpenFile(file.isFromArchive(), QString::fromStdWString(file.getName()));
+#else
+  return canOpenFile(file.isFromArchive(), QString::fromStdString(file.getName()));
+#endif
 }
 
 bool isHidden(const FileEntry& file)
 {
+#ifdef _WIN32
   return (QString::fromStdWString(file.getName()).endsWith(ModInfo::s_HiddenExt, Qt::CaseInsensitive));
+#else
+  return (QString::fromStdString(file.getName()).endsWith(ModInfo::s_HiddenExt, Qt::CaseInsensitive));
+#endif
 }
 
 bool canExploreFile(const FileEntry& file);
@@ -364,7 +381,11 @@ void FileTree::openModInfo(FileTreeItem* item)
   }
 
   const auto& origin = m_core.directoryStructure()->getOriginByID(originID);
+#ifdef _WIN32
   const auto& name = QString::fromStdWString(origin.getName());
+#else
+  const auto& name = QString::fromStdString(origin.getName());
+#endif
 
   unsigned int index = ModInfo::getIndex(name);
   if (index == UINT_MAX) {
@@ -447,7 +468,11 @@ void FileTree::dumpToFile() const
     return;
   }
 
+#ifdef _WIN32
   m_core.directoryStructure()->dump(file.toStdWString());
+#else
+  m_core.directoryStructure()->dump(file.toStdString());
+#endif
 }
 
 void FileTree::onExpandedChanged(const QModelIndex& index, bool expanded)
@@ -501,7 +526,11 @@ void FileTree::onContextMenu(const QPoint &pos)
       addDirectoryMenus(menu, *item);
     } else {
       const auto file = m_core.directoryStructure()->searchFile(
+#ifdef _WIN32
         item->dataRelativeFilePath().toStdWString(), nullptr);
+#else
+        item->dataRelativeFilePath().toStdString(), nullptr);
+#endif
 
       if (file) {
         addFileMenus(menu, *file, item->originID());
@@ -580,7 +609,11 @@ bool FileTree::showShellMenu(QPoint pos)
 
     if (item->isConflicted()) {
       const auto file = m_core.directoryStructure()->searchFile(
+#ifdef _WIN32
         item->dataRelativeFilePath().toStdWString(), nullptr);
+#else
+        item->dataRelativeFilePath().toStdString(), nullptr);
+#endif
 
       if (!file) {
         log::error(
@@ -612,13 +645,25 @@ bool FileTree::showShellMenu(QPoint pos)
           continue;
         }
 
+#ifdef _WIN32
         if (!QFile::exists(QString::fromStdWString(fullPath))) {
           log::error("{}",
             tr("File '%1' does not exist, you may need to refresh.")
             .arg(QString::fromStdWString(fullPath)));
         }
+#else
+        if (!QFile::exists(QString::fromStdString(fullPath))) {
+          log::error("{}",
+            tr("File '%1' does not exist, you may need to refresh.")
+            .arg(QString::fromStdString(fullPath)));
+        }
+#endif
 
+#ifdef _WIN32
         itor->second.addFile(QString::fromStdWString(fullPath));
+#else
+        itor->second.addFile(QString::fromStdString(fullPath));
+#endif
       }
     }
   }
@@ -646,7 +691,11 @@ bool FileTree::showShellMenu(QPoint pos)
         continue;
       }
 
+#ifdef _WIN32
       QString caption = QString::fromStdWString(origin->getName());
+#else
+      QString caption = QString::fromStdString(origin->getName());
+#endif
       if (m.second.fileCount() < totalFiles) {
         const auto d = m.second.fileCount();
         caption += " " + tr("(only has %1 file(s))").arg(d);
@@ -680,7 +729,11 @@ void FileTree::addFileMenus(QMenu& menu, const FileEntry& file, int originID)
   menu.addSeparator();
   menu.setToolTipsVisible(true);
 
+#ifdef _WIN32
   const QFileInfo target(QString::fromStdWString(file.getFullPath()));
+#else
+  const QFileInfo target(QString::fromStdString(file.getFullPath()));
+#endif
 
   MenuItem(tr("&Add as Executable"))
     .callback([&]{ addAsExecutable(); })
@@ -726,7 +779,11 @@ void FileTree::addOpenMenus(QMenu& menu, const MOShared::FileEntry& file)
 
   MenuItem openMenu, openHookedMenu;
 
+#ifdef _WIN32
   const QFileInfo target(QString::fromStdWString(file.getFullPath()));
+#else
+  const QFileInfo target(QString::fromStdString(file.getFullPath()));
+#endif
 
   if (getFileExecutionType(target) == FileExecutionTypes::Executable) {
     openMenu

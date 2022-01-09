@@ -168,6 +168,12 @@ bool CaseInsenstiveComparePred(wchar_t lhs, wchar_t rhs)
   return std::tolower(lhs, loc) == std::tolower(rhs, loc);
 }
 
+bool CaseInsensitiveEqual(const std::string &lhs, const std::string &rhs)
+{
+  auto l = boost::locale::generator()("");
+  return boost::locale::to_lower(lhs, l) == boost::locale::to_lower(rhs, l);
+}
+
 bool CaseInsensitiveEqual(const std::wstring &lhs, const std::wstring &rhs)
 {
   return (lhs.length() == rhs.length())
@@ -356,7 +362,7 @@ void SetThisThreadName(const QString& s)
 //  if (SetThreadDescription) {
 //    SetThreadDescription(GetCurrentThread(), s.toStdWString().c_str());
 //  }
-  std::cerr << "FIXME: cpp excption handlers" + std::string(" " __FILE__) + ':' + std::to_string(__LINE__) + "\n";
+  std::cerr << "FIXME: Not Implemented SetThisThreadName" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
 }
 
 

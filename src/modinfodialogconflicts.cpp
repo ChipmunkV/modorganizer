@@ -723,11 +723,11 @@ ConflictItem GeneralConflictsTab::createOverwriteItem(
   const MOShared::AlternativesVector& alternatives)
 {
   const auto& ds = *m_core.directoryStructure();
-  std::wstring altString;
+  PathStr altString;
 
   for (const auto& alt : alternatives) {
     if (!altString.empty()) {
-      altString += L", ";
+      altString += ALOGSTR", ";
     }
 
     altString += ds.getOriginByID(alt.originID()).getName();
@@ -986,7 +986,7 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
 {
   const auto& ds = *m_core.directoryStructure();
 
-  std::wstring before, after;
+  PathStr before, after;
 
   auto currOrigin = m_tab->origin();
   bool isCurrOrigArchive = archive;
@@ -1002,7 +1002,7 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
         {
           const auto& altOrigin = ds.getOriginByID(alt.originID());
           if (!before.empty()) {
-            before += L", ";
+            before += ALOGSTR", ";
           }
 
           before += altOrigin.getName();
@@ -1046,7 +1046,7 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
             // mod comes before current
 
             if (!before.empty()) {
-              before += L", ";
+              before += ALOGSTR", ";
             }
 
             before += altOrigin.getName();
@@ -1055,7 +1055,7 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
             // mod comes after current
 
             if (!after.empty()) {
-              after += L", ";
+              after += ALOGSTR", ";
             }
 
             after += altOrigin.getName();
@@ -1064,7 +1064,7 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
 
         // also add the active winner origin (the one outside alternatives) to 'after'
         if (!after.empty()) {
-          after += L", ";
+          after += ALOGSTR", ";
         }
         after += ds.getOriginByID(fileOrigin).getName();
 
@@ -1104,8 +1104,13 @@ std::optional<ConflictItem> AdvancedConflictsTab::createItem(
     }
   }
 
+#ifdef _WIN32
   auto beforeQS = QString::fromStdWString(before);
   auto afterQS = QString::fromStdWString(after);
+#else
+  auto beforeQS = QString::fromStdString(before);
+  auto afterQS = QString::fromStdString(after);
+#endif
 
   return ConflictItem(
     std::move(beforeQS), std::move(relativeName), std::move(afterQS),

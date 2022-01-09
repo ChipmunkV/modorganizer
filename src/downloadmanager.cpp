@@ -440,10 +440,10 @@ void DownloadManager::refreshList()
     }
 #else
       QDir::toNativeSeparators(m_OutputDirectory).toStdString(), &cx, nullptr, nullptr,
-      [](void* data, const QString& f, uint64_t size) {
+      [](void* data, PathStrView f, FILETIME, uint64_t size) {
         auto& cx = *static_cast<Context*>(data);
 
-        std::string lc = MOShared::ToLowerCopy(f.toStdString());
+        std::string lc = MOShared::ToLowerCopy(f);
 
         bool interestingExt = false;
         for (auto&& ext : cx.extensions) {
@@ -461,7 +461,7 @@ void DownloadManager::refreshList()
           return;
         }
 
-        QString fileName = QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" + f;
+        QString fileName = QDir::fromNativeSeparators(cx.self.m_OutputDirectory) + "/" + QString::fromStdString(std::string(f));
 
         DownloadInfo *info = DownloadInfo::createFromMeta(
           fileName, cx.self.m_ShowHidden, cx.self.m_OutputDirectory, size);

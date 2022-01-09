@@ -2300,9 +2300,15 @@ void MainWindow::modRenamed(const QString &oldName, const QString &newName)
 
   // also fix the directory structure
   try {
+#ifdef _WIN32
     if (m_OrganizerCore.directoryStructure()->originExists(ToWString(oldName))) {
       FilesOrigin &origin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(oldName));
       origin.setName(ToWString(newName));
+#else
+    if (m_OrganizerCore.directoryStructure()->originExists(oldName.toStdString())) {
+      FilesOrigin &origin = m_OrganizerCore.directoryStructure()->getOriginByName(oldName.toStdString());
+      origin.setName(newName.toStdString());
+#endif
     } else {
 
     }
@@ -2313,11 +2319,20 @@ void MainWindow::modRenamed(const QString &oldName, const QString &newName)
 
 void MainWindow::fileMoved(const QString &filePath, const QString &oldOriginName, const QString &newOriginName)
 {
+#ifdef _WIN32
   const FileEntryPtr filePtr = m_OrganizerCore.directoryStructure()->findFile(ToWString(filePath));
+#else
+  const FileEntryPtr filePtr = m_OrganizerCore.directoryStructure()->findFile(filePath.toStdString());
+#endif
   if (filePtr.get() != nullptr) {
     try {
+#ifdef _WIN32
       if (m_OrganizerCore.directoryStructure()->originExists(ToWString(newOriginName))) {
         FilesOrigin &newOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(newOriginName));
+#else
+      if (m_OrganizerCore.directoryStructure()->originExists(newOriginName.toStdString())) {
+        FilesOrigin &newOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(newOriginName.toStdString());
+#endif
 
 //        QString fullNewPath = ToQString(newOrigin.getPath()) + "\\" + filePath;
 //        WIN32_FIND_DATAW findData;
@@ -2327,10 +2342,17 @@ void MainWindow::fileMoved(const QString &filePath, const QString &oldOriginName
 //        FindClose(hFind);
         std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
       }
+#ifdef _WIN32
       if (m_OrganizerCore.directoryStructure()->originExists(ToWString(oldOriginName))) {
         FilesOrigin &oldOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(oldOriginName));
         filePtr->removeOrigin(oldOrigin.getID());
       }
+#else
+      if (m_OrganizerCore.directoryStructure()->originExists(oldOriginName.toStdString())) {
+        FilesOrigin &oldOrigin = m_OrganizerCore.directoryStructure()->getOriginByName(oldOriginName.toStdString());
+        filePtr->removeOrigin(oldOrigin.getID());
+      }
+#endif
     } catch (const std::exception &e) {
       reportError(tr("failed to move \"%1\" from mod \"%2\" to \"%3\": %4").arg(filePath).arg(oldOriginName).arg(newOriginName).arg(e.what()));
     }
@@ -3307,9 +3329,17 @@ void MainWindow::extractBSATriggered(QTreeWidgetItem* item)
       for (int i = 0; i < item->childCount(); ++i) {
         archives.append(item->child(i)->text(0));
       }
+#ifdef _WIN32
       origin = QDir::fromNativeSeparators(ToQString(m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(item->text(0))).getPath()));
+#else
+      origin = QDir::fromNativeSeparators(ToQString(m_OrganizerCore.directoryStructure()->getOriginByName(item->text(0).toStdString()).getPath()));
+#endif
     } else {
+#ifdef _WIN32
       origin = QDir::fromNativeSeparators(ToQString(m_OrganizerCore.directoryStructure()->getOriginByName(ToWString(item->text(1))).getPath()));
+#else
+      origin = QDir::fromNativeSeparators(ToQString(m_OrganizerCore.directoryStructure()->getOriginByName(item->text(1).toStdString()).getPath()));
+#endif
       archives = QStringList({ item->text(0) });
     }
 

@@ -151,10 +151,18 @@ void PluginList::highlightPlugins(
     if (!selectedMod.isNull() && profile->modEnabled(modIndex)) {
       QDir dir(selectedMod->absolutePath());
       QStringList plugins = dir.entryList(QStringList() << "*.esp" << "*.esm" << "*.esl");
+#ifdef _WIN32
       const MOShared::FilesOrigin& origin = directoryEntry.getOriginByName(selectedMod->internalName().toStdWString());
+#else
+      const MOShared::FilesOrigin& origin = directoryEntry.getOriginByName(selectedMod->internalName().toStdString());
+#endif
       if (plugins.size() > 0) {
         for (auto plugin : plugins) {
+#ifdef _WIN32
           MOShared::FileEntryPtr file = directoryEntry.findFile(plugin.toStdWString());
+#else
+          MOShared::FileEntryPtr file = directoryEntry.findFile(plugin.toStdString());
+#endif
           if (file && file->getOrigin() != origin.getID()) {
             const auto alternatives = file->getAlternatives();
             if (std::find_if(alternatives.begin(), alternatives.end(), [&](const FileAlternative& element) { return element.originID() == origin.getID(); }) == alternatives.end())
@@ -223,7 +231,11 @@ void PluginList::refresh(const QString &profileName
         QString baseName = QFileInfo(filename).completeBaseName();
 
         QString iniPath = baseName + ".ini";
+#ifdef _WIN32
         bool hasIni = baseDirectory.findFile(ToWString(iniPath)).get() != nullptr;
+#else
+        bool hasIni = baseDirectory.findFile(iniPath.toStdString()).get() != nullptr;
+#endif
         std::set<QString> loadedArchives;
         QString candidateName;
         for (FileEntryPtr archiveCandidate : files) {
@@ -596,54 +608,58 @@ void PluginList::saveTo(const QString &lockedOrderFileName) const
 
 bool PluginList::saveLoadOrder(DirectoryEntry &directoryStructure)
 {
-//  if (m_GamePlugin->loadOrderMechanism() != IPluginGame::LoadOrderMechanism::FileTime) {
-//    // nothing to do
-//    return true;
-//  }
-//
-//  log::debug("setting file times on esps");
-//
-//  for (ESPInfo &esp : m_ESPs) {
-//    std::wstring espName = ToWString(esp.name);
-//    const FileEntryPtr fileEntry = directoryStructure.findFile(espName);
-//    if (fileEntry.get() != nullptr) {
-//      QString fileName;
-//      bool archive = false;
-//      int originid = fileEntry->getOrigin(archive);
-//
-//      fileName = QString("%1\\%2")
-//        .arg(QDir::toNativeSeparators(ToQString(directoryStructure.getOriginByID(originid).getPath())))
-//        .arg(esp.name);
-//
-//      HANDLE file = ::CreateFile(ToWString(fileName).c_str(), GENERIC_READ | GENERIC_WRITE,
-//                                 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-//      if (file == INVALID_HANDLE_VALUE) {
-//        if (::GetLastError() == ERROR_SHARING_VIOLATION) {
-//          // file is locked, probably the game is running
-//          return false;
-//        } else {
-//          throw windows_error(QObject::tr("failed to access %1").arg(fileName).toUtf8().constData());
-//        }
-//      }
-//
-//      ULONGLONG temp = 0;
-//      temp = (145731ULL + esp.priority) * 24 * 60 * 60 * 10000000ULL;
-//
-//      FILETIME newWriteTime;
-//
-//      newWriteTime.dwLowDateTime  = (DWORD)(temp & 0xFFFFFFFF);
-//      newWriteTime.dwHighDateTime = (DWORD)(temp >> 32);
-////      esp.time = newWriteTime;
-//      fileEntry->setFileTime(newWriteTime);
-//      if (!::SetFileTime(file, nullptr, nullptr, &newWriteTime)) {
-//        throw windows_error(QObject::tr("failed to set file time %1").arg(fileName).toUtf8().constData());
-//      }
-//
-//      CloseHandle(file);
-//    }
-//  }
-  std::cerr << "FIXME: Not implemented" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n"; assert(false && "Not implemented");
+  if (m_GamePlugin->loadOrderMechanism() != IPluginGame::LoadOrderMechanism::FileTime) {
+    // nothing to do
+    return true;
+  }
+
+#ifdef _WIN32
+  log::debug("setting file times on esps");
+
+  for (ESPInfo &esp : m_ESPs) {
+    std::wstring espName = ToWString(esp.name);
+    const FileEntryPtr fileEntry = directoryStructure.findFile(espName);
+    if (fileEntry.get() != nullptr) {
+      QString fileName;
+      bool archive = false;
+      int originid = fileEntry->getOrigin(archive);
+
+      fileName = QString("%1\\%2")
+        .arg(QDir::toNativeSeparators(ToQString(directoryStructure.getOriginByID(originid).getPath())))
+        .arg(esp.name);
+
+      HANDLE file = ::CreateFile(ToWString(fileName).c_str(), GENERIC_READ | GENERIC_WRITE,
+                                 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+      if (file == INVALID_HANDLE_VALUE) {
+        if (::GetLastError() == ERROR_SHARING_VIOLATION) {
+          // file is locked, probably the game is running
+          return false;
+        } else {
+          throw windows_error(QObject::tr("failed to access %1").arg(fileName).toUtf8().constData());
+        }
+      }
+
+      ULONGLONG temp = 0;
+      temp = (145731ULL + esp.priority) * 24 * 60 * 60 * 10000000ULL;
+
+      FILETIME newWriteTime;
+
+      newWriteTime.dwLowDateTime  = (DWORD)(temp & 0xFFFFFFFF);
+      newWriteTime.dwHighDateTime = (DWORD)(temp >> 32);
+//      esp.time = newWriteTime;
+      fileEntry->setFileTime(newWriteTime);
+      if (!::SetFileTime(file, nullptr, nullptr, &newWriteTime)) {
+        throw windows_error(QObject::tr("failed to set file time %1").arg(fileName).toUtf8().constData());
+      }
+
+      CloseHandle(file);
+    }
+  }
   return true;
+#else
+  std::cerr << "FIXME: Not implemented PluginList::saveLoadOrder" + std::string(" \e]8;;eclsrc://") + __FILE__ + ":" + std::to_string(__LINE__) + "\a" + __FILE__ + ":" + std::to_string(__LINE__) + "\e]8;;\a\n";
+  return true;
+#endif
 }
 
 int PluginList::enabledCount() const
@@ -1586,7 +1602,11 @@ ESPInfo::ESPInfo(const QString &name, bool enabled,
     archives(archives.begin(), archives.end()), modSelected(false)
 {
   try {
+#ifdef _WIN32
     ESP::File file(ToWString(fullPath));
+#else
+    ESP::File file(fullPath.toStdString());
+#endif
     isMaster = file.isMaster();
     auto extension = name.right(3).toLower();
     isLight = lightPluginsAreSupported && (extension == "esl");

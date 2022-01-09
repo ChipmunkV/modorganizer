@@ -300,7 +300,7 @@ public:
 
   static env::CoreDumpTypes getGlobalCoreDumpType();
   static void setGlobalCoreDumpType(env::CoreDumpTypes type);
-  static std::wstring getGlobalCoreDumpPath();
+  static PathStr getGlobalCoreDumpPath();
 
 public:
   MOBase::IModRepositoryBridge *createNexusBridge() const;

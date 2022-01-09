@@ -638,6 +638,7 @@ MOShared::FilesOrigin* ModInfoDialog::getOrigin()
 {
   auto* ds = m_core.directoryStructure();
 
+#ifdef _WIN32
   if (!ds->originExists(m_mod->name().toStdWString())) {
     return nullptr;
   }
@@ -646,6 +647,16 @@ MOShared::FilesOrigin* ModInfoDialog::getOrigin()
   if (origin->isDisabled()) {
     return nullptr;
   }
+#else
+  if (!ds->originExists(m_mod->name().toStdString())) {
+    return nullptr;
+  }
+
+  auto* origin = &ds->getOriginByName(m_mod->name().toStdString());
+  if (origin->isDisabled()) {
+    return nullptr;
+  }
+#endif
 
   return origin;
 }

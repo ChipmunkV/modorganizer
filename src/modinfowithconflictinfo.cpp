@@ -90,12 +90,17 @@ ModInfoWithConflictInfo::Conflicts ModInfoWithConflictInfo::doConflictCheck() co
   bool hasHiddenFiles = false;
 
   int dataID = 0;
-  if (m_Core.directoryStructure()->originExists(L"data")) {
-    dataID = m_Core.directoryStructure()->getOriginByName(L"data").getID();
+  if (m_Core.directoryStructure()->originExists(ALOGSTR"data")) {
+    dataID = m_Core.directoryStructure()->getOriginByName(ALOGSTR"data").getID();
   }
 
-  std::wstring name = ToWString(this->name());
-  const std::wstring hideExt = ToWString(ModInfo::s_HiddenExt);
+#ifdef _WIN32
+  PathStr name = ToWString(this->name());
+  const PathStr hideExt = ToWString(ModInfo::s_HiddenExt);
+#else
+  PathStr name = this->name().toStdString();
+  const PathStr hideExt = ModInfo::s_HiddenExt.toStdString();
+#endif
 
   if (m_Core.directoryStructure()->originExists(name)) {
     FilesOrigin &origin = m_Core.directoryStructure()->getOriginByName(name);
@@ -109,7 +114,11 @@ ModInfoWithConflictInfo::Conflicts ModInfoWithConflictInfo::doConflictCheck() co
       if (!hasHiddenFiles) {
         const fs::path nameAsPath(file->getName());
 
+#ifdef _WIN32
         if (nameAsPath.extension().wstring().compare(hideExt) == 0) {
+#else
+        if (nameAsPath.extension().string().compare(hideExt) == 0) {
+#endif
           hasHiddenFiles = true;
         }
         else {
@@ -125,7 +134,11 @@ ModInfoWithConflictInfo::Conflicts ModInfoWithConflictInfo::doConflictCheck() co
             }
             else {
               const fs::path dirPath(parent->getName());
+#ifdef _WIN32
               if (dirPath.extension().wstring().compare(hideExt) == 0) {
+#else
+              if (dirPath.extension().string().compare(hideExt) == 0) {
+#endif
                 hasHiddenFiles = true;
                 break;
               }
@@ -251,7 +264,11 @@ ModInfoWithConflictInfo::EConflictType ModInfoWithConflictInfo::isLooseArchiveCo
 
 bool ModInfoWithConflictInfo::isRedundant() const
 {
-  std::wstring name = ToWString(this->name());
+#ifdef _WIN32
+  PathStr name = ToWString(this->name());
+#else
+  PathStr name = this->name().toStdString();
+#endif
   if (m_Core.directoryStructure()->originExists(name)) {
     FilesOrigin &origin = m_Core.directoryStructure()->getOriginByName(name);
     std::vector<FileEntryPtr> files = origin.getFiles();

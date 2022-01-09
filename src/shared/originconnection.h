@@ -19,36 +19,36 @@ public:
   OriginConnection& operator=(const OriginConnection&) = delete;
 
   std::pair<FilesOrigin&, bool> getOrCreate(
-    const std::wstring &originName, const std::wstring &directory, int priority,
+    const PathStr &originName, const PathStr &directory, int priority,
     const boost::shared_ptr<FileRegister>& fileRegister,
     const boost::shared_ptr<OriginConnection>& originConnection,
     DirectoryStats& stats);
 
   FilesOrigin& createOrigin(
-    const std::wstring &originName, const std::wstring &directory, int priority,
+    const PathStr &originName, const PathStr &directory, int priority,
     boost::shared_ptr<FileRegister> fileRegister,
     boost::shared_ptr<OriginConnection> originConnection);
 
-  bool exists(const std::wstring &name);
+  bool exists(const PathStr &name);
 
   FilesOrigin &getByID(OriginID ID);
   const FilesOrigin* findByID(OriginID ID) const;
-  FilesOrigin &getByName(const std::wstring &name);
+  FilesOrigin &getByName(const PathStr &name);
 
   void changePriorityLookup(int oldPriority, int newPriority);
 
-  void changeNameLookup(const std::wstring &oldName, const std::wstring &newName);
+  void changeNameLookup(const PathStr &oldName, const PathStr &newName);
 
 private:
   std::atomic<OriginID> m_NextID;
   std::map<OriginID, FilesOrigin> m_Origins;
-  std::map<std::wstring, OriginID> m_OriginsNameMap;
+  std::map<PathStr, OriginID> m_OriginsNameMap;
   mutable std::mutex m_Mutex;
 
   OriginID createID();
 
   FilesOrigin& createOriginNoLock(
-    const std::wstring &originName, const std::wstring &directory, int priority,
+    const PathStr &originName, const PathStr &directory, int priority,
     boost::shared_ptr<FileRegister> fileRegister,
     boost::shared_ptr<OriginConnection> originConnection);
 };
