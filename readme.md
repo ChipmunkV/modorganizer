@@ -26,6 +26,45 @@ Linux namespaces may be handy to make each game process see its own set of files
 Wine will be used for things like the Windows registry access.
 Launching games from MO2 will probably rely on Lutris or Steam.
 
+## Implementation details
+
+### Filesystem custom view
+
+The "bind" mounts are used to override individual files.
+Equivalent `mount` command to override `appdata/config.ini` by `config.ini` is:
+
+`mount --bind config.ini appdata/config.ini`
+
+OverlayFS mounts are used to overlay directories.
+Equivalent `mount` command to overlay `mod1dir/`, `mod2dir/` and `mod3dir/` over `gamedata/` and use `Overwrite/` as the "MO2 Overwrite" dir is:
+
+`mount -t overlay -o lowerdir=gamedata/:mod1dir/:mod2dir/:mod3dir/,upperdir=Overwrite/,workdir=/tmp/work overlay gamedata/`
+
+The read-only lower dirs are the original gamedata dir and the mod dirs, the upper dir is the read-write "Overwrite" dir.
+The resulting combined dir appears at the place of the original gamedata dir.
+
+### Filesystem custom view separation
+
+To make the mount operations affect only the process of the game (and its subprocesses) we need to prepare a "Linux mount namespace" for it before starting the game.
+Equivalent command:
+
+`unshare --mount`
+
+The mounts set up by this process will be visible only to this process and its children.
+
+### Filesystem custom view runner
+
+The `mount` and `unshare` calls need a higher level of access than an ordinary user has.
+So the runner is a separate executable file that has the setuid attribute set.
+
+The runner performs `unshare` and `mount` calls, drops privileges, switches user back and runs the game.
+
+### MO2 Windows-specific tools
+
+* `winapi-PrivateProfile.sh` - command line tool to read and write INI files using WinAPI
+
+Compiled at runtime.
+
 ## Motivation
 
 * Linux users are more likely to look into the code and fix the issues if they don't need a Windows VM to build and debug MO2
