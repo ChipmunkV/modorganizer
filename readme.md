@@ -28,36 +28,96 @@ Launching games from MO2 will probably rely on Lutris or Steam.
 
 ## Implementation details
 
-### Filesystem custom view
+### Mappings
+
+Mappings is list of source-destination records that define which directories to lay over the other directories or (or override a single file by another file).
+Its purpose is to define how to overlay multiple game mod directories over the original gamedata directory.
+
+### Virtual filesystem using LD_PRELOAD
+
+The LD_PRELOAD-based MO2 virtual filesystem is a standalone shared library that is not linked to anything.
+It takes a list of mappings through an environment variable `VFS_MAPPING_LIST`.
+
+MO2 when running the game process sets the `VFS_MAPPING_LIST` environment variable for the game process.
+MO2 when running the game process sets the `LD_PRELOAD` environment variable for the game process to the path to the virtual filesystem shared library file.
+The `LD_PRELOAD` variable is used by the `ld.so` dynamic linker in Linux.
+
+The virtual filesystem shared library implements the logic of layering of multiple game mod directories on top of the game data directory according to the MO2 USVFS implementation.
+
+The virtual filesystem shared library overrides the open, read, write, etc. functions of the libc to operate on files from a desired mapping.
+
+The resulting combined directory appears at the place of the original gamedata directory according to the mappings.
+
+### Virtual filesystem using FUSE
+
+The FUSE-based MO2 virtual filesystem is a standalone executable.
+It takes a list of mappings as command line arguments.
+
+The executable mounts the mappings, they remain mounted while the executable is running.
+For each directory or single-file mapping destination it creates a FUSE mount.
+
+It implements the logic of layering of multiple game mod directories on top of the game data directory according to the MO2 USVFS implementation.
+
+The virtual filesystem executable implements the open, read, write, etc. functions from `fuse_operations` to operate on files from a desired mapping.
+
+The resulting combined directory appears at the place of the original gamedata directory according to the mappings.
+
+In order to have access to the original gamedata directory after mounting the mappings the executable unmounts them just for itself.
+To do that it first uses the `unshare` Linux syscall to enter a new Linux namespace, then the `umount` call to unmount the FUSE mount from the original gamedata directory.
+It should not be confused with the other `unshare` call that is used by the game process runner to keep the mounts invisible to everything except the game process and its subprocesses.
+
+The `unshare` call needs a higher level of access than an ordinary user has.
+So the virtual filesystem executable file has the `cap_sys_admin+ep` attributes set just for that.
+The executable sets up the mappings, `unshare`s the mount namespace, drops capabilities, `umount`s all the FUSE mounts, starts serving FUSE callbacks.
+
+### Virtual filesystem using Linux overlayfs and binds
+
+The overlayfs-based MO2 virtual filesystem is a standalone executable.
+It takes a list of mappings as command line arguments.
+
+The executable mounts the mappings and exits.
 
 The "bind" mounts are used to override individual files.
 Equivalent `mount` command to override `appdata/config.ini` by `config.ini` is:
 
 `mount --bind config.ini appdata/config.ini`
 
-OverlayFS mounts are used to overlay directories.
+The overlayfs mounts are used to overlay directories.
 Equivalent `mount` command to overlay `mod1dir/`, `mod2dir/` and `mod3dir/` over `gamedata/` and use `Overwrite/` as the "MO2 Overwrite" dir is:
 
 `mount -t overlay -o lowerdir=gamedata/:mod1dir/:mod2dir/:mod3dir/,upperdir=Overwrite/,workdir=/tmp/work overlay gamedata/`
 
 The read-only lower dirs are the original gamedata dir and the mod dirs, the upper dir is the read-write "Overwrite" dir.
-The resulting combined dir appears at the place of the original gamedata dir.
+The resulting combined dir appears at the place of the original gamedata dir according to the mappings.
 
-### Filesystem custom view separation
+The behaviour is inconsistent with the MO2 USVFS implementation.
 
-To make the mount operations affect only the process of the game (and its subprocesses) we need to prepare a "Linux mount namespace" for it before starting the game.
+The `mount` call needs a higher level of access than an ordinary user has.
+So the virtual filesystem executable file has the `cap_sys_admin+ep` attributes set.
+
+### Game process runner for the per-process visibility of the mount-based virtual filesystem
+
+The game process runner is an executable that takes a path to the virtual filesystem executable and a list of mappings as command line arguments.
+
+To make the mount operations affect only the process of the game (and its subprocesses) the game process runner prepares a "Linux mount namespace" for it before starting the game.
+It uses the `unshare` Linux syscall.
 Equivalent command:
 
 `unshare --mount`
 
 The mounts set up by this process will be visible only to this process and its children.
 
-### Filesystem custom view runner
+The `unshare` call needs a higher level of access than an ordinary user has.
+So the runner executable file has the `cap_sys_admin+ep` attributes set.
 
-The `mount` and `unshare` calls need a higher level of access than an ordinary user has.
-So the runner is a separate executable file that has the setuid attribute set.
+The runner performs `unshare`, drops capabilities, executes the virtual filesystem executable and runs the game.
 
-The runner performs `unshare` and `mount` calls, drops privileges, switches user back and runs the game.
+### Virtual filesystem library
+
+The virtual filesystem library consists of the library itself and a C++ header with the API.
+It is linked to a program that wants to define mappings.
+
+For MO2 the virtual filesystem library is built into a Qt plugin.
 
 ### MO2 Windows-specific tools
 
